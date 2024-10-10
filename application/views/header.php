@@ -7,7 +7,7 @@
 	<!-- Tell the browser to be responsive to screen width -->
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 	<!-- Bootstrap 3.3.7 -->
-	<link rel="icon" href="<?= base_url('images/icon.png') ?>" type="image/x-icon" />
+	<link rel="icon" href="<?= base_url('images/favicon.png') ?>" type="image/x-icon"/>
 	<link rel="stylesheet"
 		  href="<?= base_url('assets/adminLte/bower_components/bootstrap/dist/css/bootstrap.min.css') ?>">
 	<link rel="stylesheet"
@@ -49,6 +49,15 @@
 
 	<!--	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-html5-1.5.1/datatables.min.css"/>-->
 	<script src="<?= base_url('assets/adminLte/bower_components/jquery/dist/jquery.min.js') ?>"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
 	<!-- jQuery UI 1.11.4 -->
-	<script src="<?= base_url('assets/adminLte/bower_components/jquery-ui/jquery-ui.min.js') ?>"></script>
+<!--	<script src="--><?//= base_url('assets/adminLte/bower_components/jquery-ui/jquery-ui.min.js') ?><!--"></script>-->
+<!--	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">-->
+	<script src="<?php echo base_url('assets/adminLte/plugins/Chart.js/Chart.min.js') ?>"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+	<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 </head>

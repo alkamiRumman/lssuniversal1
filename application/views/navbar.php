@@ -1,110 +1,163 @@
-<body class="hold-transition skin-blue sidebar-mini">
-<div class="wrapper">
-
+<body class="skin-black-light layout-top-nav" data-new-gr-c-s-check-loaded="14.1193.0" data-gr-ext-installed=""
+	  style="height: auto; min-height: 100%;">
+<div class="wrapper" style="height: auto; min-height: 100%;">
 	<header class="main-header">
-		<!-- Logo -->
-		<a href="<?= dashboard_url('index') ?>" class="logo">
-			<!-- mini logo for sidebar mini 50x50 pixels -->
-<!--			<span class="logo-mini"><b>--><?//= SHORTNAME ?><!--</b></span>-->
-			<!-- logo for regular state and mobile devices -->
-			<span class="logo-lg"><b>Admin </b><?= SHORTNAME ?></span>
-		</a>
-		<!-- Header Navbar: style can be found in header.less -->
 		<nav class="navbar navbar-static-top">
-			<!-- Sidebar toggle button-->
-<!--			<a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">-->
-<!--				<span class="sr-only">Toggle navigation</span>-->
-<!--			</a>-->
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand"><b><?= COMPANY ?></a>
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+							data-target="#navbar-collapse" aria-expanded="false">
+						<i class="fa fa-bars"></i>
+					</button>
+				</div>
 
-			<div class="navbar-custom-menu">
-				<ul class="nav navbar-nav">
-					<li class="float-left">
-						<a href="<?= dashboard_url('index') ?>"><i class="fa fa-dashboard"></i> Dashboard </a>
-					</li>
-					<li class="float-left">
-						<a href="<?= titles_url('index') ?>"><i class="fa fa-list"></i> Title List </a>
-					</li>
-					<li>
-						<a href="<?= titles_url('add') ?>"><i class="fa fa-plus-square"></i> Add Title </a>
-					</li>
-					<li>
-						<a href="<?= items_url('index') ?>"><i class="fa fa-list"></i> Item List </a>
-					</li>
-					<li>
-						<a href="<?= items_url('add') ?>"><i class="fa fa-plus-square"></i> Add Item </a>
-					</li>
-					<li>
-						<a href="<?= login_url('logout') ?>"><i class="fa fa-power-off"></i> Sign out</a>
-					</li>
-					<li class="dropdown messages-menu">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-							<?= COMPANY ?>
-						</a>
-					</li>
+				<div class="navbar-collapse pull-left collapse" id="navbar-collapse" aria-expanded="false"
+					 style="height: 1px;">
+					<ul class="nav navbar-nav">
+						<?php if (isAdmin()) { ?>
+							<li class="<?= $this->uri->segment(2) == 'index' ? 'active' : '' ?>">
+								<a href="<?= admin_url('index') ?>"><i class="fa fa-dashboard"></i>
+									<span>Dashboard</span>
+								</a>
+							</li>
+							<li class="<?= $this->uri->segment(2) == 'customers' ? 'active' : '' ?>">
+								<a href="<?= admin_url('customers') ?>"><i
+											class="fa fa-user-circle"></i> <span>Team Members</span></a>
+							</li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+									Production Center <span class="caret"></span></a>
+								<ul class="dropdown-menu" role="menu">
+									<li class="<?= $this->uri->segment(2) == 'add' ? 'active' : '' ?>"><a
+												href="<?= admin_url('add') ?>"><i
+													class="fa fa-plus"></i> Add Production</a></li>
+									<li class="<?= $this->uri->segment(2) == 'productions' ? 'active' : '' ?>"><a
+												href="<?= admin_url('productions') ?>"><i
+													class="fa fa-tasks"></i> View Productions</a></li>
+								</ul>
+							</li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+									Vendor Network <span class="caret"></span></a>
+								<ul class="dropdown-menu" role="menu">
+									<li class="<?= $this->uri->segment(2) == 'vendors' ? 'active' : '' ?>">
+										<a href="<?= admin_url('vendors') ?>"><i
+													class="fa fa-user-secret"></i> Vendors </a>
+									</li>
+									<li class="<?= $this->uri->segment(2) == 'vendorInvoice' ? 'active' : '' ?>">
+										<a href="<?= admin_url('vendorInvoice') ?>"><i
+													class="fa fa-money"></i> Vendor Invoice </a>
+									</li>
+								</ul>
+							</li>
+							<li class="<?= $this->uri->segment(2) == 'venues' ? 'active' : '' ?>">
+								<a href="<?= admin_url('venues') ?>"><i
+											class="fa fa-map-marker"></i> <span>House of Venues</span></a>
+							</li>
+						<?php } else if (isCustomer()) { ?>
+							<li class="<?= $this->uri->segment(2) == 'index' ? 'active' : '' ?>">
+								<a href="<?= customer_url('index') ?>"><i class="fa fa-dashboard"></i>
+									<span>Dashboard</span> </a>
+							</li>
+							<li class="<?= $this->uri->segment(2) == 'customers' ? 'active' : '' ?>">
+								<a href="<?= customer_url('customers') ?>"><i
+											class="fa fa-user-circle"></i> <span>Team Members</span></a>
+							</li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+									Production Center <span class="caret"></span></a>
+								<ul class="dropdown-menu" role="menu">
+									<li class="<?= $this->uri->segment(2) == 'add' ? 'active' : '' ?>"><a
+												href="<?= customer_url('add') ?>"><i
+													class="fa fa-plus"></i> Add Production</a></li>
+									<li class="<?= $this->uri->segment(2) == 'productions' ? 'active' : '' ?>"><a
+												href="<?= customer_url('productions') ?>"><i
+													class="fa fa-tasks"></i> View Productions</a></li>
+								</ul>
+							</li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+									Vendor Network <span class="caret"></span></a>
+								<ul class="dropdown-menu" role="menu">
+									<li class="<?= $this->uri->segment(2) == 'vendors' ? 'active' : '' ?>">
+										<a href="<?= customer_url('vendors') ?>"><i
+													class="fa fa-user-secret"></i> Vendors </a>
+									</li>
+									<li class="<?= $this->uri->segment(2) == 'vendorInvoice' ? 'active' : '' ?>">
+										<a href="<?= customer_url('vendorInvoice') ?>"><i
+													class="fa fa-money"></i> Vendor Invoice </a>
+									</li>
+								</ul>
+							</li>
+							<li class="<?= $this->uri->segment(2) == 'venues' ? 'active' : '' ?>">
+								<a href="<?= customer_url('venues') ?>"><i
+											class="fa fa-map-marker"></i> <span>House of Venues</span></a>
+							</li>
+						<?php } else if (isVendor()) { ?>
+							<li class="<?= $this->uri->segment(2) == 'index' ? 'active' : '' ?>">
+								<a href="<?= vendor_url('index') ?>"><i class="fa fa-dashboard"></i>
+									<span>Welcome</span> </a>
+							</li>
+							<li class="<?= $this->uri->segment(2) == 'updateProfile' ? 'active' : '' ?>">
+								<a href="<?= vendor_url('updateProfile') ?>"><i
+											class="fa fa-user"></i> Update Profile </a>
+							</li>
+							<li class="<?= $this->uri->segment(2) == 'addVendorInvoice' ? 'active' : '' ?>">
+								<a href="<?= vendor_url('addVendorInvoice') ?>"><i
+											class="fa fa-plus"></i> Submit Invoice </a>
+							</li>
+							<li class="<?= $this->uri->segment(2) == 'vendorInvoice' ? 'active' : '' ?>">
+								<a href="<?= vendor_url('vendorInvoice') ?>"><i
+											class="fa fa-bars"></i> Vendor Invoice </a>
+							</li>
+						<?php } ?>
+						<li>
+							<a href="<?= login_url('logout') ?>"><i
+										class="fa fa-power-off"></i> <span>Sign out</span></a>
+						</li>
+					</ul>
+				</div>
 
-<!--					<li class="dropdown user user-menu">-->
-<!--						<a href="#" class="dropdown-toggle" data-toggle="dropdown">-->
-<!--							<img src="--><?//= base_url('assets/adminLte/dist/img/noImage.png') ?><!--" class="user-image"-->
-<!--								 alt="User Image">-->
-<!--							<span class="hidden-xs">Steven Davis</span>-->
-<!--						</a>-->
-<!--						<ul class="dropdown-menu">-->
-<!--							<li class="user-header">-->
-<!--								<img src="--><?//= base_url('assets/adminLte/dist/img/noImage.png') ?><!--" class="img-circle"-->
-<!--									 alt="User Image">-->
-<!--								<p>-->
-<!--									Steven Davis - Owner-->
-<!--									<small>Last Update - April 12, 2020</small>-->
-<!--								</p>-->
-<!--							</li>-->
-<!--							<li class="user-footer">-->
-<!--								<div class="pull-left">-->
-<!--									<a href="#" class="btn btn-default btn-flat">Profile</a>-->
-<!--								</div>-->
-<!--								<div class="pull-right">-->
-<!--									<a href="--><?//= login_url('logout') ?><!--" class="btn btn-default btn-flat">Sign out</a>-->
-<!--								</div>-->
-<!--							</li>-->
-<!--						</ul>-->
-<!--					</li>-->
-				</ul>
+
+				<div class="navbar-custom-menu">
+					<ul class="nav navbar-nav">
+						<li class="dropdown user user-menu">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+								<img src="<?= getSession()->profilePicture ? base_url('images/' . getSession()->id . '/' . getSession()->profilePicture)
+										: base_url('assets/adminLte/dist/img/noImage.png') ?>" class="user-image"
+									 alt="User Image">
+								<span class="hidden-xs"><?= getSession()->name ?></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li class="user-header">
+									<img src="<?= getSession()->profilePicture ? base_url('images/' . getSession()->id . '/' . getSession()->profilePicture)
+											: base_url('assets/adminLte/dist/img/noImage.png') ?>" class="img-circle"
+										 alt="User Image">
+									<p>
+										<?= getSession()->name ?>
+										<small>Joined Since
+											- <?= date('d F Y', strtotime(getSession()->createAt)) ?></small>
+									</p>
+								</li>
+								<li class="user-footer">
+									<div class="pull-left">
+										<a onclick="loadPopup('<?= login_url('profile') ?>')"
+										   class="btn btn-default btn-flat">Profile</a>
+									</div>
+									<div class="pull-right">
+										<a href="<?= login_url('logout') ?>" class="btn btn-default btn-flat">Sign
+											out</a>
+									</div>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+
 			</div>
+
 		</nav>
 	</header>
-</div>
-<!-- Left side column. contains the logo and sidebar -->
-
-
-<!-- Content Wrapper. Contains page content -->
-<!--<div class="content-wrapper">-->
-<section class="content">
-	<?php
-		if ($this->session->flashdata('success')) {
-			?>
-			<div class="text-center alert alert-success" role="alert">
-				<p style="font-size: 20px">
-					<?php echo $this->session->flashdata('success'); ?></p>
-			</div>
-			<?php
-		}
-		if ($this->session->flashdata('danger')) {
-			?>
-			<div class="alert alert-danger text-center" role="alert">
-				<p style="font-size: 20px">
-					<?php echo $this->session->flashdata('danger'); ?></p>
-			</div>
-		<?php } ?>
-
-	<script>
-		$(function () {
-			var url = window.location;
-			$('.treeview-menu li a[href="' + url + '"]').parent().addClass('active');
-			$('.treeview-menu li a').filter(function () {
-				return this.href == url;
-			}).parent().parent().parent().addClass('active', 'text-danger');
-		});
-	</script>
-
-
-
-
+	<div class="content-wrapper" style="min-height: 743px;">
+		<section class="content">
