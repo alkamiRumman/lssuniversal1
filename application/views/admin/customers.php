@@ -194,7 +194,7 @@
 			"fnFooterCallback": function (nRow, aaData, iStart, iEnd, aiDisplay) {
 				// console.log(nRow);
 			},
-			dom: '<"top"B<"pull-right"f>>irtlp',
+			dom: '<"top"B<"pull-right"fi>>rtlp',
 			// dom: 'lfrtip',
 		});
 	}

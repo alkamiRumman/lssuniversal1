@@ -218,7 +218,7 @@
 			},
 			"fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
 			},
-			dom: '<"top"B<"pull-right"f>>irtlp',
+			dom: '<"top"B<"pull-right"fi>>rtlp',
 			buttons: [
 				{
 					extend: 'print',

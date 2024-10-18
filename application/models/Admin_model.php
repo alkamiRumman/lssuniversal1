@@ -591,4 +591,29 @@ class Admin_model extends CI_Model
 		$this->db->delete(TABLE_VENUEATTACHMENT);
 	}
 
+	// run of show
+	function saveRunOfShow($arr)
+	{
+		$this->db->insert(TABLE_RUNOFSHOW, $arr);
+	}
+
+	function getRunOfShowById($id)
+	{
+		$this->db->select('*');
+		$this->db->from(TABLE_RUNOFSHOW);
+		$this->db->where('venueId', $id);
+		return $this->db->get()->result();
+	}
+
+	function updateRunOfShow($arr, $id)
+	{
+		$this->db->update(TABLE_RUNOFSHOW, $arr, array('id' => $id));
+	}
+
+	function deleteRunOfShow($id)
+	{
+		$this->db->where('venueId', $id);
+		$this->db->delete(TABLE_RUNOFSHOW);
+	}
+
 }

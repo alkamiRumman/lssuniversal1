@@ -1391,4 +1391,49 @@ class Admin extends MY_Controller
 		$this->session->set_flashdata('success', 'Venue Remove Successfully.');
 		redirect('admin/venues');
 	}
+
+	// run of show
+	function runOfShow()
+	{
+		$this->data['title'] = 'Run of Show';
+		$this->makeView('/runOfShow');
+	}
+
+	function addRunShow()
+	{
+		$this->popupView('/addRunShow');
+	}
+
+	function getRunOfShow()
+	{
+		$action = '<div class="dropdown">
+		<button class="btn btn-sm dropdown-toggle" style="color: white; background-color: black" type="button" data-toggle="dropdown">Actions
+		<span class="caret"></span></button>
+		<ul class="dropdown-menu">
+			<li><a href="javascript:void(0);" onclick="">Copy</a></li>
+			<li><a href="javascript:void(0);" onclick="">View</a></li>
+			<li><a href="javascript:void(0);" onclick="">Edit</a></li>
+			<li><a href="javascript:void(0);" onclick="">Save as Template</a></li>
+			<li><a href="javascript:void(0);" onclick="">Archive</a></li>
+			<li><a href="javascript:void(0);" onclick="">Guess Pass</a></li>
+		</ul>
+	  </div>';
+
+		$this->datatables->select('p.title, r.description, r.date, r.time, r.updateAt');
+		$this->datatables->from(TABLE_RUNOFSHOW . ' as r');
+		$this->datatables->join(TABLE_PRODUCTIONS . ' as p', 'r.productionId = p.id');
+		$this->datatables->addColumn('actions', $action, 'id');
+		$this->datatables->generate();
+	}
+
+	function saveRunShow()
+	{
+		$ar['productionId'] = $this->input->post('productionId');
+		$ar['description'] = $this->input->post('description');
+		$ar['date'] = date('Y-m-d', strtotime($this->input->post('date')));
+		$ar['time'] = $this->input->post('time');
+		$this->admin->saveRunOfShow($ar);
+		$this->session->set_flashdata('success', 'Run of Show Added Successfully.');
+		redirect('admin/runOfShow');
+	}
 }
