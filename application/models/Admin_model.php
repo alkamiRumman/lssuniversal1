@@ -599,10 +599,12 @@ class Admin_model extends CI_Model
 
 	function getRunOfShowById($id)
 	{
-		$this->db->select('*');
-		$this->db->from(TABLE_RUNOFSHOW);
-		$this->db->where('venueId', $id);
-		return $this->db->get()->result();
+		$this->db->select('r.*, p.title, p.eventMonth, p.eventYear, v.venueName, v.address, v.city, v.state, v.zip');
+		$this->db->from(TABLE_RUNOFSHOW . ' as r');
+		$this->db->join(TABLE_PRODUCTIONS . ' as p', 'r.productionId = p.id');
+		$this->db->join(TABLE_VENUE . ' as v', 'p.venueId = v.id');
+		$this->db->where('r.id', $id);
+		return $this->db->get()->row();
 	}
 
 	function updateRunOfShow($arr, $id)
@@ -612,8 +614,171 @@ class Admin_model extends CI_Model
 
 	function deleteRunOfShow($id)
 	{
-		$this->db->where('venueId', $id);
+		$this->db->where('id', $id);
 		$this->db->delete(TABLE_RUNOFSHOW);
+	}
+
+	public function insertRunOfShowScheduleTitle($data)
+	{
+		$this->db->insert(TABLE_RUNOFSHOWTITLES, $data);
+		return $this->db->insert_id(); // Return the inserted title ID
+	}
+
+	public function insertRunOfShowScheduleItem($data)
+	{
+		$this->db->insert(TABLE_RUNOFSHOWITEMS, $data);
+	}
+
+	public function getRunOfShowScheduleDetails($runId)
+	{
+		$this->db->select('t.*, i.*');
+		$this->db->from(TABLE_RUNOFSHOWTITLES . ' as t');
+		$this->db->join(TABLE_RUNOFSHOWITEMS . ' as i', 't.id = i.title_id', 'left');
+		$this->db->where('t.productionId', $runId);
+		return $this->db->get()->result_array();
+	}
+
+	public function deleteRunOfShowDetailsByRunId($runId)
+	{
+		// Delete items first to avoid foreign key constraint issues
+		$this->db->where('productionId', $runId);
+		$this->db->delete(TABLE_RUNOFSHOWITEMS); // Assuming 'items' is the table where individual rows are stored
+
+		// Now delete titles
+		$this->db->where('productionId', $runId);
+		$this->db->delete(TABLE_RUNOFSHOWTITLES); // Assuming 'titles' is the table where title rows are stored
+	}
+
+
+	// Crew Travel
+	function saveRunOfShowCrewTravel($arr)
+	{
+		$this->db->insert(TABLE_RUNOFSHOWCREWTRAVEL, $arr);
+	}
+
+	function updateRunOfShowCrewTravel($arr, $id)
+	{
+		$this->db->update(TABLE_RUNOFSHOWCREWTRAVEL, $arr, array('id' => $id));
+	}
+
+	function deleteRunOfShowCrewTravel($id)
+	{
+		$this->db->where('id', $id);
+		$this->db->delete(TABLE_RUNOFSHOWCREWTRAVEL);
+	}
+
+	function getCrewMemberSearch($searchTerm = "", $id)
+	{
+		$this->db->select('*, firstName as text');
+		$this->db->from(TABLE_CREWMEMBERS);
+		$this->db->where("firstName like '%" . $searchTerm . "%'");
+		$this->db->where('productionId', $id);
+		$value = $this->db->get()->result();
+		$data = array();
+		foreach ($value as $val) {
+			$data[] = $val;
+		}
+		return $data;
+	}
+
+	public function getRunOfShowCrewTravelDetails($id)
+	{
+		$this->db->select('t.*, i.firstName, i.lastName');
+		$this->db->from(TABLE_RUNOFSHOWCREWTRAVEL . ' as t');
+		$this->db->join(TABLE_CREWMEMBERS . ' as i', 't.crewMemberId = i.id');
+		$this->db->where('t.productionId', $id);
+		return $this->db->get()->result();
+	}
+
+	public function getRunOfShowCrewTravelById($id)
+	{
+		$this->db->select('t.*, i.firstName, i.lastName');
+		$this->db->from(TABLE_RUNOFSHOWCREWTRAVEL . ' as t');
+		$this->db->join(TABLE_CREWMEMBERS . ' as i', 't.crewMemberId = i.id');
+		$this->db->where('t.id', $id);
+		return $this->db->get()->row();
+	}
+
+	// talent Crew
+	function getTalentCrewMemberSearch($searchTerm = "", $id)
+	{
+		$this->db->select('*, firstName as text');
+		$this->db->from(TABLE_ENTERTAINER);
+		$this->db->where("firstName like '%" . $searchTerm . "%'");
+		$this->db->where('productionId', $id);
+		$value = $this->db->get()->result();
+		$data = array();
+		foreach ($value as $val) {
+			$data[] = $val;
+		}
+		return $data;
+	}
+
+	public function getRunOfShowTalentCrewDetails($id)
+	{
+		$this->db->select('t.*, i.firstName, i.lastName');
+		$this->db->from(TABLE_RUNOFSHOWTALENTCREW . ' as t');
+		$this->db->join(TABLE_ENTERTAINER . ' as i', 't.crewMemberId = i.id');
+		$this->db->where('t.productionId', $id);
+		return $this->db->get()->result();
+	}
+
+	function saveRunOfShowTalentCrew($arr)
+	{
+		$this->db->insert(TABLE_RUNOFSHOWTALENTCREW, $arr);
+	}
+
+	public function getRunOfShowTalentCrewById($id)
+	{
+		$this->db->select('t.*, i.firstName, i.lastName');
+		$this->db->from(TABLE_RUNOFSHOWTALENTCREW . ' as t');
+		$this->db->join(TABLE_ENTERTAINER . ' as i', 't.crewMemberId = i.id');
+		$this->db->where('t.id', $id);
+		return $this->db->get()->row();
+	}
+
+	function updateRunOfShowTalentCrew($arr, $id)
+	{
+		$this->db->update(TABLE_RUNOFSHOWTALENTCREW, $arr, array('id' => $id));
+	}
+
+	function deleteRunOfShowTalentCrew($id)
+	{
+		$this->db->where('id', $id);
+		$this->db->delete(TABLE_RUNOFSHOWTALENTCREW);
+	}
+
+	// Run of Show POC
+	public function getRunOfShowPocDetails($id)
+	{
+		$this->db->select('*');
+		$this->db->from(TABLE_RUNOFSHOWPOC);
+		$this->db->where('productionId', $id);
+		return $this->db->get()->result();
+	}
+
+	function saveRunOfShowPoc($arr)
+	{
+		$this->db->insert(TABLE_RUNOFSHOWPOC, $arr);
+	}
+
+	public function getRunOfShowPocById($id)
+	{
+		$this->db->select('*');
+		$this->db->from(TABLE_RUNOFSHOWPOC);
+		$this->db->where('id', $id);
+		return $this->db->get()->row();
+	}
+
+	function updateRunOfShowPoc($arr, $id)
+	{
+		$this->db->update(TABLE_RUNOFSHOWPOC, $arr, array('id' => $id));
+	}
+
+	function deleteRunOfShowPoc($id)
+	{
+		$this->db->where('id', $id);
+		$this->db->delete(TABLE_RUNOFSHOWPOC);
 	}
 
 }

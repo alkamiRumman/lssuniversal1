@@ -1,18 +1,5 @@
 <div class="row">
 	<div class="col-md-12">
-		<div class="box">
-			<div class="box-body" style="background: black">
-				<div class="row">
-					<div class="col-md-12 text-center">
-						<img class="responsive-img" src="<?= base_url('images/3.png') ?>" alt="User Image">
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<div class="row">
-	<div class="col-md-12">
 		<div class="box box-info">
 			<div class="box-header with-border">
 				<h3 class="box-title"><b>Invoice List</b></h3>

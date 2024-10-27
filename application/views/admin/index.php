@@ -1,20 +1,3 @@
-<!--<pre>Please don't share anything regarding this conversation in fiverr. If you are agree with me then contact my whatsapp +8801521430459 otherwise please ignore it. But please don't talk anything related with this in fiverr.</pre>-->
-<!--<pre>Just want to know, is there any way for you to make the payment outside from the fiverr? so far i know fiverr charges extra from both you and me. I need to pay 20% from the total order amount to them.-->
-<!--So it will be better for me if you can make payment outside of fiverr.</pre>-->
-
-<div class="row">
-	<div class="col-md-12">
-		<div class="box">
-			<div class="box-body" style="background: black">
-				<div class="row">
-					<div class="col-md-12 text-center">
-						<img class="responsive-img" src="<?= base_url('images/3.png') ?>" alt="User Image">
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
 <div class="row">
 	<div class="col-md-6">
 		<div class="box box-success">

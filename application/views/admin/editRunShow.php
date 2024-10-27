@@ -4,31 +4,33 @@
 			<div class="modal-header">
 				<button type="button" class="btn btn-danger pull-right" data-dismiss="modal" aria-label="Close">Close
 				</button>
-				<h4 class="modal-title"><b>Create New Run of Show</b></h4>
+				<h4 class="modal-title"><b>Update Run of Show</b></h4>
 			</div>
-			<form id="formEdit" action="<?= admin_url('saveRunShow') ?>" method="post">
+			<form id="formEdit" action="<?= admin_url('updateRunShow/') . $data->id ?>" method="post">
 				<div class="modal-body">
 					<div class="row">
 						<div class="form-group col-md-12">
 							<label for="productionId">Select Production <b class="text-danger">*</b></label>
 							<select id="productionId" name="productionId" class="form-control selectProduction"
-									style="width: 100%;" required></select>
+									style="width: 100%;" required>
+								<option value="<?= $data->productionId ?>" selected><?= $data->title ?></option>
+							</select>
 						</div>
 					</div>
-					<div class="row detailsTable" style="display: none">
+					<div class="row detailsTable">
 						<div class="form-group col-md-12">
 							<table class="table table-bordered table-sm">
 								<tr>
 									<th>Event Month</th>
-									<td id="eventMonth"></td>
+									<td id="eventMonth"><?= $data->eventMonth ?></td>
 								</tr>
 								<tr>
 									<th>Event Year</th>
-									<td id="eventYear"></td>
+									<td id="eventYear"><?= $data->eventYear ?></td>
 								</tr>
 								<tr>
 									<th>Venue</th>
-									<td id="venue"></td>
+									<td id="venue"><?= $data->venueName ?></td>
 								</tr>
 							</table>
 						</div>
@@ -37,7 +39,7 @@
 						<div class="form-group col-md-12">
 							<label for="description">Description </label>
 							<textarea rows="3" type="text" id="description" name="description"
-									  class="form-control"></textarea>
+									  class="form-control"><?= $data->description ?></textarea>
 						</div>
 					</div>
 					<div class="row">
@@ -45,19 +47,22 @@
 							<label for="date">Date <b class="text-danger">*</b></label>
 							<div class="input-group date">
 								<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-								<input type="text" class="form-control" name="date" id="date" required>
+								<input type="text" class="form-control"
+									   value="<?= date('d M Y', strtotime($data->date)) ?>" name="date" id="date"
+									   required>
 							</div>
 						</div>
 						<div class="form-group col-md-6">
 							<label for="time">Time <b class="text-danger">*</b></label>
-							<input type="time" class="form-control" name="time" id="time" required>
+							<input type="time" value="<?= $data->time ?>" class="form-control" name="time" id="time"
+								   required>
 						</div>
 					</div>
 				</div>
 				<div class="box-footer">
 					<div class="row">
 						<div class="form-group col-md-12">
-							<button type="submit" id="submit" class="btn btn-primary pull-right">Save</button>
+							<button type="submit" id="submit" class="btn btn-primary pull-right">Update</button>
 						</div>
 					</div>
 				</div>
@@ -96,7 +101,6 @@
 		color: #aaa;
 		font-style: italic;
 	}
-
 </style>
 <script>
 	$(document).ready(function () {
@@ -108,7 +112,6 @@
 		$('#date').datepicker({
 			autoclose: true,
 			todayHighlight: true,
-			// startDate: '+0d',
 			format: 'dd M yyyy'
 		});
 

@@ -191,7 +191,7 @@
 					<div class="col-xs-12 col-xs-12">
 						<div class="panel">
 							<div class="panel-heading"><strong>Production Crew Details</strong></div>
-							<div class="panel-body">
+							<div class="panel-body table-responsive">
 								<table class="table">
 									<tr>
 										<th style="background-color: #BCBCBC; color: black">First Name</th>
@@ -270,7 +270,7 @@
 					<div class="col-xs-12 col-xs-12">
 						<div class="panel">
 							<div class="panel-heading"><strong>Entertainers & Crew Members Details</strong></div>
-							<div class="panel-body">
+							<div class="panel-body table-responsive">
 								<table class="table">
 									<tr>
 										<th style="background-color: #BCBCBC; color: black">First Name</th>

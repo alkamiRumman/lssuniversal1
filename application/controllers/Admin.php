@@ -1411,15 +1411,14 @@ class Admin extends MY_Controller
 		<span class="caret"></span></button>
 		<ul class="dropdown-menu">
 			<li><a href="javascript:void(0);" onclick="">Copy</a></li>
-			<li><a href="javascript:void(0);" onclick="">View</a></li>
-			<li><a href="javascript:void(0);" onclick="">Edit</a></li>
-			<li><a href="javascript:void(0);" onclick="">Save as Template</a></li>
+			<li><a href="viewRunOfShowSchedule/$1">View</a></li>
+			<li><a href="javascript:void(0);" onclick="loadPopup(\'' . base_url('admin/editRunShow/$1') . '\')">Edit</a></li>
 			<li><a href="javascript:void(0);" onclick="">Archive</a></li>
 			<li><a href="javascript:void(0);" onclick="">Guess Pass</a></li>
 		</ul>
 	  </div>';
 
-		$this->datatables->select('p.title, r.description, r.date, r.time, r.updateAt');
+		$this->datatables->select('r.id as id, p.title, r.description, r.date, r.time, r.updateAt');
 		$this->datatables->from(TABLE_RUNOFSHOW . ' as r');
 		$this->datatables->join(TABLE_PRODUCTIONS . ' as p', 'r.productionId = p.id');
 		$this->datatables->addColumn('actions', $action, 'id');
@@ -1435,5 +1434,412 @@ class Admin extends MY_Controller
 		$this->admin->saveRunOfShow($ar);
 		$this->session->set_flashdata('success', 'Run of Show Added Successfully.');
 		redirect('admin/runOfShow');
+	}
+
+	function editRunShow($id)
+	{
+		$this->data['data'] = $this->admin->getRunOfShowById($id);
+		$this->popupView('/editRunShow');
+	}
+
+	function updateRunShow($id)
+	{
+		$ar['productionId'] = $this->input->post('productionId');
+		$ar['description'] = $this->input->post('description');
+		$ar['date'] = date('Y-m-d', strtotime($this->input->post('date')));
+		$ar['time'] = $this->input->post('time');
+		$ar['updateAt'] = date('Y-m-d H:i:s');
+		$this->admin->updateRunOfShow($ar, $id);
+		$this->session->set_flashdata('success', 'Run of Show Updated Successfully.');
+		redirect('admin/runOfShow');
+	}
+
+	function viewRunOfShowSchedule($id)
+	{
+		$this->data['title'] = 'View Run Of Show Schedule';
+		$this->data['data'] = $this->admin->getRunOfShowById($id);
+		$this->data['runOfShowDetails'] = $this->admin->getRunOfShowScheduleDetails($id);
+		$this->makeView('/viewRunOfShowSchedule');
+	}
+
+	public function saveRunOfShowScheduleDetails($id)
+	{
+		// Fetch posted data
+		$titles = $this->input->post('title');
+		$items = $this->input->post('items');
+		$start_times = $this->input->post('start');
+		$durations = $this->input->post('duration');
+		$leadCrewMembers = $this->input->post('leadCrewMember');
+		$talents = $this->input->post('talent');
+		$locations = $this->input->post('location');
+		$areas = $this->input->post('area');
+		$details = $this->input->post('details');
+		$privateNotes = $this->input->post('privateNotes');
+
+		if (empty($titles)) {
+			// If no titles are posted, set an error message and redirect
+			$this->session->set_flashdata('error', 'No data submitted or remove all data successfully.');
+			redirect($_SERVER['HTTP_REFERER']);
+			return; // Exit the function to prevent further execution
+		}
+
+		// Delete all existing records related to this run_of_show
+		$this->admin->deleteRunOfShowDetailsByRunId($id);
+
+		// Re-insert the new data
+		foreach ($titles as $titleId => $titleName) {
+			// Insert each title
+			$titleData = [
+				'productionId' => $id,
+				'title_name' => $titleName,
+			];
+			$titleInsertId = $this->admin->insertRunOfShowScheduleTitle($titleData);
+
+			// Insert corresponding items for each title
+			if (!empty($items[$titleId])) {
+				foreach ($items[$titleId] as $index => $itemName) {
+					$itemData = [
+						'title_id' => $titleInsertId,
+						'productionId' => $id,
+						'item_name' => $itemName,
+						'start_time' => $start_times[$titleId][$index],
+						'duration' => $durations[$titleId][$index],
+						'lead_crew_member' => $leadCrewMembers[$titleId][$index],
+						'talent' => $talents[$titleId][$index],
+						'location' => $locations[$titleId][$index],
+						'area_space' => $areas[$titleId][$index],
+						'details' => $details[$titleId][$index],
+						'private_notes' => $privateNotes[$titleId][$index],
+					];
+					$this->admin->insertRunOfShowScheduleItem($itemData);
+				}
+			}
+		}
+
+		// Set success message and redirect
+		$this->session->set_flashdata('success', 'Run of Show Details Updated Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	// crew travel
+	function viewRunOfShowCrewTravel($id)
+	{
+		$this->data['title'] = 'View Run Of Show Crew Travel';
+		$this->data['data'] = $this->admin->getRunOfShowById($id);
+		$this->data['crewTravelDetails'] = $this->admin->getRunOfShowCrewTravelDetails($id);
+		$this->makeView('/viewRunOfShowCrewTravel');
+	}
+
+	function addRunOfShowCrewTravel($id)
+	{
+		$this->data['id'] = $id;
+		$this->popupView('/addRunOfShowCrewTravel');
+	}
+
+	function getCrewMemberSearch($id)
+	{
+		$searchTerm = $this->input->post('searchTerm');
+		$response = $this->admin->getCrewMemberSearch($searchTerm, $id);
+		echo json_encode($response);
+	}
+
+	function saveRunOfShowCrewTravel($id)
+	{
+//		return dnd($_POST);
+		$arr['productionId'] = $id;
+		$arr['crewMemberId'] = $this->input->post('crewMemberId');
+		$arr['travelTypeTo'] = $this->input->post('travelTypeTo');
+		$arr['airlineTo'] = $this->input->post('airlineTo');
+		$arr['specifyTravelTo'] = $this->input->post('specifyTravelTo');
+		$arr['airportFromTo'] = $this->input->post('airportFromTo');
+		$arr['departureTimeTo'] = $this->input->post('departureTimeTo');
+		$arr['confirmationTo'] = $this->input->post('confirmationTo');
+		$arr['airportToTo'] = $this->input->post('airportToTo');
+		$arr['arrivalTimeTo'] = $this->input->post('arrivalTimeTo');
+		$arr['travelTypeFrom'] = $this->input->post('travelTypeFrom');
+		$arr['airlineFrom'] = $this->input->post('airlineFrom');
+		$arr['specifyTravelFrom'] = $this->input->post('specifyTravelFrom');
+		$arr['airportFromFrom'] = $this->input->post('airportFromFrom');
+		$arr['departureTimeFrom'] = $this->input->post('departureTimeFrom');
+		$arr['confirmationFrom'] = $this->input->post('confirmationFrom');
+		$arr['airportToFrom'] = $this->input->post('airportToFrom');
+		$arr['arrivalTimeFrom'] = $this->input->post('arrivalTimeFrom');
+		$arr['groundTransCo'] = $this->input->post('groundTransCo');
+		$arr['vehicleMake'] = $this->input->post('vehicleMake');
+		$arr['driverName'] = $this->input->post('driverName');
+		$arr['driverPhone'] = $this->input->post('driverPhone');
+		$arr['vehicleModel'] = $this->input->post('vehicleModel');
+		$arr['vehicleTag'] = $this->input->post('vehicleTag');
+		$arr['pickUpTime'] = $this->input->post('pickUpTime');
+		$arr['dropOffTime'] = $this->input->post('dropOffTime');
+		$arr['dropOffLocation'] = $this->input->post('dropOffLocation');
+		$arr['groundNotes'] = $this->input->post('groundNotes');
+		$arr['hotelName'] = $this->input->post('hotelName');
+		$arr['hotelStay'] = $this->input->post('hotelStay');
+		$arr['confirmationAccommodation'] = $this->input->post('confirmationAccommodation');
+		$arr['perDiem'] = $this->input->post('perDiem');
+		$arr['hotelAddress'] = $this->input->post('hotelAddress');
+		$arr['airportToAccommodation'] = $this->input->post('airportToAccommodation');
+		$arr['roomType'] = $this->input->post('roomType');
+		$arr['checkIn'] = $this->input->post('checkIn');
+		$arr['checkOut'] = $this->input->post('checkOut');
+		$arr['accommodationNote'] = $this->input->post('accommodationNote');
+		$this->admin->saveRunOfShowCrewTravel($arr);
+		$this->session->set_flashdata('success', 'Production Crew Travel Details Added Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	function editRunOfShowCrewTravel($id)
+	{
+		$this->data['data'] = $this->admin->getRunOfShowCrewTravelById($id);
+		$this->popupView('/editRunOfShowCrewTravel');
+	}
+
+	function updateRunOfShowCrewTravel($id)
+	{
+		$arr['crewMemberId'] = $this->input->post('crewMemberId');
+		$arr['travelTypeTo'] = $this->input->post('travelTypeTo');
+		$arr['airlineTo'] = $this->input->post('airlineTo');
+		$arr['specifyTravelTo'] = $this->input->post('specifyTravelTo');
+		$arr['airportFromTo'] = $this->input->post('airportFromTo');
+		$arr['departureTimeTo'] = $this->input->post('departureTimeTo');
+		$arr['confirmationTo'] = $this->input->post('confirmationTo');
+		$arr['airportToTo'] = $this->input->post('airportToTo');
+		$arr['arrivalTimeTo'] = $this->input->post('arrivalTimeTo');
+		$arr['travelTypeFrom'] = $this->input->post('travelTypeFrom');
+		$arr['airlineFrom'] = $this->input->post('airlineFrom');
+		$arr['specifyTravelFrom'] = $this->input->post('specifyTravelFrom');
+		$arr['airportFromFrom'] = $this->input->post('airportFromFrom');
+		$arr['departureTimeFrom'] = $this->input->post('departureTimeFrom');
+		$arr['confirmationFrom'] = $this->input->post('confirmationFrom');
+		$arr['airportToFrom'] = $this->input->post('airportToFrom');
+		$arr['arrivalTimeFrom'] = $this->input->post('arrivalTimeFrom');
+		$arr['groundTransCo'] = $this->input->post('groundTransCo');
+		$arr['vehicleMake'] = $this->input->post('vehicleMake');
+		$arr['driverName'] = $this->input->post('driverName');
+		$arr['driverPhone'] = $this->input->post('driverPhone');
+		$arr['vehicleModel'] = $this->input->post('vehicleModel');
+		$arr['vehicleTag'] = $this->input->post('vehicleTag');
+		$arr['pickUpTime'] = $this->input->post('pickUpTime');
+		$arr['dropOffTime'] = $this->input->post('dropOffTime');
+		$arr['dropOffLocation'] = $this->input->post('dropOffLocation');
+		$arr['groundNotes'] = $this->input->post('groundNotes');
+		$arr['hotelName'] = $this->input->post('hotelName');
+		$arr['hotelStay'] = $this->input->post('hotelStay');
+		$arr['confirmationAccommodation'] = $this->input->post('confirmationAccommodation');
+		$arr['perDiem'] = $this->input->post('perDiem');
+		$arr['hotelAddress'] = $this->input->post('hotelAddress');
+		$arr['airportToAccommodation'] = $this->input->post('airportToAccommodation');
+		$arr['roomType'] = $this->input->post('roomType');
+		$arr['checkIn'] = $this->input->post('checkIn');
+		$arr['checkOut'] = $this->input->post('checkOut');
+		$arr['accommodationNote'] = $this->input->post('accommodationNote');
+		$arr['updateAt'] = date('Y-m-d H:i:s');
+		$this->admin->updateRunOfShowCrewTravel($arr, $id);
+		$this->session->set_flashdata('success', 'Production Crew Travel Details Update Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	function deleteRunOfShowCrewTravel($id)
+	{
+		$this->admin->deleteRunOfShowCrewTravel($id);
+		$this->session->set_flashdata('success', 'Successfully Removed..');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	// Talent Crew
+	function viewRunOfShowTalentCrew($id)
+	{
+		$this->data['title'] = 'View Run Of Show Talent & Crew';
+		$this->data['data'] = $this->admin->getRunOfShowById($id);
+		$this->data['crewTravelDetails'] = $this->admin->getRunOfShowTalentCrewDetails($id);
+		$this->makeView('/viewRunOfShowTalentCrew');
+	}
+
+	function addRunOfShowTalentCrew($id)
+	{
+		$this->data['id'] = $id;
+		$this->popupView('/addRunOfShowTalentCrew');
+	}
+
+	function getTalentCrewMemberSearch($id)
+	{
+		$searchTerm = $this->input->post('searchTerm');
+		$response = $this->admin->getTalentCrewMemberSearch($searchTerm, $id);
+		echo json_encode($response);
+	}
+
+	function saveRunOfShowTalentCrew($id)
+	{
+//		return dnd($_POST);
+		$arr['productionId'] = $id;
+		$arr['crewMemberId'] = $this->input->post('crewMemberId');
+		$arr['travelTypeTo'] = $this->input->post('travelTypeTo');
+		$arr['airlineTo'] = $this->input->post('airlineTo');
+		$arr['specifyTravelTo'] = $this->input->post('specifyTravelTo');
+		$arr['airportFromTo'] = $this->input->post('airportFromTo');
+		$arr['departureTimeTo'] = $this->input->post('departureTimeTo');
+		$arr['confirmationTo'] = $this->input->post('confirmationTo');
+		$arr['airportToTo'] = $this->input->post('airportToTo');
+		$arr['arrivalTimeTo'] = $this->input->post('arrivalTimeTo');
+		$arr['travelTypeFrom'] = $this->input->post('travelTypeFrom');
+		$arr['airlineFrom'] = $this->input->post('airlineFrom');
+		$arr['specifyTravelFrom'] = $this->input->post('specifyTravelFrom');
+		$arr['airportFromFrom'] = $this->input->post('airportFromFrom');
+		$arr['departureTimeFrom'] = $this->input->post('departureTimeFrom');
+		$arr['confirmationFrom'] = $this->input->post('confirmationFrom');
+		$arr['airportToFrom'] = $this->input->post('airportToFrom');
+		$arr['arrivalTimeFrom'] = $this->input->post('arrivalTimeFrom');
+		$arr['groundTransCo'] = $this->input->post('groundTransCo');
+		$arr['vehicleMake'] = $this->input->post('vehicleMake');
+		$arr['driverName'] = $this->input->post('driverName');
+		$arr['driverPhone'] = $this->input->post('driverPhone');
+		$arr['vehicleModel'] = $this->input->post('vehicleModel');
+		$arr['vehicleTag'] = $this->input->post('vehicleTag');
+		$arr['pickUpTime'] = $this->input->post('pickUpTime');
+		$arr['dropOffTime'] = $this->input->post('dropOffTime');
+		$arr['dropOffLocation'] = $this->input->post('dropOffLocation');
+		$arr['groundNotes'] = $this->input->post('groundNotes');
+		$arr['hotelName'] = $this->input->post('hotelName');
+		$arr['hotelStay'] = $this->input->post('hotelStay');
+		$arr['confirmationAccommodation'] = $this->input->post('confirmationAccommodation');
+		$arr['perDiem'] = $this->input->post('perDiem');
+		$arr['hotelAddress'] = $this->input->post('hotelAddress');
+		$arr['airportToAccommodation'] = $this->input->post('airportToAccommodation');
+		$arr['roomType'] = $this->input->post('roomType');
+		$arr['checkIn'] = $this->input->post('checkIn');
+		$arr['checkOut'] = $this->input->post('checkOut');
+		$arr['accommodationNote'] = $this->input->post('accommodationNote');
+		$this->admin->saveRunOfShowTalentCrew($arr);
+		$this->session->set_flashdata('success', 'Talent & Crew Travel Details Added Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	function editRunOfShowTalentCrew($id)
+	{
+		$this->data['data'] = $this->admin->getRunOfShowTalentCrewById($id);
+		$this->popupView('/editRunOfShowTalentCrew');
+	}
+
+	function updateRunOfShowTalentCrew($id)
+	{
+		$arr['crewMemberId'] = $this->input->post('crewMemberId');
+		$arr['travelTypeTo'] = $this->input->post('travelTypeTo');
+		$arr['airlineTo'] = $this->input->post('airlineTo');
+		$arr['specifyTravelTo'] = $this->input->post('specifyTravelTo');
+		$arr['airportFromTo'] = $this->input->post('airportFromTo');
+		$arr['departureTimeTo'] = $this->input->post('departureTimeTo');
+		$arr['confirmationTo'] = $this->input->post('confirmationTo');
+		$arr['airportToTo'] = $this->input->post('airportToTo');
+		$arr['arrivalTimeTo'] = $this->input->post('arrivalTimeTo');
+		$arr['travelTypeFrom'] = $this->input->post('travelTypeFrom');
+		$arr['airlineFrom'] = $this->input->post('airlineFrom');
+		$arr['specifyTravelFrom'] = $this->input->post('specifyTravelFrom');
+		$arr['airportFromFrom'] = $this->input->post('airportFromFrom');
+		$arr['departureTimeFrom'] = $this->input->post('departureTimeFrom');
+		$arr['confirmationFrom'] = $this->input->post('confirmationFrom');
+		$arr['airportToFrom'] = $this->input->post('airportToFrom');
+		$arr['arrivalTimeFrom'] = $this->input->post('arrivalTimeFrom');
+		$arr['groundTransCo'] = $this->input->post('groundTransCo');
+		$arr['vehicleMake'] = $this->input->post('vehicleMake');
+		$arr['driverName'] = $this->input->post('driverName');
+		$arr['driverPhone'] = $this->input->post('driverPhone');
+		$arr['vehicleModel'] = $this->input->post('vehicleModel');
+		$arr['vehicleTag'] = $this->input->post('vehicleTag');
+		$arr['pickUpTime'] = $this->input->post('pickUpTime');
+		$arr['dropOffTime'] = $this->input->post('dropOffTime');
+		$arr['dropOffLocation'] = $this->input->post('dropOffLocation');
+		$arr['groundNotes'] = $this->input->post('groundNotes');
+		$arr['hotelName'] = $this->input->post('hotelName');
+		$arr['hotelStay'] = $this->input->post('hotelStay');
+		$arr['confirmationAccommodation'] = $this->input->post('confirmationAccommodation');
+		$arr['perDiem'] = $this->input->post('perDiem');
+		$arr['hotelAddress'] = $this->input->post('hotelAddress');
+		$arr['airportToAccommodation'] = $this->input->post('airportToAccommodation');
+		$arr['roomType'] = $this->input->post('roomType');
+		$arr['checkIn'] = $this->input->post('checkIn');
+		$arr['checkOut'] = $this->input->post('checkOut');
+		$arr['accommodationNote'] = $this->input->post('accommodationNote');
+		$arr['updateAt'] = date('Y-m-d H:i:s');
+		$this->admin->updateRunOfShowTalentCrew($arr, $id);
+		$this->session->set_flashdata('success', 'Talent & Crew Travel Details Update Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	function deleteRunOfShowTalentCrew($id)
+	{
+		$this->admin->deleteRunOfShowTalentCrew($id);
+		$this->session->set_flashdata('success', 'Successfully Removed..');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	// Run of Show POC
+	function viewRunOfShowPoc($id)
+	{
+		$this->data['title'] = 'View Run Of Show POC';
+		$this->data['data'] = $this->admin->getRunOfShowById($id);
+		$this->data['pocDetails'] = $this->admin->getRunOfShowPocDetails($id);
+		$this->makeView('/viewRunOfShowPoc');
+	}
+
+	function addRunOfShowPoc($id)
+	{
+		$this->data['id'] = $id;
+		$this->popupView('/addRunOfShowPoc');
+	}
+
+	function saveRunOfShowPoc($id)
+	{
+//		return dnd($_POST);
+		$arr['productionId'] = $id;
+		$arr['name'] = $this->input->post('name');
+		$arr['title'] = $this->input->post('title');
+		$arr['phone'] = $this->input->post('phone');
+		$arr['email'] = $this->input->post('email');
+		$arr['assistantName'] = $this->input->post('assistantName');
+		$arr['assistantTitle'] = $this->input->post('assistantTitle');
+		$arr['assistantPhone'] = $this->input->post('assistantPhone');
+		$arr['assistantEmail'] = $this->input->post('assistantEmail');
+		$arr['backUpName'] = $this->input->post('backUpName');
+		$arr['backUpTitle'] = $this->input->post('backUpTitle');
+		$arr['backUpPhone'] = $this->input->post('backUpPhone');
+		$arr['backUpEmail'] = $this->input->post('backUpEmail');
+		$this->admin->saveRunOfShowPoc($arr);
+		$this->session->set_flashdata('success', 'POC Details Added Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	function editRunOfShowPoc($id)
+	{
+		$this->data['data'] = $this->admin->getRunOfShowPocById($id);
+		$this->popupView('/editRunOfShowPoc');
+	}
+
+	function updateRunOfShowPoc($id)
+	{
+		$arr['productionId'] = $id;
+		$arr['name'] = $this->input->post('name');
+		$arr['title'] = $this->input->post('title');
+		$arr['phone'] = $this->input->post('phone');
+		$arr['email'] = $this->input->post('email');
+		$arr['assistantName'] = $this->input->post('assistantName');
+		$arr['assistantTitle'] = $this->input->post('assistantTitle');
+		$arr['assistantPhone'] = $this->input->post('assistantPhone');
+		$arr['assistantEmail'] = $this->input->post('assistantEmail');
+		$arr['backUpName'] = $this->input->post('backUpName');
+		$arr['backUpTitle'] = $this->input->post('backUpTitle');
+		$arr['backUpPhone'] = $this->input->post('backUpPhone');
+		$arr['backUpEmail'] = $this->input->post('backUpEmail');
+		$arr['updateAt'] = date('Y-m-d H:i:s');
+		$this->admin->updateRunOfShowPoc($arr, $id);
+		$this->session->set_flashdata('success', 'POC Details Update Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	function deleteRunOfShowPoc($id)
+	{
+		$this->admin->deleteRunOfShowPoc($id);
+		$this->session->set_flashdata('success', 'Successfully Removed..');
+		redirect($_SERVER['HTTP_REFERER']);
 	}
 }

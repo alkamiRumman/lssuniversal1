@@ -1,18 +1,5 @@
 <div class="row">
 	<div class="col-md-12">
-		<div class="box">
-			<div class="box-body" style="background: black">
-				<div class="row">
-					<div class="col-md-12 text-center">
-						<img class="responsive-img" src="<?= base_url('images/3.png') ?>" alt="User Image">
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<div class="row">
-	<div class="col-md-12">
 		<div class="box box-info">
 			<div class="box-header with-border">
 				<h3 class="box-title"><b>Run of Show</b></h3>
@@ -27,6 +14,7 @@
 						   style="width: 99% !important;">
 						<thead>
 						<tr>
+							<th>ID</th>
 							<th>Name</th>
 							<th>Description</th>
 							<th>Start Date&Time</th>
@@ -64,7 +52,7 @@
 
 						return formattedDate + ' ' + formattedTime;
 					},
-					"targets": 2,
+					"targets": 3,
 					"sType": 'date'
 				},
 				{
@@ -74,10 +62,10 @@
 						} else {
 							return '--';
 						}
-					}, "targets": 3, "sType": 'date'
+					}, "targets": 4, "sType": 'date'
 				}
 			],
-			'aoColumns': [{mData: "title"}, {mData: "description"}, {mData: "date"}, {mData: "updateAt"}, {
+			'aoColumns': [{mData: "id"}, {mData: "title"}, {mData: "description"}, {mData: "date"}, {mData: "updateAt"}, {
 				mData: "actions",
 				bSortable: false
 			}],
@@ -124,12 +112,6 @@
 					}
 				},
 				{
-					text: 'Templates',
-					action: function (e, dt, node, config) {
-						alert('This will be templates page!');
-					}
-				},
-				{
 					text: 'Archives',
 					action: function (e, dt, node, config) {
 						alert('This will be archives page!');
@@ -146,42 +128,15 @@
 	}
 	$('#reportTable tbody').on('click', 'tr td', function () {
 		var data = $('#reportTable').DataTable().row(this).data();
+		console.log(data.id);
 		var columnIndex = $(this).index();
 		switch (columnIndex) {
-			case 4:
+			case 5:
 				break;
 			default:
-				alert('view run of show');
+				window.location = "<?= base_url('admin/viewRunOfShowSchedule/') ?>" + data.id;
 				break;
 		}
 	});
 
-
-	$('#reportTable tbody').on('change', '.completedStatus', function () {
-		var id = $(this).attr('id');
-		var status = $(this).val();
-		$.ajax({
-			url: '<?= admin_url("updateVendorInvoiceStatus") ?>',
-			type: 'POST',
-			data: {
-				id: id,
-				status: status
-			},
-			success: function (response) {
-				var data = JSON.parse(response);
-				if (data.status == 'success') {
-					toastr.success('Status Update Successfully!');
-					$('#reportTable').DataTable().ajax.reload(null, false);
-				} else {
-					toastr.error('Failed to save. Please try again.');
-				}
-			},
-			error: function () {
-				toastr.error('Failed to save. Please try again.');
-			}
-		});
-		if (status == 'Rejected') {
-			loadPopup('<?= admin_url('viewRejectedReason/') ?>' + id);
-		}
-	});
 </script>
