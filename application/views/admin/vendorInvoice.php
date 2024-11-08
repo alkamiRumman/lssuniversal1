@@ -254,7 +254,6 @@
 				loadPopup('<?= admin_url('viewVendorInvoiceMSA/') ?>' + data.id);
 				break;
 			case 11:
-				break;
 			case 13:
 				break;
 			default:

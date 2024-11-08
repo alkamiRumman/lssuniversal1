@@ -17,7 +17,9 @@
 							</div>
 							<div class="form-group col-md-2">
 								<label for="phone"> Phone <b class="text-danger">*</b></label>
-								<input class="form-control" type="text" name="phone" id="phone"
+								<input class="form-control" type="number" name="phone" id="phone"
+									   min="0" step="1" maxlength="10"
+									   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
 									   value="<?= $data->phone ?>" required>
 							</div>
 							<div class="form-group col-md-2">

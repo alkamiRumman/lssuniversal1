@@ -3,9 +3,6 @@
 		<div class="box box-info">
 			<div class="box-header with-border">
 				<h3 class="box-title"><b>Run of Show</b></h3>
-				<a href="javascript:void(0);"
-				   onclick="loadPopup('<?= admin_url('addRunShow') ?>')"
-				   class="btn btn-sm pull-right" style="color: white; background-color: black">Create New</a>
 			</div>
 			<div class="box-body">
 				<div class="table-responsive">
@@ -77,7 +74,7 @@
 				emptyTable: "<h3>You don't have anything!</h3>"
 			},
 			'bServerSide': true,
-			'sAjaxSource': '<?= admin_url('getRunOfShow') ?>',
+			'sAjaxSource': '<?= admin_url('getArchives') ?>',
 			'fnServerData': function (sSource, aoData, fnCallback) {
 				$.ajax({
 					'dataType': 'json',
@@ -106,13 +103,13 @@
 			buttons: [
 				{
 					text: 'Run of Show',
-					className: 'active',
+					action: function (e, dt, node, config) {
+						window.location = "<?= base_url('admin/runOfShow') ?>";
+					}
 				},
 				{
 					text: 'Archives',
-					action: function (e, dt, node, config) {
-						window.location = "<?= base_url('admin/archives') ?>";
-					}
+					className: 'active',
 				},
 				{
 					text: 'Files',

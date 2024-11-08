@@ -6,7 +6,7 @@
 				</button>
 				<h4 class="modal-title"><b>Add Point Of Contact Details</b></h4>
 			</div>
-			<form id="formEdit" action="<?= admin_url('saveRunOfShowPoc/') . $id ?>" method="post">
+			<form id="formEdit" action="<?= admin_url('saveRunOfShowPoc/') . $runOfShowDetails->id ?>" method="post">
 				<div class="modal-body">
 					<div class="row">
 						<div class="col-md-12">
@@ -26,7 +26,9 @@
 										</div>
 										<div class="col-md-3">
 											<label for="phone">Phone <b class="text-danger text-bold">*</b></label>
-											<input class="form-control input-sm" min="0" type="number" name="phone"
+											<input class="form-control input-sm" type="number" name="phone"
+												   min="0" step="1" maxlength="10"
+												   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
 												   id="phone" required>
 										</div>
 										<div class="col-md-3">
@@ -57,8 +59,9 @@
 										</div>
 										<div class="col-md-3">
 											<label for="assistantPhone">Phone </label>
-											<input class="form-control input-sm" min="0" type="number"
-												   name="assistantPhone"
+											<input class="form-control input-sm" type="number"
+												   name="assistantPhone" min="0" step="1" maxlength="10"
+												   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
 												   id="assistantPhone">
 										</div>
 										<div class="col-md-3">
@@ -90,8 +93,9 @@
 										</div>
 										<div class="col-md-3">
 											<label for="backUpPhone">Phone </label>
-											<input class="form-control input-sm" min="0" type="backUpPhone"
-												   name="backUpPhone"
+											<input class="form-control input-sm" type="number"
+												   name="backUpPhone" min="0" step="1" maxlength="10"
+												   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
 												   id="backUpPhone">
 										</div>
 										<div class="col-md-3">
@@ -105,7 +109,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="box-footer">
+				<div class="modal-footer">
 					<div class="row">
 						<div class="form-group col-md-12">
 							<button type="submit" id="submit" class="btn pull-right"

@@ -37,7 +37,7 @@
 													class="fa fa-tasks"></i> View Productions</a></li>
 									<li class="<?= $this->uri->segment(2) == 'runOfShow' ? 'active' : '' ?>"><a
 												href="<?= admin_url('runOfShow') ?>"><i
-													class="fa fa-video-camera"></i> Run Of Show</a></li>
+													class="fa fa-video-camera"></i> Run of Show</a></li>
 								</ul>
 							</li>
 							<li class="dropdown">

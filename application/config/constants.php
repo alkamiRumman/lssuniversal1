@@ -102,6 +102,10 @@ defined('TABLE_RUNOFSHOWTITLES') or define('TABLE_RUNOFSHOWTITLES', "runOfShowTi
 defined('TABLE_RUNOFSHOWCREWTRAVEL') or define('TABLE_RUNOFSHOWCREWTRAVEL', "runOfShowCrewTravel");
 defined('TABLE_RUNOFSHOWTALENTCREW') or define('TABLE_RUNOFSHOWTALENTCREW', "runOfShowTalentCrew");
 defined('TABLE_RUNOFSHOWPOC') or define('TABLE_RUNOFSHOWPOC', "runOfShowPoc");
+defined('TABLE_TIMEDACCESSLINK') or define('TABLE_TIMEDACCESSLINK', "timedAccessLink");
+defined('TABLE_TIMEDACCESSLINKCREWTRAVEL') or define('TABLE_TIMEDACCESSLINKCREWTRAVEL', "timedAccessLinkCrewTravel");
+defined('TABLE_TIMEDACCESSLINKTALENTTRAVEL') or define('TABLE_TIMEDACCESSLINKTALENTTRAVEL', "timedAccessLinkTalentTravel");
+defined('TABLE_TIMEDACCESSLINKPOC') or define('TABLE_TIMEDACCESSLINKPOC', "timedAccessLinkPoc");
 defined('TABLE_USERS') or define('TABLE_USERS', "users");
 define('COMPANY', 'LSS UNIVERSAL');
 define('SHORTNAME', 'LSS');

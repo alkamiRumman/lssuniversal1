@@ -4,22 +4,17 @@
 			<div class="modal-header">
 				<button type="button" class="btn btn-danger pull-right" data-dismiss="modal" aria-label="Close">Close
 				</button>
-				<h4 class="modal-title"><b>Update Run of Show</b></h4>
+				<h4 class="modal-title"><b>Copy Run of Show</b></h4>
 			</div>
-			<form id="formEdit" action="<?= admin_url('updateRunShow/') . $data->id ?>" method="post">
+			<form id="formEdit" action="<?= admin_url('saveCopyRunShow/') . $data->id ?>" method="post">
 				<div class="modal-body">
-					<div class="row">
-						<div class="form-group col-md-12">
-							<label for="productionId">Select Production <b class="text-danger">*</b></label>
-							<select id="productionId" name="productionId" class="form-control selectProduction"
-									style="width: 100%;" required>
-								<option value="<?= $data->productionId ?>" selected><?= $data->title ?></option>
-							</select>
-						</div>
-					</div>
 					<div class="row detailsTable">
 						<div class="form-group col-md-12">
 							<table class="table table-bordered table-sm">
+								<tr>
+									<th>Production Title</th>
+									<td id="eventMonth"><?= $data->title ?></td>
+								</tr>
 								<tr>
 									<th>Event Month</th>
 									<td id="eventMonth"><?= $data->eventMonth ?></td>
@@ -40,6 +35,7 @@
 							<label for="description">Description </label>
 							<textarea rows="3" type="text" id="description" name="description"
 									  class="form-control"><?= $data->description ?></textarea>
+							<input type="hidden" name="productionId" value="<?= $data->productionId ?>">
 						</div>
 					</div>
 					<div class="row">
@@ -62,7 +58,9 @@
 				<div class="box-footer">
 					<div class="row">
 						<div class="form-group col-md-12">
-							<button type="submit" id="submit" class="btn btn-primary pull-right">Update</button>
+							<button type="submit" id="submit" style="background-color: black; color: white"
+									class="btn pull-right">Copy
+							</button>
 						</div>
 					</div>
 				</div>
@@ -102,7 +100,7 @@
 		font-style: italic;
 	}
 
-	td{
+	td {
 		font-weight: normal;
 	}
 </style>

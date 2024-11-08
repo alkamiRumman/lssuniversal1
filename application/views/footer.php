@@ -52,10 +52,6 @@
 		display: inline-block; /* Centers image */
 	}
 
-	.text-center {
-		text-align: center; /* Ensures the image is centered within the column */
-	}
-
 	@media (max-width: 768px) {
 		.responsive-img {
 			height: auto; /* Responsive height on smaller screens */

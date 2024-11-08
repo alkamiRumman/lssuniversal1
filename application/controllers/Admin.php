@@ -1410,19 +1410,53 @@ class Admin extends MY_Controller
 		<button class="btn btn-sm dropdown-toggle" style="color: white; background-color: black" type="button" data-toggle="dropdown">Actions
 		<span class="caret"></span></button>
 		<ul class="dropdown-menu">
-			<li><a href="javascript:void(0);" onclick="">Copy</a></li>
+			<li><a href="javascript:void(0);" onclick="loadPopup(\'' . base_url('admin/copyRunShow/$1') . '\')">Copy</a></li>
 			<li><a href="viewRunOfShowSchedule/$1">View</a></li>
 			<li><a href="javascript:void(0);" onclick="loadPopup(\'' . base_url('admin/editRunShow/$1') . '\')">Edit</a></li>
-			<li><a href="javascript:void(0);" onclick="">Archive</a></li>
-			<li><a href="javascript:void(0);" onclick="">Guess Pass</a></li>
+			<li><a href="' . base_url('admin/changeRunOfShowArchiveStatus/$1') . '" onclick="return confirm(\'Are you sure?\')">Archive</a></li>
+			<li><a href="timeAccessLink/$1" onclick="">Timed Access Link</a></li>
+			<li><a href="' . base_url('admin/deleteRunOfShow/$1') . '" onclick="return confirm(\'Are you sure?\')">Delete</a></li>
 		</ul>
 	  </div>';
 
 		$this->datatables->select('r.id as id, p.title, r.description, r.date, r.time, r.updateAt');
 		$this->datatables->from(TABLE_RUNOFSHOW . ' as r');
 		$this->datatables->join(TABLE_PRODUCTIONS . ' as p', 'r.productionId = p.id');
+		$this->datatables->where(array('r.archivesStatus' => 0));
 		$this->datatables->addColumn('actions', $action, 'id');
 		$this->datatables->generate();
+	}
+
+	function copyRunShow($id)
+	{
+		$this->data['data'] = $this->admin->getRunOfShowById($id);
+		$this->popupView('/copyRunShow');
+	}
+
+	function saveCopyRunShow($id)
+	{
+//		dnp($_POST);
+		$ar['productionId'] = $this->input->post('productionId');
+		$ar['description'] = $this->input->post('description');
+		$ar['date'] = date('Y-m-d', strtotime($this->input->post('date')));
+		$ar['time'] = $this->input->post('time');
+		$this->admin->saveRunOfShow($ar);
+		$runOfShowId = $this->db->insert_id();
+		$this->admin->duplicateRunOfShowSchedule($id, $runOfShowId);
+		$this->admin->duplicateRunOfShowCrewTravel($id, $runOfShowId);
+		$this->admin->duplicateRunOfShowTalentCrew($id, $runOfShowId);
+		$this->admin->duplicateRunOfShowPoc($id, $runOfShowId);
+		$this->session->set_flashdata('success', 'Run of Show Copied Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	function changeRunOfShowArchiveStatus($id)
+	{
+		$arr['archivesStatus'] = 1;
+		$arr['updateAt'] = date('Y-m-d H:i:s');
+		$this->admin->updateRunOfShow($arr, $id);
+		$this->session->set_flashdata('success', 'Run of Show Marked Archived Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
 	}
 
 	function saveRunShow()
@@ -1454,6 +1488,17 @@ class Admin extends MY_Controller
 		redirect('admin/runOfShow');
 	}
 
+	function deleteRunOfShow($id)
+	{
+		$this->admin->deleteRunOfShow($id);
+		$this->admin->deleteRunOfShowDetailsByRunId($id);
+		$this->admin->deleteRunOfShowCrewTravelByRunOfShowId($id);
+		$this->admin->deleteRunOfShowTalentCrewRunOfShowId($id);
+		$this->admin->deleteRunOfShowPocRunOfShowId($id);
+		$this->session->set_flashdata('success', 'Run of Show Deleted Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
 	function viewRunOfShowSchedule($id)
 	{
 		$this->data['title'] = 'View Run Of Show Schedule';
@@ -1465,11 +1510,13 @@ class Admin extends MY_Controller
 	public function saveRunOfShowScheduleDetails($id)
 	{
 		// Fetch posted data
+//		return dnp($_POST);
 		$titles = $this->input->post('title');
 		$items = $this->input->post('items');
 		$start_times = $this->input->post('start');
 		$durations = $this->input->post('duration');
-		$leadCrewMembers = $this->input->post('leadCrewMember');
+		$leadTeamMember = $this->input->post('leadTeamMember');
+		$crewMember = $this->input->post('crewMember');
 		$talents = $this->input->post('talent');
 		$locations = $this->input->post('location');
 		$areas = $this->input->post('area');
@@ -1490,7 +1537,7 @@ class Admin extends MY_Controller
 		foreach ($titles as $titleId => $titleName) {
 			// Insert each title
 			$titleData = [
-				'productionId' => $id,
+				'runOfShowId' => $id,
 				'title_name' => $titleName,
 			];
 			$titleInsertId = $this->admin->insertRunOfShowScheduleTitle($titleData);
@@ -1500,11 +1547,12 @@ class Admin extends MY_Controller
 				foreach ($items[$titleId] as $index => $itemName) {
 					$itemData = [
 						'title_id' => $titleInsertId,
-						'productionId' => $id,
+						'runOfShowId' => $id,
 						'item_name' => $itemName,
 						'start_time' => $start_times[$titleId][$index],
 						'duration' => $durations[$titleId][$index],
-						'lead_crew_member' => $leadCrewMembers[$titleId][$index],
+						'leadTeamMember' => isset($leadTeamMember[$titleId][$index]) ? $leadTeamMember[$titleId][$index] : null,
+						'crew_member' => $crewMember[$titleId][$index],
 						'talent' => $talents[$titleId][$index],
 						'location' => $locations[$titleId][$index],
 						'area_space' => $areas[$titleId][$index],
@@ -1521,6 +1569,43 @@ class Admin extends MY_Controller
 		redirect($_SERVER['HTTP_REFERER']);
 	}
 
+	// archives
+	function archives()
+	{
+		$this->data['title'] = 'Archives';
+		$this->makeView('/archives');
+	}
+
+	function getArchives()
+	{
+		$action = '<div class="dropdown">
+		<button class="btn btn-sm dropdown-toggle" style="color: white; background-color: black" type="button" data-toggle="dropdown">Actions
+		<span class="caret"></span></button>
+		<ul class="dropdown-menu">
+			<li><a href="viewRunOfShowSchedule/$1">View</a></li>
+			<li><a href="' . base_url('admin/changeRunOfShowUnarchivedStatus/$1') . '" onclick="return confirm(\'Are you sure?\')">Unarchived</a></li>
+			<li><a href="' . base_url('admin/deleteRunOfShow/$1') . '" onclick="return confirm(\'Are you sure?\')">Delete</a></li>
+		</ul>
+	  </div>';
+
+		$this->datatables->select('r.id as id, p.title, r.description, r.date, r.time, r.updateAt');
+		$this->datatables->from(TABLE_RUNOFSHOW . ' as r');
+		$this->datatables->join(TABLE_PRODUCTIONS . ' as p', 'r.productionId = p.id');
+		$this->datatables->where(array('r.archivesStatus' => 1));
+		$this->datatables->addColumn('actions', $action, 'id');
+		$this->datatables->generate();
+	}
+
+	function changeRunOfShowUnarchivedStatus($id)
+	{
+		$arr['archivesStatus'] = 0;
+		$arr['updateAt'] = date('Y-m-d H:i:s');
+		$this->admin->updateRunOfShow($arr, $id);
+		$this->session->set_flashdata('success', 'Run of Show marked Unarchived Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+
 	// crew travel
 	function viewRunOfShowCrewTravel($id)
 	{
@@ -1532,7 +1617,7 @@ class Admin extends MY_Controller
 
 	function addRunOfShowCrewTravel($id)
 	{
-		$this->data['id'] = $id;
+		$this->data['runOfShowDetails'] = $this->admin->getRunOfShowById($id);
 		$this->popupView('/addRunOfShowCrewTravel');
 	}
 
@@ -1546,7 +1631,7 @@ class Admin extends MY_Controller
 	function saveRunOfShowCrewTravel($id)
 	{
 //		return dnd($_POST);
-		$arr['productionId'] = $id;
+		$arr['runOfShowId'] = $id;
 		$arr['crewMemberId'] = $this->input->post('crewMemberId');
 		$arr['travelTypeTo'] = $this->input->post('travelTypeTo');
 		$arr['airlineTo'] = $this->input->post('airlineTo');
@@ -1579,7 +1664,6 @@ class Admin extends MY_Controller
 		$arr['confirmationAccommodation'] = $this->input->post('confirmationAccommodation');
 		$arr['perDiem'] = $this->input->post('perDiem');
 		$arr['hotelAddress'] = $this->input->post('hotelAddress');
-		$arr['airportToAccommodation'] = $this->input->post('airportToAccommodation');
 		$arr['roomType'] = $this->input->post('roomType');
 		$arr['checkIn'] = $this->input->post('checkIn');
 		$arr['checkOut'] = $this->input->post('checkOut');
@@ -1629,7 +1713,6 @@ class Admin extends MY_Controller
 		$arr['confirmationAccommodation'] = $this->input->post('confirmationAccommodation');
 		$arr['perDiem'] = $this->input->post('perDiem');
 		$arr['hotelAddress'] = $this->input->post('hotelAddress');
-		$arr['airportToAccommodation'] = $this->input->post('airportToAccommodation');
 		$arr['roomType'] = $this->input->post('roomType');
 		$arr['checkIn'] = $this->input->post('checkIn');
 		$arr['checkOut'] = $this->input->post('checkOut');
@@ -1658,7 +1741,7 @@ class Admin extends MY_Controller
 
 	function addRunOfShowTalentCrew($id)
 	{
-		$this->data['id'] = $id;
+		$this->data['runOfShowDetails'] = $this->admin->getRunOfShowById($id);
 		$this->popupView('/addRunOfShowTalentCrew');
 	}
 
@@ -1672,7 +1755,7 @@ class Admin extends MY_Controller
 	function saveRunOfShowTalentCrew($id)
 	{
 //		return dnd($_POST);
-		$arr['productionId'] = $id;
+		$arr['runOfShowId'] = $id;
 		$arr['crewMemberId'] = $this->input->post('crewMemberId');
 		$arr['travelTypeTo'] = $this->input->post('travelTypeTo');
 		$arr['airlineTo'] = $this->input->post('airlineTo');
@@ -1705,7 +1788,6 @@ class Admin extends MY_Controller
 		$arr['confirmationAccommodation'] = $this->input->post('confirmationAccommodation');
 		$arr['perDiem'] = $this->input->post('perDiem');
 		$arr['hotelAddress'] = $this->input->post('hotelAddress');
-		$arr['airportToAccommodation'] = $this->input->post('airportToAccommodation');
 		$arr['roomType'] = $this->input->post('roomType');
 		$arr['checkIn'] = $this->input->post('checkIn');
 		$arr['checkOut'] = $this->input->post('checkOut');
@@ -1755,7 +1837,6 @@ class Admin extends MY_Controller
 		$arr['confirmationAccommodation'] = $this->input->post('confirmationAccommodation');
 		$arr['perDiem'] = $this->input->post('perDiem');
 		$arr['hotelAddress'] = $this->input->post('hotelAddress');
-		$arr['airportToAccommodation'] = $this->input->post('airportToAccommodation');
 		$arr['roomType'] = $this->input->post('roomType');
 		$arr['checkIn'] = $this->input->post('checkIn');
 		$arr['checkOut'] = $this->input->post('checkOut');
@@ -1784,14 +1865,14 @@ class Admin extends MY_Controller
 
 	function addRunOfShowPoc($id)
 	{
-		$this->data['id'] = $id;
+		$this->data['runOfShowDetails'] = $this->admin->getRunOfShowById($id);
 		$this->popupView('/addRunOfShowPoc');
 	}
 
 	function saveRunOfShowPoc($id)
 	{
 //		return dnd($_POST);
-		$arr['productionId'] = $id;
+		$arr['runOfShowId'] = $id;
 		$arr['name'] = $this->input->post('name');
 		$arr['title'] = $this->input->post('title');
 		$arr['phone'] = $this->input->post('phone');
@@ -1817,7 +1898,6 @@ class Admin extends MY_Controller
 
 	function updateRunOfShowPoc($id)
 	{
-		$arr['productionId'] = $id;
 		$arr['name'] = $this->input->post('name');
 		$arr['title'] = $this->input->post('title');
 		$arr['phone'] = $this->input->post('phone');
@@ -1842,4 +1922,201 @@ class Admin extends MY_Controller
 		$this->session->set_flashdata('success', 'Successfully Removed..');
 		redirect($_SERVER['HTTP_REFERER']);
 	}
+
+	// Timed Access Link
+	function timeAccessLink($id)
+	{
+		$this->data['title'] = 'Timed Access Link';
+		$this->data['data'] = $this->admin->getRunOfShowById($id);
+		$this->data['timedAccessLink'] = $this->admin->getTimedAccessLinkDetailsByRunOfShowId($id);
+		$this->data['timedAccessLinkCrewTravel'] = $this->admin->getTimedAccessLinkCrewTravelDetailsByRunOfShowId($id);
+		$this->data['timedAccessLinkTalentTravel'] = $this->admin->getTimedAccessLinkTalentTravelDetailsByRunOfShowId($id);
+		$this->data['timedAccessLinkPOC'] = $this->admin->getTimedAccessLinkPocDetailsByRunOfShowId($id);
+//		return dnp($this->data);
+		$this->makeView('/timeAccessLink');
+	}
+
+	function addTimeAccessLink($id)
+	{
+		$this->data['id'] = $id;
+		$this->data['runOfShowDetails'] = $this->admin->getRunOfShowScheduleDetails($id);
+		$this->data['crewTravelDetails'] = $this->admin->getRunOfShowCrewTravelDetails($id);
+		$this->data['talentCrewDetails'] = $this->admin->getRunOfShowTalentCrewDetails($id);
+		$this->data['pocDetails'] = $this->admin->getRunOfShowPocDetails($id);
+		$this->popupView('/addTimeAccessLink');
+	}
+
+	function saveTimeAccessLink($id)
+	{
+//		return dnp($_POST);
+		$arr['runOfShowId'] = $id;
+		$arr['userAccessTitle'] = $this->input->post('userAccessTitle');
+		if ($this->input->post('showProduction')) {
+			$arr['showProduction'] = $this->input->post('showProduction');
+		}
+		if ($this->input->post('showPrivateNote')) {
+			$arr['showPrivateNote'] = $this->input->post('showPrivateNote');
+		}
+		$arr['createBy'] = getSession()->id;
+		$timedAccessLinkId = $this->admin->saveTimedAccessLink($arr);
+
+		$crewTravel = $arr['crewTravel'] = $this->input->post('crewTravel');
+		if ($crewTravel) {
+			foreach ($crewTravel as $ct) {
+				$data = [
+					'runOfShowId' => $id,
+					'timedAccessLinkId' => $timedAccessLinkId,
+					'crewTravelId' => $ct
+				];
+				$this->admin->insertCrewTravel($data);
+			}
+		}
+		$talentTravel = $arr['talentTravel'] = $this->input->post('talentTravel');
+		if ($talentTravel) {
+			foreach ($talentTravel as $tt) {
+				$data = [
+					'runOfShowId' => $id,
+					'timedAccessLinkId' => $timedAccessLinkId,
+					'talentTravelId' => $tt
+				];
+				$this->admin->insertTalentTravel($data);
+			}
+		}
+		$poc = $arr['poc'] = $this->input->post('poc');
+		if ($poc) {
+			foreach ($poc as $p) {
+				$data = [
+					'runOfShowId' => $id,
+					'timedAccessLinkId' => $timedAccessLinkId,
+					'pocId' => $p
+				];
+				$this->admin->insertPoc($data);
+			}
+		}
+
+		$this->session->set_flashdata('success', 'Timed Access Link Successfully Saved..');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	function editTimedAccessLink($id)
+	{
+		$timeAccessLink = $this->data['timedAccessLink'] = $this->admin->getTimedAccessLinkDetailsById($id);
+		$this->data['runOfShowDetails'] = $this->admin->getRunOfShowScheduleDetails($timeAccessLink->runOfShowId);
+		$this->data['crewTravelDetails'] = $this->admin->getRunOfShowCrewTravelDetails($timeAccessLink->runOfShowId);
+		$this->data['talentCrewDetails'] = $this->admin->getRunOfShowTalentCrewDetails($timeAccessLink->runOfShowId);
+		$this->data['pocDetails'] = $this->admin->getRunOfShowPocDetails($timeAccessLink->runOfShowId);
+
+		$crewData = $this->admin->getTimedAccessLinkCrewTravelDetailsById($id);
+		$checkedCrewTravelIds = [];
+		if ($crewData) {
+			foreach ($crewData as $detail) {
+				$checkedCrewTravelIds[] = $detail->crewMemberId;
+			}
+		}
+		$this->data['timedAccessLinkCrewTravel'] = $checkedCrewTravelIds;
+
+		$talentData = $this->admin->getTimedAccessLinkTalentTravelDetailsById($id);
+		$checkedTalentTravelIds = [];
+		if ($talentData) {
+			foreach ($talentData as $detail) {
+				$checkedTalentTravelIds[] = $detail->crewMemberId;
+			}
+		}
+		$this->data['timedAccessLinkTalentTravel'] = $checkedTalentTravelIds;
+
+		$pocData = $this->admin->getTimedAccessLinkPocDetailsById($id);
+		$checkedPocIds = [];
+		if ($pocData) {
+			foreach ($pocData as $detail) {
+				$checkedPocIds[] = $detail->id;
+			}
+		}
+		$this->data['timedAccessLinkPOC'] = $checkedPocIds;
+		$this->popupView('/editTimedAccessLink');
+	}
+
+	function updateTimeAccessLink($id)
+	{
+		$arr['userAccessTitle'] = $this->input->post('userAccessTitle');
+		if ($this->input->post('showProduction')) {
+			$arr['showProduction'] = $this->input->post('showProduction');
+		}
+		if ($this->input->post('showPrivateNote')) {
+			$arr['showPrivateNote'] = $this->input->post('showPrivateNote');
+		}
+		$arr['updateAt'] = date('Y-m-d H:i:s');
+
+		$this->admin->updateTimedAccessLinkById($arr, $id);
+
+		$timeAccessLink = $this->admin->getTimedAccessLinkDetailsById($id);
+		$this->admin->deleteTimedAccessLinkExtend($id);
+
+		$crewTravel = $arr['crewTravel'] = $this->input->post('crewTravel');
+		if ($crewTravel) {
+			foreach ($crewTravel as $ct) {
+				$data = [
+					'runOfShowId' => $timeAccessLink->runOfShowId,
+					'timedAccessLinkId' => $id,
+					'crewTravelId' => $ct
+				];
+				$this->admin->insertCrewTravel($data);
+			}
+		}
+		$talentTravel = $arr['talentTravel'] = $this->input->post('talentTravel');
+		if ($talentTravel) {
+			foreach ($talentTravel as $tt) {
+				$data = [
+					'runOfShowId' => $timeAccessLink->runOfShowId,
+					'timedAccessLinkId' => $id,
+					'talentTravelId' => $tt
+				];
+				$this->admin->insertTalentTravel($data);
+			}
+		}
+		$poc = $arr['poc'] = $this->input->post('poc');
+		if ($poc) {
+			foreach ($poc as $p) {
+				$data = [
+					'runOfShowId' => $timeAccessLink->runOfShowId,
+					'timedAccessLinkId' => $id,
+					'pocId' => $p
+				];
+				$this->admin->insertPoc($data);
+			}
+		}
+		$this->session->set_flashdata('success', 'Timed Access Link Successfully Updated..');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	function updateTimedAccessLinkStatus()
+	{
+		$id = $this->input->post('id');
+		$arr['status'] = $this->input->post('status');
+		$arr['updateAt'] = date('Y-m-d H:i:s');
+		$this->admin->updateTimedAccessLinkById($arr, $id);
+		echo json_encode(array('status' => 'success'));
+	}
+
+	function viewTimedAccessLink($id)
+	{
+		$timeAccessLink = $this->data['timedAccessLink'] = $this->admin->getTimedAccessLinkDetailsById($id);
+		$this->data['data'] = $this->admin->getRunOfShowById($timeAccessLink->runOfShowId);
+//		return dnp($timeAccessLink->showProduction);
+		if ($timeAccessLink->showProduction == 1) {
+			$this->data['runOfShowDetails'] = $this->admin->getRunOfShowScheduleDetails($timeAccessLink->runOfShowId);
+		}
+		$this->data['timedAccessLinkCrewTravel'] = $this->admin->getTimedAccessLinkCrewTravelDetailsById($id);
+		$this->data['timedAccessLinkTalentTravel'] = $this->admin->getTimedAccessLinkTalentTravelDetailsById($id);
+		$this->data['timedAccessLinkPOC'] = $this->admin->getTimedAccessLinkPocDetailsById($id);
+		$this->popupView('/viewTimedAccessLink');
+	}
+
+	function deleteTimedAccessLink($id)
+	{
+		$this->admin->deleteTimedAccessLink($id);
+		$this->admin->deleteTimedAccessLinkExtend($id);
+		$this->session->set_flashdata('success', 'Timed Access Link Successfully Removed..');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
 }

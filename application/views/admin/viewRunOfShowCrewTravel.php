@@ -10,10 +10,16 @@
 					<a class="btn btn-default"
 					   href="<?= admin_url('/viewRunOfShowSchedule/' . $data->id) ?>">Schedule</a>
 					<a class="btn btn-default active">Crew Travel</a>
-					<a class="btn btn-default" href="<?= admin_url('viewRunOfShowTalentCrew/' . $data->id) ?>">Talent Travel</a>
+					<a class="btn btn-default" href="<?= admin_url('viewRunOfShowTalentCrew/' . $data->id) ?>">Talent
+						Travel</a>
 					<a class="btn btn-default" href="<?= admin_url('viewRunOfShowPoc/' . $data->id) ?>">ROS POC</a>
-					<a class="btn" style="color: white; background-color: black"
-					   href="<?= admin_url('runOfShow') ?>">Back</a>
+					<?php if ($data->archivesStatus == 0) { ?>
+						<a class="btn" style="color: white; background-color: black"
+						   href="<?= admin_url('runOfShow') ?>">Back</a>
+					<?php } else { ?>
+						<a class="btn" style="color: white; background-color: black"
+						   href="<?= admin_url('archives') ?>">Back</a>
+					<?php } ?>
 				</div>
 			</div>
 			<div class="box-body">
@@ -39,32 +45,40 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="box box-default" style="background-color: #D3D3D3">
-							<div class="box-header with-border">
-								<h3 class="box-title text-black"><b>SECTION 1: PRODUCTION CREW TRAVEL DETAILS</b></h3>
-								<a href="javascript:void(0);" style="background-color: #2D2D2D; color: white"
-								   onclick="loadPopup('<?= admin_url('addRunOfShowCrewTravel/') . $data->id ?>')"
-								   class="btn btn-sm pull-right"><i class="fa fa-plus"></i> Add New</a>
+							<div class="box-header with-border"
+								 style="background-color: black; color: white; border-top-right-radius: 5px; border-top-left-radius: 5px">
+								<h5 class="box-title" style="font-size: 14px"><b>Production Crew Travel Details</b></h5>
+								<?php if ($data->archivesStatus == 0) { ?>
+									<a href="javascript:void(0);" style="background-color: #2D2D2D; color: white"
+									   onclick="loadPopup('<?= admin_url('addRunOfShowCrewTravel/') . $data->id ?>')"
+									   class="btn btn-xs pull-right"><i class="fa fa-plus"></i> Add New</a>
+								<?php } ?>
 							</div>
 							<div class="box-body">
 								<div class="table-responsive" style="overflow: auto;">
-									<table id="theatreCrewTable" style="width: 99%;"
+									<table id="theatreCrewTable" style="width: 99%;border-bottom: 1px solid black"
 										   class="table table-bordered table-hover table-striped table-theatreCrew">
 										<thead>
 										<tr>
 											<th>Traveler Information</th>
 											<th>Travel Details</th>
+											<?php if ($data->archivesStatus == 0) { ?>
 											<th>Actions</th>
+											<?php } ?>
 										</tr>
 										</thead>
 										<tbody>
 										<?php if ($crewTravelDetails) {
 											foreach ($crewTravelDetails as $crewTravelDetail) { ?>
 												<tr>
-													<td style="vertical-align: middle;"><?= $crewTravelDetail->firstName . ' ' . $crewTravelDetail->lastName ?></td>
-													<td>
+													<td style="vertical-align: middle;border-bottom: 1px solid black"><?= $crewTravelDetail->firstName . ' ' . $crewTravelDetail->lastName ?></td>
+													<td style="border-bottom: 1pt solid black">
 														<table class="table table-sm nested-table">
 															<tr>
-																<th colspan="6" style="background-color: #D3D3D3">Travel-To Info</th>
+																<th colspan="6"
+																	style="background-color: black; color: white">
+																	Travel-To Info
+																</th>
 															</tr>
 															<tr>
 																<th>Travel Type</th>
@@ -92,7 +106,10 @@
 															</tr>
 
 															<tr>
-																<th colspan="6" style="background-color: #D3D3D3">Travel-From Info</th>
+																<th colspan="6"
+																	style="background-color: black; color: white">
+																	Travel-From Info
+																</th>
 															</tr>
 															<tr>
 																<th>Travel Type</th>
@@ -120,7 +137,10 @@
 															</tr>
 
 															<tr>
-																<th colspan="6" style="background-color: #D3D3D3">Ground Trans</th>
+																<th colspan="6"
+																	style="background-color: black; color: white">Ground
+																	Trans
+																</th>
 															</tr>
 															<tr>
 																<th>Ground Trans Co.</th>
@@ -156,7 +176,10 @@
 															</tr>
 
 															<tr style="text-align: center">
-																<th colspan="6" style="background-color: #D3D3D3">Accommodations</th>
+																<th colspan="6"
+																	style="background-color: black; color: white">
+																	Accommodations
+																</th>
 															</tr>
 															<tr>
 																<th>Hotel Name</th>
@@ -177,8 +200,8 @@
 															<tr>
 																<th>Confirmation #</th>
 																<td><?= $crewTravelDetail->confirmationAccommodation ?></td>
-																<th>Airport To</th>
-																<td><?= $crewTravelDetail->airportToAccommodation ?></td>
+																<th></th>
+																<td></td>
 																<th>Check-Out</th>
 																<td><?= $crewTravelDetail->checkOut ? date('h:i a', strtotime($crewTravelDetail->checkOut)) : '' ?></td>
 															</tr>
@@ -192,16 +215,26 @@
 															</tr>
 														</table>
 													</td>
-													<td style="vertical-align: middle;">
-														<a href="javascript:void(0);"
-														   onclick="loadPopup('<?= base_url('admin/editRunOfShowCrewTravel/' . $crewTravelDetail->id) ?>')"
-														   class="btn btn-sm btn-info"><i
-																	class="fa fa-edit"></i></a>
-														<a href="<?= base_url('admin/deleteRunOfShowCrewTravel/' . $crewTravelDetail->id) ?>"
-														   class="btn btn-sm btn-danger"
-														   onclick="return confirm('Are you sure?')">
-															<i class="fa fa-trash"></i></a>
+													<?php if ($data->archivesStatus == 0) { ?>
+													<td style="vertical-align: middle; border-bottom: 1px solid black">
+														<div class="dropdown">
+															<button class="btn btn-sm dropdown-toggle"
+																	style="color: white; background-color: black"
+																	type="button"
+																	data-toggle="dropdown">Actions
+																<span class="caret"></span></button>
+															<ul class="dropdown-menu">
+																<li><a href="javascript:void(0);"
+																	   onclick="loadPopup('<?= base_url('admin/editRunOfShowCrewTravel/' . $crewTravelDetail->id) ?>')">Edit</a>
+																</li>
+																<li>
+																	<a href="<?= base_url('admin/deleteRunOfShowCrewTravel/' . $crewTravelDetail->id) ?>"
+																	   onclick="return confirm('Are you sure?')">Delete</a>
+																</li>
+															</ul>
+														</div>
 													</td>
+													<?php } ?>
 												</tr>
 											<?php }
 										} ?>
@@ -235,23 +268,23 @@
 		margin-top: 7px; /* Add spacing if needed */
 	}
 
-	/* Reduce border thickness */
+	/* Adjustments for nested tables */
+	.nested-table {
+		width: 100%;
+		font-size: 12px;
+		border-spacing: 0;
+		border-collapse: collapse;
+		margin-bottom: 0;
+		padding-bottom: 0;
+	}
+
 	.table-theatreCrew,
 	.table-theatreCrew td,
 	.table-theatreCrew th {
 		border: 1px solid #dee2e6;
 	}
 
-	/* Adjustments for nested tables */
-	.nested-table {
-		width: 100%;
-		font-size: 12px;
-		border-spacing : 0;
-		border-collapse: collapse;
-		margin-bottom: 0;
-		padding-bottom: 0;
-	}
-
+	#theatreCrewTable td,
 	.nested-table td {
 		font-weight: normal;
 	}

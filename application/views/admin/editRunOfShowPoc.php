@@ -26,7 +26,9 @@
 										</div>
 										<div class="col-md-3">
 											<label for="phone">Phone <b class="text-danger text-bold">*</b></label>
-											<input class="form-control input-sm" min="0" type="number" name="phone"
+											<input class="form-control input-sm" type="number" name="phone"
+												   min="0" step="1" maxlength="10"
+												   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
 												   value="<?= $data->phone ?>" id="phone" required>
 										</div>
 										<div class="col-md-3">
@@ -59,8 +61,9 @@
 										</div>
 										<div class="col-md-3">
 											<label for="assistantPhone">Phone </label>
-											<input class="form-control input-sm" min="0" type="number"
-												   name="assistantPhone"
+											<input class="form-control input-sm" type="number"
+												   name="assistantPhone" min="0" step="1" maxlength="10"
+												   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
 												   value="<?= $data->assistantPhone ?>" id="assistantPhone">
 										</div>
 										<div class="col-md-3">
@@ -92,8 +95,9 @@
 										</div>
 										<div class="col-md-3">
 											<label for="backUpPhone">Phone </label>
-											<input class="form-control input-sm" min="0" type="backUpPhone"
-												   name="backUpPhone"
+											<input class="form-control input-sm" type="number"
+												   name="backUpPhone" min="0" step="1" maxlength="10"
+												   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
 												   value="<?= $data->backUpPhone ?>" id="backUpPhone">
 										</div>
 										<div class="col-md-3">

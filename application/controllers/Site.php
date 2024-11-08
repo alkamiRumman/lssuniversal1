@@ -175,6 +175,27 @@ class Site extends MY_Controller
 		}
 	}
 
+	function viewTimedAccessLink($id)
+	{
+		$this->data['title'] = 'Timed Access Link';
+		$timeAccessLink = $this->data['timedAccessLink'] = $this->site->getTimedAccessLinkDetailsById($id);
+		if ($timeAccessLink->status == 0) {
+			$this->data['data'] = $this->site->getRunOfShowById($timeAccessLink->runOfShowId);
+//		return dnp($timeAccessLink->showProduction);
+			if ($timeAccessLink->showProduction == 1) {
+				$this->data['runOfShowDetails'] = $this->site->getRunOfShowScheduleDetails($timeAccessLink->runOfShowId);
+			}
+			$this->data['timedAccessLinkCrewTravel'] = $this->site->getTimedAccessLinkCrewTravelDetailsById($id);
+			$this->data['timedAccessLinkTalentTravel'] = $this->site->getTimedAccessLinkTalentTravelDetailsById($id);
+			$this->data['timedAccessLinkPOC'] = $this->site->getTimedAccessLinkPocDetailsById($id);
+			$this->load->view("header", $this->data);
+			$this->load->view('site/viewTimedAccessLink', $this->data);
+			$this->load->view('footer', $this->data);
+		} else {
+			redirect('https://www.legendarystudioshows.com/404');
+		}
+	}
+
 	function logout()
 	{
 		$this->session->unset_userdata('user');
