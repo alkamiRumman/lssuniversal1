@@ -132,6 +132,36 @@ class Admin extends MY_Controller
 		echo json_encode(array('status' => 'success'));
 	}
 
+	function updateCustomer($id)
+	{
+		$arr['name'] = $this->input->post('name');
+		$arr['type'] = $this->input->post('type');
+		$arr['phone'] = $this->input->post('phone');
+		$arr['businessName'] = $this->input->post('businessName');
+		$arr['ein'] = $this->input->post('ein');
+		$arr['businessAddress'] = $this->input->post('businessAddress');
+		$arr['city'] = $this->input->post('city');
+		$arr['state'] = $this->input->post('state');
+		$arr['zip'] = $this->input->post('zip');
+		$arr['businessLine1'] = $this->input->post('businessLine1');
+		$arr['service1'] = $this->input->post('service1');
+		$arr['businessLine2'] = $this->input->post('businessLine2');
+		$arr['service2'] = $this->input->post('service2');
+		$arr['businessLine3'] = $this->input->post('businessLine3');
+		$arr['service3'] = $this->input->post('service3');
+		if ($this->input->post('username')) {
+			$arr['username'] = $this->input->post('username');
+		}
+		if ($this->input->post('password')) {
+			$arr['password'] = md5($this->input->post('password'));
+		}
+		$arr['updateAt'] = date('Y-m-d H:i:s');
+		$this->admin->updateCustomer($arr, $id);
+//			$this->session->set_flashdata('danger', 'Not Permitted!!');
+		$this->session->set_flashdata('success', 'Updated Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
 	function getVendors()
 	{
 		$action = '<div class="dropdown">
@@ -167,36 +197,6 @@ class Admin extends MY_Controller
 	{
 		$this->data['data'] = $this->admin->getCustomerById($id);
 		$this->popupView('/viewCustomer');
-	}
-
-	function updateCustomer($id)
-	{
-		$arr['name'] = $this->input->post('name');
-		$arr['type'] = $this->input->post('type');
-		$arr['phone'] = $this->input->post('phone');
-		$arr['businessName'] = $this->input->post('businessName');
-		$arr['ein'] = $this->input->post('ein');
-		$arr['businessAddress'] = $this->input->post('businessAddress');
-		$arr['city'] = $this->input->post('city');
-		$arr['state'] = $this->input->post('state');
-		$arr['zip'] = $this->input->post('zip');
-		$arr['businessLine1'] = $this->input->post('businessLine1');
-		$arr['service1'] = $this->input->post('service1');
-		$arr['businessLine2'] = $this->input->post('businessLine2');
-		$arr['service2'] = $this->input->post('service2');
-		$arr['businessLine3'] = $this->input->post('businessLine3');
-		$arr['service3'] = $this->input->post('service3');
-		if ($this->input->post('username')) {
-			$arr['username'] = $this->input->post('username');
-		}
-		if ($this->input->post('password')) {
-			$arr['password'] = md5($this->input->post('password'));
-		}
-		$arr['updateAt'] = date('Y-m-d H:i:s');
-		$this->admin->updateCustomer($arr, $id);
-//			$this->session->set_flashdata('danger', 'Not Permitted!!');
-		$this->session->set_flashdata('success', 'Updated Successfully.');
-		redirect($_SERVER['HTTP_REFERER']);
 	}
 
 	function deleteCustomer($id)
@@ -235,13 +235,6 @@ class Admin extends MY_Controller
 		$this->data['marketingFeeData'] = $this->admin->getMarketingFeeByProductionId($id);
 		$this->data['rentalAndMiscData'] = $this->admin->getRentalAndMiscByProductionId($id);
 		$this->makeView('/add');
-	}
-
-	function getVenueSearch()
-	{
-		$searchTerm = $this->input->post('searchTerm');
-		$response = $this->admin->getVenueSearch($searchTerm);
-		echo json_encode($response);
 	}
 
 	function save()
@@ -308,6 +301,66 @@ class Admin extends MY_Controller
 		redirect('admin/productions');
 	}
 
+	function update($id)
+	{
+		$arr['title'] = $this->input->post('title');
+		$arr['eventMonth'] = $this->input->post('eventMonth');
+		$arr['eventYear'] = $this->input->post('eventYear');
+		$arr['venueId'] = $this->input->post('venueId');
+		$arr['rentalFee'] = $this->input->post('rentalFee');
+		$arr['backLine'] = $this->input->post('backLine');
+		$arr['totalRentalFee'] = $this->input->post('totalRentalFee');
+		$arr['ticketFee'] = $this->input->post('ticketFee');
+		$arr['serviceFee'] = $this->input->post('serviceFee');
+		$arr['totalTicketFee'] = $this->input->post('totalTicketFee');
+		$arr['productionFee'] = $this->input->post('productionFee');
+		$arr['originationFee'] = $this->input->post('originationFee');
+		$arr['coi'] = $this->input->post('coi');
+		$arr['totalProductionFee'] = $this->input->post('totalProductionFee');
+		$arr['standing'] = $this->input->post('standing');
+		$arr['orchesta'] = $this->input->post('orchesta');
+		$arr['mezzanine'] = $this->input->post('mezzanine');
+		$arr['balcony'] = $this->input->post('balcony');
+		$arr['totalVenueCapacity'] = $this->input->post('totalVenueCapacity');
+		$arr['totalCrewCost'] = $this->input->post('totalCrewCost');
+		$arr['totalEntertainerCost'] = $this->input->post('totalEntertainerCost');
+		$arr['totalTheatreCrewCost'] = $this->input->post('totalTheatreCrewCost');
+		$arr['graphicDesign'] = $this->input->post('graphicDesign');
+		$arr['radio'] = $this->input->post('radio');
+		$arr['television'] = $this->input->post('television');
+		$arr['billboard'] = $this->input->post('billboard');
+		$arr['facebook'] = $this->input->post('facebook');
+		$arr['instagram'] = $this->input->post('instagram');
+		$arr['twitter'] = $this->input->post('twitter');
+		$arr['tikTok'] = $this->input->post('tikTok');
+		$arr['printing'] = $this->input->post('printing');
+		$arr['trailerPromo'] = $this->input->post('trailerPromo');
+		$arr['other'] = $this->input->post('other');
+		$arr['totalAdvertising'] = $this->input->post('totalAdvertising');
+		$arr['totalMarketingFees'] = $this->input->post('totalMarketingFees');
+		$arr['totalRentalAndMiscFees'] = $this->input->post('totalRentalAndMiscFees');
+		$arr['totalProductionCost'] = $this->input->post('totalProductionCost');
+		$arr['finalTotalTicketFee'] = $this->input->post('finalTotalTicketFee');
+		$arr['overallProductionCost'] = $this->input->post('overallProductionCost');
+		$arr['baseTicketPrice'] = $this->input->post('baseTicketPrice');
+		$arr['ticketMarkup'] = $this->input->post('ticketMarkup');
+		$arr['newTicketPrice'] = $this->input->post('newTicketPrice');
+		$arr['projectedROI'] = $this->input->post('projectedROI');
+		$arr['updateAt'] = date('Y-m-d H:i:s');
+		$arr['customerStatus'] = 0;
+		$arr['adminStatus'] = 1;
+		$this->admin->update($arr, $id);
+		$this->session->set_flashdata('success', 'Production Update Successfully.');
+		redirect('admin/productions');
+	}
+
+	function getVenueSearch()
+	{
+		$searchTerm = $this->input->post('searchTerm');
+		$response = $this->admin->getVenueSearch($searchTerm);
+		echo json_encode($response);
+	}
+
 	function saveProgress()
 	{
 
@@ -370,6 +423,8 @@ class Admin extends MY_Controller
 		}
 	}
 
+	// crew member
+
 	function productionMarkRead($id)
 	{
 		$arr['customerStatus'] = 0;
@@ -379,7 +434,6 @@ class Admin extends MY_Controller
 		redirect('admin/productions');
 	}
 
-	// crew member
 	function addCrewMember($id)
 	{
 		$this->data['id'] = $id;
@@ -445,27 +499,17 @@ class Admin extends MY_Controller
 		$this->admin->updateCrewMember($arr, $id);
 	}
 
+	// theatre Crew
+
 	function deleteCrewMember($id)
 	{
 		$this->admin->deleteCrewMember($id);
 	}
 
-	// theatre Crew
 	function addTheatreCrew($id)
 	{
 		$this->data['id'] = $id;
 		$this->popupView('/addTheatreCrew');
-	}
-
-	function saveTheatreCrew($id)
-	{
-//		return dnd($_POST);
-		$arr['productionId'] = $id;
-		$arr['memberTitle'] = $this->input->post('memberTitle');
-		$arr['hourlyRate'] = $this->input->post('hourlyRate');
-		$arr['laborHour'] = $this->input->post('laborHour');
-		$arr['total'] = $this->input->post('total');
-		$this->admin->saveTheatreCrew($arr);
 	}
 
 	function editTheatreCrew($id)
@@ -494,33 +538,6 @@ class Admin extends MY_Controller
 	{
 		$this->data['id'] = $id;
 		$this->popupView('/addEntertainer');
-	}
-
-	function saveEntertainer($id)
-	{
-//		return dnd($_POST);
-		$arr['productionId'] = $id;
-		$arr['firstName'] = $this->input->post('firstName');
-		$arr['lastName'] = $this->input->post('lastName');
-		$arr['role'] = $this->input->post('role');
-		$arr['bookingFee'] = $this->input->post('bookingFee');
-		$arr['hotelName'] = $this->input->post('hotelName');
-		$arr['hotelNightlyRate'] = $this->input->post('hotelNightlyRate');
-		$arr['totalNight'] = $this->input->post('totalNight');
-		$arr['perDiem'] = $this->input->post('perDiem');
-		$arr['airline'] = $this->input->post('airline');
-		$arr['airlineFrom'] = $this->input->post('airlineFrom');
-		$arr['airlineTo'] = $this->input->post('airlineTo');
-		$arr['airlineTicketType'] = $this->input->post('airlineTicketType');
-		$arr['rountTrip'] = $this->input->post('rountTrip');
-		$arr['ticketCost'] = $this->input->post('ticketCost');
-		$arr['groundTransCo'] = $this->input->post('groundTransCo');
-		$arr['groundTransCost'] = $this->input->post('groundTransCost');
-		$arr['miscFee'] = $this->input->post('miscFee');
-		$riderFee = $arr['riderFee'] = $this->input->post('riderFee');
-		$entertainerNotes = $arr['entertainerNotes'] = $this->input->post('entertainerNotes');
-		$entertainerCost = $arr['entertainerCost'] = $this->input->post('entertainerCost');
-		$this->admin->saveEntertainer($arr);
 	}
 
 	function editEntertainer($id)
@@ -560,21 +577,13 @@ class Admin extends MY_Controller
 		$this->admin->deleteEntertainer($id);
 	}
 
-	// Marketing Fee
 	function addMarketingFee($id)
 	{
 		$this->data['id'] = $id;
 		$this->popupView('/addMarketingFee');
 	}
 
-	function saveMarketingFee($id)
-	{
-//		return dnd($_POST);
-		$arr['productionId'] = $id;
-		$arr['title'] = $this->input->post('title');
-		$arr['total'] = $this->input->post('total');
-		$this->admin->saveMarketingFee($arr);
-	}
+	// Marketing Fee
 
 	function editMarketingFee($id)
 	{
@@ -595,20 +604,10 @@ class Admin extends MY_Controller
 		$this->admin->deleteMarketingFee($id);
 	}
 
-	// Rentals And Misc Fee
 	function addRentalAndMisc($id)
 	{
 		$this->data['id'] = $id;
 		$this->popupView('/addRentalAndMisc');
-	}
-
-	function saveRentalAndMisc($id)
-	{
-//		return dnd($_POST);
-		$arr['productionId'] = $id;
-		$arr['title'] = $this->input->post('title');
-		$arr['total'] = $this->input->post('total');
-		$this->admin->saveRentalAndMisc($arr);
 	}
 
 	function editRentalAndMisc($id)
@@ -616,6 +615,8 @@ class Admin extends MY_Controller
 		$this->data['data'] = $this->admin->getRentalAndMiscById($id);
 		$this->popupView('/editRentalAndMisc');
 	}
+
+	// Rentals And Misc Fee
 
 	function updateRentalAndMisc($id)
 	{
@@ -711,59 +712,6 @@ class Admin extends MY_Controller
 		$this->data['marketingFeeData'] = $this->admin->getMarketingFeeByProductionId($id);
 		$this->data['rentalAndMiscData'] = $this->admin->getRentalAndMiscByProductionId($id);
 		$this->makeView('/editProduction');
-	}
-
-	function update($id)
-	{
-		$arr['title'] = $this->input->post('title');
-		$arr['eventMonth'] = $this->input->post('eventMonth');
-		$arr['eventYear'] = $this->input->post('eventYear');
-		$arr['venueId'] = $this->input->post('venueId');
-		$arr['rentalFee'] = $this->input->post('rentalFee');
-		$arr['backLine'] = $this->input->post('backLine');
-		$arr['totalRentalFee'] = $this->input->post('totalRentalFee');
-		$arr['ticketFee'] = $this->input->post('ticketFee');
-		$arr['serviceFee'] = $this->input->post('serviceFee');
-		$arr['totalTicketFee'] = $this->input->post('totalTicketFee');
-		$arr['productionFee'] = $this->input->post('productionFee');
-		$arr['originationFee'] = $this->input->post('originationFee');
-		$arr['coi'] = $this->input->post('coi');
-		$arr['totalProductionFee'] = $this->input->post('totalProductionFee');
-		$arr['standing'] = $this->input->post('standing');
-		$arr['orchesta'] = $this->input->post('orchesta');
-		$arr['mezzanine'] = $this->input->post('mezzanine');
-		$arr['balcony'] = $this->input->post('balcony');
-		$arr['totalVenueCapacity'] = $this->input->post('totalVenueCapacity');
-		$arr['totalCrewCost'] = $this->input->post('totalCrewCost');
-		$arr['totalEntertainerCost'] = $this->input->post('totalEntertainerCost');
-		$arr['totalTheatreCrewCost'] = $this->input->post('totalTheatreCrewCost');
-		$arr['graphicDesign'] = $this->input->post('graphicDesign');
-		$arr['radio'] = $this->input->post('radio');
-		$arr['television'] = $this->input->post('television');
-		$arr['billboard'] = $this->input->post('billboard');
-		$arr['facebook'] = $this->input->post('facebook');
-		$arr['instagram'] = $this->input->post('instagram');
-		$arr['twitter'] = $this->input->post('twitter');
-		$arr['tikTok'] = $this->input->post('tikTok');
-		$arr['printing'] = $this->input->post('printing');
-		$arr['trailerPromo'] = $this->input->post('trailerPromo');
-		$arr['other'] = $this->input->post('other');
-		$arr['totalAdvertising'] = $this->input->post('totalAdvertising');
-		$arr['totalMarketingFees'] = $this->input->post('totalMarketingFees');
-		$arr['totalRentalAndMiscFees'] = $this->input->post('totalRentalAndMiscFees');
-		$arr['totalProductionCost'] = $this->input->post('totalProductionCost');
-		$arr['finalTotalTicketFee'] = $this->input->post('finalTotalTicketFee');
-		$arr['overallProductionCost'] = $this->input->post('overallProductionCost');
-		$arr['baseTicketPrice'] = $this->input->post('baseTicketPrice');
-		$arr['ticketMarkup'] = $this->input->post('ticketMarkup');
-		$arr['newTicketPrice'] = $this->input->post('newTicketPrice');
-		$arr['projectedROI'] = $this->input->post('projectedROI');
-		$arr['updateAt'] = date('Y-m-d H:i:s');
-		$arr['customerStatus'] = 0;
-		$arr['adminStatus'] = 1;
-		$this->admin->update($arr, $id);
-		$this->session->set_flashdata('success', 'Production Update Successfully.');
-		redirect('admin/productions');
 	}
 
 	function updateStatus()
@@ -936,6 +884,62 @@ class Admin extends MY_Controller
 		redirect('admin/productions');
 	}
 
+	function saveEntertainer($id)
+	{
+//		return dnd($_POST);
+		$arr['productionId'] = $id;
+		$arr['firstName'] = $this->input->post('firstName');
+		$arr['lastName'] = $this->input->post('lastName');
+		$arr['role'] = $this->input->post('role');
+		$arr['bookingFee'] = $this->input->post('bookingFee');
+		$arr['hotelName'] = $this->input->post('hotelName');
+		$arr['hotelNightlyRate'] = $this->input->post('hotelNightlyRate');
+		$arr['totalNight'] = $this->input->post('totalNight');
+		$arr['perDiem'] = $this->input->post('perDiem');
+		$arr['airline'] = $this->input->post('airline');
+		$arr['airlineFrom'] = $this->input->post('airlineFrom');
+		$arr['airlineTo'] = $this->input->post('airlineTo');
+		$arr['airlineTicketType'] = $this->input->post('airlineTicketType');
+		$arr['rountTrip'] = $this->input->post('rountTrip');
+		$arr['ticketCost'] = $this->input->post('ticketCost');
+		$arr['groundTransCo'] = $this->input->post('groundTransCo');
+		$arr['groundTransCost'] = $this->input->post('groundTransCost');
+		$arr['miscFee'] = $this->input->post('miscFee');
+		$riderFee = $arr['riderFee'] = $this->input->post('riderFee');
+		$entertainerNotes = $arr['entertainerNotes'] = $this->input->post('entertainerNotes');
+		$entertainerCost = $arr['entertainerCost'] = $this->input->post('entertainerCost');
+		$this->admin->saveEntertainer($arr);
+	}
+
+	function saveTheatreCrew($id)
+	{
+//		return dnd($_POST);
+		$arr['productionId'] = $id;
+		$arr['memberTitle'] = $this->input->post('memberTitle');
+		$arr['hourlyRate'] = $this->input->post('hourlyRate');
+		$arr['laborHour'] = $this->input->post('laborHour');
+		$arr['total'] = $this->input->post('total');
+		$this->admin->saveTheatreCrew($arr);
+	}
+
+	function saveMarketingFee($id)
+	{
+//		return dnd($_POST);
+		$arr['productionId'] = $id;
+		$arr['title'] = $this->input->post('title');
+		$arr['total'] = $this->input->post('total');
+		$this->admin->saveMarketingFee($arr);
+	}
+
+	function saveRentalAndMisc($id)
+	{
+//		return dnd($_POST);
+		$arr['productionId'] = $id;
+		$arr['title'] = $this->input->post('title');
+		$arr['total'] = $this->input->post('total');
+		$this->admin->saveRentalAndMisc($arr);
+	}
+
 	function vendorInvoice()
 	{
 		$this->data['title'] = 'Vendor Invoice';
@@ -973,6 +977,59 @@ class Admin extends MY_Controller
 		redirect('admin/vendorInvoice');
 	}
 
+	function updateVendorInvoice($id)
+	{
+		$vendorId = $arr['vendorId'] = $this->input->post('vendorId');
+		$productionId = $arr['productionId'] = $this->input->post('productionId');
+		$arr['submissionDate'] = date('Y-m-d', strtotime($this->input->post('date')));
+		$arr['dueDate'] = date('Y-m-d', strtotime($this->input->post('dueDate')));
+		$arr['net'] = $this->input->post('net');
+		$arr['invoiceAmount'] = $this->input->post('invoiceAmount');
+		$arr['vendorNotes'] = $this->input->post('vendorNotes');
+		$arr['status'] = 'Unpaid';
+		$arr['updateAt'] = date('Y-m-d H:i:s');
+		$arr['adminCustomerStatus'] = 1;
+		$arr['vendorStatus'] = 0;
+		$config['upload_path'] = './images/' . $vendorId . '/' . $productionId;
+		$config['allowed_types'] = 'pdf';
+		$config['overwrite'] = true;
+
+		if (!is_dir('images')) {
+			mkdir('./images', 0777, true);
+		}
+		if (!is_dir('images/' . $vendorId)) {
+			mkdir('./images/' . $vendorId, 0777, true);
+		}
+		if (!is_dir('images/' . $vendorId . '/' . $productionId)) {
+			mkdir('./images/' . $vendorId . '/' . $productionId, 0777, true);
+		}
+		$this->load->library('upload', $config);
+		if (!empty($_FILES['msa']['name'])) {
+			$this->upload->initialize($config);
+
+			if (!$this->upload->do_upload('msa')) {
+				$error = array('error' => $this->upload->display_errors());
+				$this->session->set_flashdata('danger', $error);
+				redirect('admin/vendorInvoice');
+			}
+
+			$file = $this->upload->data('file_name');
+			$arr['msa'] = $file;
+		}
+		$this->admin->updateVendorInvoice($arr, $id);
+		$this->admin->deleteVendorInvoiceDetailsByInvoiceId($id);
+		for ($i = 0; $i < count($this->input->post('description')); $i++) {
+			$ar['vendorInvoiceId'] = $id;
+			$ar['description'] = $this->input->post('description')[$i];
+			$ar['qty'] = $this->input->post('qty')[$i];
+			$ar['price'] = $this->input->post('price')[$i];
+			$ar['total'] = $this->input->post('total')[$i];
+			$this->admin->saveVendorInvoiceDetails($ar);
+		}
+		$this->session->set_flashdata('success', 'Vendor Invoice Update Successfully.');
+		redirect('admin/vendorInvoice');
+	}
+
 	function addVendorInvoice()
 	{
 		$this->popupView('/addVendorInvoice');
@@ -991,7 +1048,6 @@ class Admin extends MY_Controller
 		$response = $this->admin->getProductionSearch($searchTerm);
 		echo json_encode($response);
 	}
-
 
 	function saveVendorInvoice()
 	{
@@ -1097,60 +1153,6 @@ class Admin extends MY_Controller
 		$arr['vendorStatus'] = 0;
 		$this->admin->updateVendorInvoice($arr, $id);
 		echo json_encode(array('status' => 'success'));
-	}
-
-
-	function updateVendorInvoice($id)
-	{
-		$vendorId = $arr['vendorId'] = $this->input->post('vendorId');
-		$productionId = $arr['productionId'] = $this->input->post('productionId');
-		$arr['submissionDate'] = date('Y-m-d', strtotime($this->input->post('date')));
-		$arr['dueDate'] = date('Y-m-d', strtotime($this->input->post('dueDate')));
-		$arr['net'] = $this->input->post('net');
-		$arr['invoiceAmount'] = $this->input->post('invoiceAmount');
-		$arr['vendorNotes'] = $this->input->post('vendorNotes');
-		$arr['status'] = 'Unpaid';
-		$arr['updateAt'] = date('Y-m-d H:i:s');
-		$arr['adminCustomerStatus'] = 1;
-		$arr['vendorStatus'] = 0;
-		$config['upload_path'] = './images/' . $vendorId . '/' . $productionId;
-		$config['allowed_types'] = 'pdf';
-		$config['overwrite'] = true;
-
-		if (!is_dir('images')) {
-			mkdir('./images', 0777, true);
-		}
-		if (!is_dir('images/' . $vendorId)) {
-			mkdir('./images/' . $vendorId, 0777, true);
-		}
-		if (!is_dir('images/' . $vendorId . '/' . $productionId)) {
-			mkdir('./images/' . $vendorId . '/' . $productionId, 0777, true);
-		}
-		$this->load->library('upload', $config);
-		if (!empty($_FILES['msa']['name'])) {
-			$this->upload->initialize($config);
-
-			if (!$this->upload->do_upload('msa')) {
-				$error = array('error' => $this->upload->display_errors());
-				$this->session->set_flashdata('danger', $error);
-				redirect('admin/vendorInvoice');
-			}
-
-			$file = $this->upload->data('file_name');
-			$arr['msa'] = $file;
-		}
-		$this->admin->updateVendorInvoice($arr, $id);
-		$this->admin->deleteVendorInvoiceDetailsByInvoiceId($id);
-		for ($i = 0; $i < count($this->input->post('description')); $i++) {
-			$ar['vendorInvoiceId'] = $id;
-			$ar['description'] = $this->input->post('description')[$i];
-			$ar['qty'] = $this->input->post('qty')[$i];
-			$ar['price'] = $this->input->post('price')[$i];
-			$ar['total'] = $this->input->post('total')[$i];
-			$this->admin->saveVendorInvoiceDetails($ar);
-		}
-		$this->session->set_flashdata('success', 'Vendor Invoice Update Successfully.');
-		redirect('admin/vendorInvoice');
 	}
 
 	function editVendorInvoice($id)
@@ -1523,43 +1525,53 @@ class Admin extends MY_Controller
 		$details = $this->input->post('details');
 		$privateNotes = $this->input->post('privateNotes');
 
-		if (empty($titles)) {
-			// If no titles are posted, set an error message and redirect
-			$this->session->set_flashdata('error', 'No data submitted or remove all data successfully.');
+//		if (empty($titles)) {
+//			// If no titles are posted, set an error message and redirect
+//			$this->session->set_flashdata('danger', 'No data submitted or remove all data successfully.');
+//			redirect($_SERVER['HTTP_REFERER']);
+//			return; // Exit the function to prevent further execution
+//		}
+
+		if (empty($items) && !empty($titles)) {
+			// If no items are posted, set an error message and redirect
+			$this->session->set_flashdata('danger', 'Title must have at least one item!');
 			redirect($_SERVER['HTTP_REFERER']);
 			return; // Exit the function to prevent further execution
 		}
 
+//		return dnp($items);
 		// Delete all existing records related to this run_of_show
 		$this->admin->deleteRunOfShowDetailsByRunId($id);
 
 		// Re-insert the new data
-		foreach ($titles as $titleId => $titleName) {
-			// Insert each title
-			$titleData = [
-				'runOfShowId' => $id,
-				'title_name' => $titleName,
-			];
-			$titleInsertId = $this->admin->insertRunOfShowScheduleTitle($titleData);
+		if ($titles) {
+			foreach ($titles as $titleId => $titleName) {
+				// Insert each title
+				$titleData = [
+					'runOfShowId' => $id,
+					'title_name' => $titleName,
+				];
+				$titleInsertId = $this->admin->insertRunOfShowScheduleTitle($titleData);
 
-			// Insert corresponding items for each title
-			if (!empty($items[$titleId])) {
-				foreach ($items[$titleId] as $index => $itemName) {
-					$itemData = [
-						'title_id' => $titleInsertId,
-						'runOfShowId' => $id,
-						'item_name' => $itemName,
-						'start_time' => $start_times[$titleId][$index],
-						'duration' => $durations[$titleId][$index],
-						'leadTeamMember' => isset($leadTeamMember[$titleId][$index]) ? $leadTeamMember[$titleId][$index] : null,
-						'crew_member' => $crewMember[$titleId][$index],
-						'talent' => $talents[$titleId][$index],
-						'location' => $locations[$titleId][$index],
-						'area_space' => $areas[$titleId][$index],
-						'details' => $details[$titleId][$index],
-						'private_notes' => $privateNotes[$titleId][$index],
-					];
-					$this->admin->insertRunOfShowScheduleItem($itemData);
+				// Insert corresponding items for each title
+				if (!empty($items[$titleId])) {
+					foreach ($items[$titleId] as $index => $itemName) {
+						$itemData = [
+							'title_id' => $titleInsertId,
+							'runOfShowId' => $id,
+							'item_name' => $itemName,
+							'start_time' => $start_times[$titleId][$index],
+							'duration' => $durations[$titleId][$index],
+							'leadTeamMember' => isset($leadTeamMember[$titleId][$index]) ? $leadTeamMember[$titleId][$index] : null,
+							'crew_member' => $crewMember[$titleId][$index],
+							'talent' => $talents[$titleId][$index],
+							'location' => $locations[$titleId][$index],
+							'area_space' => $areas[$titleId][$index],
+							'details' => $details[$titleId][$index],
+							'private_notes' => $privateNotes[$titleId][$index],
+						];
+						$this->admin->insertRunOfShowScheduleItem($itemData);
+					}
 				}
 			}
 		}
@@ -2119,4 +2131,465 @@ class Admin extends MY_Controller
 		redirect($_SERVER['HTTP_REFERER']);
 	}
 
+	// project KPT
+	function project()
+	{
+		$this->data['title'] = 'Project KPI';
+		$this->makeView('/project');
+	}
+
+	function addProject()
+	{
+		$this->popupView('/addProject');
+	}
+
+	function getProjects()
+	{
+		$action = '<div class="dropdown">
+		<button class="btn btn-sm dropdown-toggle" style="color: white; background-color: black" type="button" data-toggle="dropdown">Actions
+		<span class="caret"></span></button>
+		<ul class="dropdown-menu">
+			<li><a href="javascript:void(0);" onclick="loadPopup(\'' . base_url('admin/projectOverview/$1') . '\')">Overview</a></li>
+			<li><a href="javascript:void(0);" onclick="loadPopup(\'' . base_url('admin/projectTeamKpi/$1') . '\')">Team KPI</a></li>
+			<li><a href="' . base_url('admin/changeProjectArchiveStatus/$1') . '" onclick="return confirm(\'Are you sure?\')">Archive</a></li>
+			<li><a href="javascript:void(0);" onclick="loadPopup(\'' . base_url('admin/editProject/$1') . '\')">Edit</a></li>
+			<li><a href="' . base_url('admin/deleteProject/$1') . '" onclick="return confirm(\'Are you sure?\')">Delete</a></li>
+		</ul>
+	  </div>';
+		$this->datatables->select('r.id as id, p.title, r.description, r.updateAt');
+		$this->datatables->from(TABLE_PROJECTS . ' as r');
+		$this->datatables->join(TABLE_PRODUCTIONS . ' as p', 'r.productionId = p.id');
+		$this->datatables->where(array('r.archivesStatus' => 0));
+		$this->datatables->addColumn('actions', $action, 'id');
+		$this->datatables->generate();
+	}
+
+	function changeProjectArchiveStatus($id)
+	{
+		$arr['archivesStatus'] = 1;
+		$arr['updateAt'] = date('Y-m-d H:i:s');
+		$this->admin->updateProject($arr, $id);
+		$this->session->set_flashdata('success', 'Project Marked Archived Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	function updateProject($id)
+	{
+		$ar['productionId'] = $this->input->post('productionId');
+		$ar['description'] = $this->input->post('description');
+		$ar['updateAt'] = date('Y-m-d H:i:s');
+		$this->admin->updateProject($ar, $id);
+		$this->session->set_flashdata('success', 'Project Updated Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	function saveProject()
+	{
+		$ar['productionId'] = $this->input->post('productionId');
+		$ar['description'] = $this->input->post('description');
+		$this->admin->saveProject($ar);
+		$project['projectId'] = $this->db->insert_id();
+		$this->admin->saveProjectOverview($project);
+		$this->session->set_flashdata('success', 'Project Added Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	function editProject($id)
+	{
+		$this->data['data'] = $this->admin->getProjectById($id);
+		$this->popupView('/editProject');
+	}
+
+	function deleteProject($id)
+	{
+		$this->admin->deleteProject($id);
+		$this->admin->deleteProjectOverview($id);
+		$this->session->set_flashdata('success', 'Project Deleted Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	function archivesProject()
+	{
+		$this->data['title'] = 'Archives Project KPI';
+		$this->makeView('/archivesProject');
+	}
+
+	function getArchivesProjects()
+	{
+		$action = '<div class="dropdown">
+		<button class="btn btn-sm dropdown-toggle" style="color: white; background-color: black" type="button" data-toggle="dropdown">Actions
+		<span class="caret"></span></button>
+		<ul class="dropdown-menu">
+			<li><a href="' . base_url('admin/changeProjectUnarchivedStatus/$1') . '" onclick="return confirm(\'Are you sure?\')">Unarchived</a></li>
+			<li><a href="' . base_url('admin/deleteProject/$1') . '" onclick="return confirm(\'Are you sure?\')">Delete</a></li>
+		</ul>
+	  </div>';
+		$this->datatables->select('r.id as id, p.title, r.description, r.updateAt');
+		$this->datatables->from(TABLE_PROJECTS . ' as r');
+		$this->datatables->join(TABLE_PRODUCTIONS . ' as p', 'r.productionId = p.id');
+		$this->datatables->where(array('r.archivesStatus' => 1));
+		$this->datatables->addColumn('actions', $action, 'id');
+		$this->datatables->generate();
+	}
+
+	function changeProjectUnarchivedStatus($id)
+	{
+		$arr['archivesStatus'] = 0;
+		$arr['updateAt'] = date('Y-m-d H:i:s');
+		$this->admin->updateProject($arr, $id);
+		$this->session->set_flashdata('success', 'Project marked Unarchived Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	// project overview
+	function overviewProject($id)
+	{
+		$this->data['title'] = 'Project Overview';
+		$this->data['data'] = $this->admin->getProjectById($id);
+		$this->data['projectOverview'] = $this->admin->getProjectOverviewByProjectId($id);
+		$this->makeView('/overviewProject');
+	}
+
+	function updateProjectOverview($id)
+	{
+//		return dnp($_POST);
+		$arr['synopsis'] = $this->input->post('synopsis');
+		$arr['about'] = $this->input->post('about');
+		$arr['intentions'] = $this->input->post('intentions');
+		$arr['problemStatement'] = $this->input->post('problemStatement');
+		$arr['proposedSolution'] = $this->input->post('proposedSolution');
+		$arr['risks'] = $this->input->post('risks');
+		$arr['updateAt'] = date('Y-m-d H:i:s');
+		$this->admin->updateProjectOverview($arr, $id);
+		$this->session->set_flashdata('success', 'Project Overview Saved Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	function viewProjectOverview($id)
+	{
+		$this->data['data'] = $this->admin->getProjectById($id);
+		$this->data['projectOverview'] = $this->admin->getProjectOverviewByProjectId($id);
+		$this->popupView('/viewProjectOverview');
+	}
+
+	// project KPI
+	function projectKpi($id)
+	{
+		$this->data['title'] = 'Project KPI';
+
+		// Get all titles for the given project ID
+		$titles = $this->admin->getProjectKPITitleByProjectId($id);
+
+		foreach ($titles as $title) {
+			// Get all items under the current title
+			$items = $this->admin->getProjectKPIItemsByTitleId($title->id);
+
+			foreach ($items as $item) {
+				// Initialize an empty data array for updates
+				$itemData = [];
+
+				// Parse the current date and the item's due date
+				$currentDate = new DateTime();
+				$dueDate = new DateTime($item->dueDate);
+
+				// Check if the due date has passed and the status is not "Completed"
+				if (($item->status !== "Completed" && $item->status !== "Blocked") && $dueDate < $currentDate) {
+					$itemData['status'] = 'Late'; // Mark the item as late
+				}
+
+				// Update the item in the database only if changes are needed
+				if (!empty($itemData)) {
+					$this->admin->updateProjectKPIItemById($itemData, $item->id);
+				}
+			}
+		}
+
+		// Pass the necessary data to the view
+		$this->data['data'] = $this->admin->getProjectById($id);
+		$this->data['projectKpiDetails'] = $this->admin->getProjectKpiDetails($id);
+		$this->makeView('/projectKpi');
+	}
+
+
+	function addProjectKpiTitle($id)
+	{
+		$this->data['id'] = $id;
+		$this->data['okr'] = $this->admin->getProjectKPITitleLastOkr($id) ? $this->admin->getProjectKPITitleLastOkr($id)->okr + 1 : 1;
+		$this->popupView('/addProjectKpiTitle');
+	}
+
+	function editProjectKpiTitle($id)
+	{
+		$this->data['data'] = $this->admin->getProjectKPITitleById($id);
+		$this->popupView('/editProjectKpiTitle');
+	}
+
+	function updateProjectKpiTitle($id)
+	{
+		$arr['productionPhase'] = $this->input->post('productionPhase');
+		$arr['timelineTrack'] = $this->input->post('timelineTrack');
+		$arr['timelineGoal'] = $this->input->post('timelineGoal');
+		$arr['timelineAction'] = $this->input->post('timelineAction');
+		$timelineView = $arr['timelineView'] = $this->input->post('timelineView') ? $this->input->post('timelineView') : 0;
+		$milestoneMark = $arr['milestoneMark'] = $this->input->post('milestoneMark') ? $this->input->post('milestoneMark') : 0;
+		$arr['startDate'] = date('Y-m-d', strtotime($this->input->post('startDate')));
+		$arr['dueDate'] = date('Y-m-d', strtotime($this->input->post('dueDate')));
+		$arr['qtr'] = $this->input->post('qtr');
+//		$arr['status'] = $this->input->post('status');
+		$arr['responsibleId'] = $this->input->post('responsibleId');
+		$arr['accountableId'] = $this->input->post('accountableId');
+		$arr['consultedId'] = $this->input->post('consultedId');
+		$arr['informedId'] = $this->input->post('informedId');
+		$arr['xfnName'] = $this->input->post('xfnName');
+		$arr['xfnEmail'] = $this->input->post('xfnEmail');
+		$arr['studioFloName'] = $this->input->post('studioFloName');
+		$arr['studioFloDirectory'] = $this->input->post('studioFloDirectory');
+		$this->admin->updateProjectKPITitleById($arr, $id);
+		$ar = [];
+		$titleDetails = $this->admin->getProjectKPIItemsByTitleId($id);
+		if ($titleDetails) {
+			foreach ($titleDetails as $titleDetail) {
+				if ($timelineView == 1) {
+					$ar['timelineView'] = 1;
+				} else {
+					$ar['timelineView'] = 0;
+				}
+				if ($milestoneMark == 1) {
+					$ar['milestoneMark'] = 1;
+				} else {
+					$ar['milestoneMark'] = 0;
+				}
+				$this->admin->updateProjectKPIItemById($ar, $titleDetail->id);
+			}
+		}
+		$this->session->set_flashdata('success', 'Project KPI Objective Saved Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	function saveProjectKpiTitle($id)
+	{
+//		return dnp($_POST);
+		$arr['projectId'] = $id;
+		$arr['type'] = $this->input->post('type');
+		$arr['okr'] = $this->input->post('okr');
+		$arr['productionPhase'] = $this->input->post('productionPhase');
+		$arr['timelineTrack'] = $this->input->post('timelineTrack');
+		$arr['timelineGoal'] = $this->input->post('timelineGoal');
+		$arr['timelineAction'] = $this->input->post('timelineAction');
+		$arr['timelineView'] = $this->input->post('timelineView') ? $this->input->post('timelineView') : 0;
+		$arr['milestoneMark'] = $this->input->post('milestoneMark') ? $this->input->post('milestoneMark') : 0;
+		$arr['startDate'] = date('Y-m-d', strtotime($this->input->post('startDate')));
+		$arr['dueDate'] = date('Y-m-d', strtotime($this->input->post('dueDate')));
+		$arr['qtr'] = $this->input->post('qtr');
+		$arr['status'] = $this->input->post('status');
+		$arr['responsibleId'] = $this->input->post('responsibleId');
+		$arr['accountableId'] = $this->input->post('accountableId');
+		$arr['consultedId'] = $this->input->post('consultedId');
+		$arr['informedId'] = $this->input->post('informedId');
+		$arr['xfnName'] = $this->input->post('xfnName');
+		$arr['xfnEmail'] = $this->input->post('xfnEmail');
+		$arr['studioFloName'] = $this->input->post('studioFloName');
+		$arr['studioFloDirectory'] = $this->input->post('studioFloDirectory');
+		$this->admin->saveProjectKpiTitle($arr);
+		$this->session->set_flashdata('success', 'Project KPI Objective Saved Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	function deleteProjectKpiTitle($titleId)
+	{
+		$this->admin->deleteProjectKpiTitle($titleId);
+		$this->session->set_flashdata('success', 'Project KPI Objective Removed Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	function deleteProjectKpiItem($titleId, $itemId)
+	{
+		$this->admin->deleteProjectKpiItem($itemId);
+
+		$ar = [];
+		$metric = 0;
+		$titleDetails = $this->admin->getProjectKPIItemsByTitleId($titleId);
+		$totalDetails = count($titleDetails);
+		foreach ($titleDetails as $titleDetail) {
+			$metric += $titleDetail->metrics;
+			$averageMetrics = $ar['metrics'] = round($metric / $totalDetails, 2);
+			if ($averageMetrics == 100) {
+				$ar['markedDate'] = date('Y-m-d');
+				$ar['status'] = 'Completed';
+			} else if ($averageMetrics > 0 && $averageMetrics <= 100) {
+				$ar['markedDate'] = null;
+				$ar['status'] = 'In-Progress';
+			} else {
+				$ar['markedDate'] = null;
+				$ar['status'] = 'Not Started';
+			}
+		}
+		$this->admin->updateProjectKPITitleById($ar, $titleId);
+		$this->session->set_flashdata('success', 'Project KPI Key Result Removed Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	function addProjectKpiItem($projectId, $titleId)
+	{
+		$items = $this->admin->getProjectKPIItemsByTitleId($titleId);
+		$this->data['okr'] = count($items) + 1;
+		$this->data['projectId'] = $projectId;
+		$this->data['titleDetails'] = $this->admin->getProjectKPITitleById($titleId);
+		$this->popupView('/addProjectKpiItem');
+	}
+
+	function updateProjectKpiItem($id)
+	{
+		$projectId = $this->input->post('projectId');
+		$titleId = $this->input->post('titleId');
+		$arr['timelineGoal'] = $this->input->post('timelineGoal');
+		$arr['timelineAction'] = $this->input->post('timelineAction');
+		$arr['startDate'] = date('Y-m-d', strtotime($this->input->post('startDate')));
+		$arr['dueDate'] = date('Y-m-d', strtotime($this->input->post('dueDate')));
+		$arr['qtr'] = $this->input->post('qtr');
+		$status = $arr['status'] = $this->input->post('status');
+		$arr['responsibleId'] = $this->input->post('responsibleId');
+		$arr['accountableId'] = $this->input->post('accountableId');
+		$arr['consultedId'] = $this->input->post('consultedId');
+		$arr['informedId'] = $this->input->post('informedId');
+		$arr['xfnName'] = $this->input->post('xfnName');
+		$arr['xfnEmail'] = $this->input->post('xfnEmail');
+		$arr['studioFloName'] = $this->input->post('studioFloName');
+		$arr['studioFloDirectory'] = $this->input->post('studioFloDirectory');
+		$arr['timelineView'] = $this->input->post('timelineView') ? $this->input->post('timelineView') : 0;
+		$arr['milestoneMark'] = $this->input->post('milestoneMark') ? $this->input->post('milestoneMark') : 0;
+		if ($status == 'Completed') {
+			$arr['metrics'] = 100;
+			$arr['markedDate'] = date('Y-m-d');
+			$arr['blockReason'] = '';
+		} else if ($status == 'In-Progress') {
+			$arr['markedDate'] = null;
+			$arr['metrics'] = 50;
+			$arr['blockReason'] = '';
+		} else if ($status == 'Blocked') {
+			$arr['markedDate'] = null;
+			$arr['metrics'] = 0;
+			$arr['blockReason'] = $this->input->post('blockReason');
+		} else {
+			$arr['markedDate'] = null;
+			$arr['metrics'] = 0;
+			$arr['blockReason'] = '';
+		}
+		$this->admin->updateProjectKPIItemById($arr, $id);
+		$ar = [];
+		$metric = 0;
+		$titleDetails = $this->admin->getProjectKPIItemsByTitleId($titleId);
+		$totalDetails = count($titleDetails);
+		foreach ($titleDetails as $titleDetail) {
+			$metric += $titleDetail->metrics;
+			$averageMetrics = $ar['metrics'] = round($metric / $totalDetails, 2);
+			if ($averageMetrics == 100) {
+				$ar['markedDate'] = date('Y-m-d');
+				$ar['status'] = 'Completed';
+			} else if ($averageMetrics > 0 && $averageMetrics <= 100) {
+				$ar['markedDate'] = null;
+				$ar['status'] = 'In-Progress';
+			} else {
+				$ar['markedDate'] = null;
+				$ar['status'] = 'Not Started';
+			}
+		}
+		$timelineViewResult = 1;
+		$milestoneMarkResult = 1;
+		foreach ($titleDetails as $titleDetail) {
+			if ($titleDetail->timelineView == 0) {
+				$timelineViewResult = 0;
+			}
+			if ($titleDetail->milestoneMark == 0) {
+				$milestoneMarkResult = 0;
+			}
+		}
+		$ar['timelineView'] = $timelineViewResult;
+		$ar['milestoneMark'] = $milestoneMarkResult;
+		$this->admin->updateProjectKPITitleById($ar, $titleId);
+		$this->session->set_flashdata('success', 'Project KPI Key Result Saved Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	function saveProjectKpiItem()
+	{
+//		return dnp($_POST);
+		$projectId = $arr['projectId'] = $this->input->post('projectId');
+		$titleId = $arr['title_id'] = $this->input->post('titleId');
+		$arr['type'] = $this->input->post('type');
+		$arr['okr'] = $this->input->post('okr');
+		$arr['timelineGoal'] = $this->input->post('timelineGoal');
+		$arr['timelineAction'] = $this->input->post('timelineAction');
+		$arr['startDate'] = date('Y-m-d', strtotime($this->input->post('startDate')));
+		$arr['dueDate'] = date('Y-m-d', strtotime($this->input->post('dueDate')));
+		$arr['qtr'] = $this->input->post('qtr');
+		$status = $arr['status'] = $this->input->post('status');
+		$arr['responsibleId'] = $this->input->post('responsibleId');
+		$arr['accountableId'] = $this->input->post('accountableId');
+		$arr['consultedId'] = $this->input->post('consultedId');
+		$arr['informedId'] = $this->input->post('informedId');
+		$arr['xfnName'] = $this->input->post('xfnName');
+		$arr['xfnEmail'] = $this->input->post('xfnEmail');
+		$arr['studioFloName'] = $this->input->post('studioFloName');
+		$arr['studioFloDirectory'] = $this->input->post('studioFloDirectory');
+		$arr['timelineView'] = $this->input->post('timelineView') ? $this->input->post('timelineView') : 0;
+		$arr['milestoneMark'] = $this->input->post('milestoneMark') ? $this->input->post('milestoneMark') : 0;
+		if ($status == 'In-Progress') {
+			$arr['metrics'] = 50;
+			$arr['blockReason'] = '';
+		} else if ($status == 'Completed') {
+			$arr['metrics'] = 100;
+			$arr['blockReason'] = '';
+		} else if ($status == 'Blocked') {
+			$arr['metrics'] = 0;
+			$arr['blockReason'] = $this->input->post('blockReason');
+		}
+		$this->admin->saveProjectKpiItem($arr);
+		$ar = [];
+		$metric = 0;
+		$titleDetails = $this->admin->getProjectKPIItemsByTitleId($titleId);
+		$totalDetails = count($titleDetails);
+		foreach ($titleDetails as $titleDetail) {
+			$metric += $titleDetail->metrics;
+			$ar['metrics'] = round($metric / $totalDetails, 2);
+			if ($titleDetail->timelineView == 1) {
+				$ar['timelineView'] = 1;
+			} else {
+				$ar['timelineView'] = 0;
+			}
+			if ($titleDetail->milestoneMark == 1) {
+				$ar['milestoneMark'] = 1;
+			} else {
+				$ar['milestoneMark'] = 0;
+			}
+		}
+//		return dnp($ar);
+		$this->admin->updateProjectKPITitleById($ar, $titleId);
+		$this->session->set_flashdata('success', 'Project KPI Key Result Saved Successfully.');
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
+	function editProjectKpiItem($id)
+	{
+		$this->data['data'] = $this->admin->getProjectKPIItemsById($id);
+		$this->popupView('/editProjectKpiItem');
+	}
+
+	function viewProjectKPIItemBlockReason($id)
+	{
+		$this->data['data'] = $this->admin->getProjectKPIItemsById($id);
+		$this->popupView('/viewProjectKpiItemBlockReason');
+	}
+
+	function roadmap()
+	{
+		$this->data['title'] = 'Roadmap';
+		$this->makeView('/roadmap');
+	}
+
+	function roadmap1()
+	{
+		$this->data['title'] = 'Roadmap';
+		$this->makeView('/roadmap1');
+	}
 }

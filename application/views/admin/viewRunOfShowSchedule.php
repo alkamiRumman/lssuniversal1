@@ -209,7 +209,7 @@
 													</tr>
 												<?php endforeach;
 											} else { ?>
-												<tr>
+												<tr id="noRecordRow">
 													<th colspan="<?= $data->archivesStatus == 0 ? '11' : '10' ?>"
 														class="text-center text-danger">No data available in table
 													</th>
@@ -297,6 +297,9 @@
 
 		// Add new title row
 		$('#addTitleRow').click(function () {
+			if ($('#noRecordRow').length > 0) {
+				$('#noRecordRow').remove();
+			}
 			titleCounter++; // Increment the title counter for each new title
 
 			let titleRow = `

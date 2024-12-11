@@ -106,6 +106,10 @@ defined('TABLE_TIMEDACCESSLINK') or define('TABLE_TIMEDACCESSLINK', "timedAccess
 defined('TABLE_TIMEDACCESSLINKCREWTRAVEL') or define('TABLE_TIMEDACCESSLINKCREWTRAVEL', "timedAccessLinkCrewTravel");
 defined('TABLE_TIMEDACCESSLINKTALENTTRAVEL') or define('TABLE_TIMEDACCESSLINKTALENTTRAVEL', "timedAccessLinkTalentTravel");
 defined('TABLE_TIMEDACCESSLINKPOC') or define('TABLE_TIMEDACCESSLINKPOC', "timedAccessLinkPoc");
+defined('TABLE_PROJECTS') or define('TABLE_PROJECTS', "projects");
+defined('TABLE_PROJECTOVERVIEW') or define('TABLE_PROJECTOVERVIEW', "projectOverview");
+defined('TABLE_PROJECTKPITITLE') or define('TABLE_PROJECTKPITITLE', "projectKpiTitle");
+defined('TABLE_PROJECTKPIITEM') or define('TABLE_PROJECTKPIITEM', "projectKpiItem");
 defined('TABLE_USERS') or define('TABLE_USERS', "users");
 define('COMPANY', 'LSS UNIVERSAL');
 define('SHORTNAME', 'LSS');

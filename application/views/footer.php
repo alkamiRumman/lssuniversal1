@@ -3,6 +3,9 @@
 <div class="modal fade" id="remoteModal2" role="dialog" aria-hidden="true" data-backdrop="static"
 	 data-keyboard="false" style="z-index: 999999"></div>
 </section>
+<div id="loadingSpinner" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); z-index: 9999; display: flex; justify-content: center; align-items: center;">
+	<i class="fa fa-spinner fa-spin" style="font-size: 80px; color: black;"></i>
+</div>
 </body>
 </html>
 
@@ -30,6 +33,16 @@
 </body>
 </html>
 <style>
+	#loadingSpinner {
+		opacity: 1;
+		transition: opacity 0.5s ease;
+	}
+
+	#loadingSpinner.hidden {
+		opacity: 0;
+		pointer-events: none; /* Ensures it doesn't block interactions after hiding */
+	}
+
 	.box {
 		background: #f9f9f9;
 		border-radius: 8px;
@@ -60,6 +73,17 @@
 	}
 </style>
 <script>
+	window.addEventListener('load', function() {
+		document.getElementById('loadingSpinner').style.display = 'none';
+	});
+
+	window.addEventListener('load', function() {
+		document.getElementById('loadingSpinner').classList.add('hidden');
+		setTimeout(function() {
+			document.getElementById('loadingSpinner').style.display = 'none';
+		}, 500); // Match the transition duration for smooth hiding
+	});
+
 	setTimeout(function () {
 		$('.alert').hide('fast');
 	}, 3000);

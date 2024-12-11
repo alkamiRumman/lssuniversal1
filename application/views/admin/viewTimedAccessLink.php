@@ -23,7 +23,7 @@
 								<tr>
 									<th>User Access Title</th>
 									<td><?= $timedAccessLink->userAccessTitle ?></td>
-									<th>Production Description</th>
+									<th>Description</th>
 									<td><?= $data->description ?></td>
 								</tr>
 							</table>

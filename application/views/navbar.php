@@ -21,10 +21,20 @@
 									<span>Dashboard</span>
 								</a>
 							</li>
-							<li class="<?= $this->uri->segment(2) == 'customers' ? 'active' : '' ?>">
-								<a href="<?= admin_url('customers') ?>"><i
-											class="fa fa-user-circle"></i> <span>Team Members</span></a>
+
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+									Team Members <span class="caret"></span></a>
+								<ul class="dropdown-menu" role="menu">
+									<li class="<?= $this->uri->segment(2) == 'customers' ? 'active' : '' ?>"><a
+												href="<?= admin_url('customers') ?>"><i
+													class="fa fa-user-circle"></i> Team Members</a></li>
+									<li class="<?= $this->uri->segment(2) == 'project' ? 'active' : '' ?>"><a
+												href="<?= admin_url('project') ?>"><i
+													class="fa fa-product-hunt"></i> Project </a></li>
+								</ul>
 							</li>
+
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 									Production Center <span class="caret"></span></a>

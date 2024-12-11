@@ -1,277 +1,185 @@
 <div class="row">
-	<div class="col-md-6">
-		<div class="box box-success">
-			<div class="box-body">
-				<div class="row">
-					<div class="col-md-3">
-						<a href="<?= admin_url('customers') ?>">
-							<div class="stat-box bg-gray-active">
-								<div class="inner">
-									<h3><?= $totalUser ?></h3>
-									<p>Team Members</p>
-								</div>
-								<div class="icon">
-									<i class="fa fa-user"></i>
-								</div>
-							</div>
-						</a>
-					</div>
-					<div class="col-md-3">
-						<a href="<?= admin_url('vendors') ?>">
-							<div class="stat-box bg-gray">
-								<div class="inner">
-									<h3><?= $totalVendor ?></h3>
-									<p>Vendors</p>
-								</div>
-								<div class="icon">
-									<i class="fa fa-user-secret"></i>
-								</div>
-							</div>
-						</a>
-					</div>
-					<div class="col-md-3">
-						<a href="<?= admin_url('productions') ?>">
-							<div class="stat-box bg-black-gradient">
-								<div class="inner">
-									<h3><?= $totalCompleteProduction ?></h3>
-									<p>Completed Productions</p>
-								</div>
-								<div class="icon">
-									<i class="fa fa-tasks"></i>
-								</div>
-							</div>
-						</a>
-					</div>
-					<div class="col-md-3">
-						<a href="<?= admin_url('productions') ?>">
-							<div class="stat-box bg-blue-gradient">
-								<div class="inner">
-									<h3><?= $totalIncompleteProduction ?></h3>
-									<p>In-Progress Productions</p>
-								</div>
-								<div class="icon">
-									<i class="fa fa-tasks"></i>
-								</div>
-							</div>
-						</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="col-md-6">
-		<div class="box box-info">
-			<div class="box-body">
-				<div class="row">
-					<!-- Invoices -->
-					<div class="col-md-3">
-						<div class="stat-box bg-gray-active">
-							<div class="inner">
-								<h3><?= $totalInvoices ?></h3>
-								<p>Total Invoices</p>
-							</div>
-							<div class="icon">
-								<i class="fa fa-file-text"></i>
-							</div>
-						</div>
-					</div>
-					<!-- Unpaid Invoices -->
-					<div class="col-md-3">
-						<div class="stat-box bg-warning">
-							<div class="inner">
-								<h3><?= $totalUnpaidInvoices ?></h3>
-								<p>Unpaid Invoices</p>
-							</div>
-							<div class="icon">
-								<i class="fa fa-hourglass"></i>
-							</div>
-						</div>
-					</div>
-					<!-- Paid Invoices -->
-					<div class="col-md-3">
-						<div class="stat-box bg-success">
-							<div class="inner">
-								<h3><?= $totalPaidInvoices ?></h3>
-								<p>Paid Invoices</p>
-							</div>
-							<div class="icon">
-								<i class="fa fa-check"></i>
-							</div>
-						</div>
-					</div>
-					<!-- Rejected Invoices -->
-					<div class="col-md-3">
-						<div class="stat-box bg-danger">
-							<div class="inner">
-								<h3><?= $totalRejectedInvoices ?></h3>
-								<p>Rejected Invoices</p>
-							</div>
-							<div class="icon">
-								<i class="fa fa-times-circle"></i>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+	<div class="col-md-12">
+		<button type="button" id="ssbutton"
+				class="btn btn-sm btn-outline-primary float-end btn-icon-text me-2 mb-2 mb-md-0">
+			<i class="btn-icon-prepend" data-feather="image"></i>
+			Screenshot
+		</button>
 	</div>
 </div>
-<div class="row">
-	<div class="col-md-12">
-		<div class="box box-primary">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="chartSpace">
-						<canvas id="chartContainer" style="height: 400px; width: 100%;"></canvas>
-					</div>
+<div class="specific">
+	<div class="row">
+		<div class="col-12 col-xl-12 stretch-card">
+			<div class="card">
+				<div class="card-header d-flex align-items-center">
+					<img src="<?= base_url('assets/images/Logo.png') ?>" height="100" alt="<?= COMPANY ?>"
+						 class="me-3">
+					<h3 class="mb-0"><?= COMPANY ?></h3>
 				</div>
 			</div>
 		</div>
+	</div>
+	<div class="card-body" style="margin-top: 10px">
+		<div id='fullcalendar'></div>
 	</div>
 </div>
 <style>
-	.stat-box {
-		position: relative;
-		background: #f7f7f7;
-		border-radius: 8px;
+	.specific {
+		background-color: #ffffff;
+	}
+
+	.fc-event {
+		margin: 0 !important;
+		padding: 0 !important;
+		border: none;
+	}
+
+	.green, .fc-day[data-date].green {
+		background-color: #4CAF50;
 		color: #fff;
-		padding: 20px;
-		margin-bottom: 20px;
-		overflow: hidden;
-		text-align: center;
-		transition: transform 0.3s ease;
-		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+		border-radius: 5px;
 	}
 
-	.stat-box .inner {
-		position: relative;
-		z-index: 2;
-	}
-
-	.stat-box h3 {
-		font-size: 38px;
-		margin: 0;
-		font-weight: 700;
-	}
-
-	.stat-box p {
-		font-size: 15px;
-		margin: 5px 0 0;
-	}
-
-	.stat-box .icon {
-		position: absolute;
-		top: 20px;
-		right: 20px;
-		font-size: 35px;
-		opacity: 0.3;
-		z-index: 1;
-		transition: opacity 0.3s ease;
-	}
-
-	.stat-box:hover {
-		transform: translateY(-5px);
-		box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-	}
-
-	.stat-box:hover .icon {
-		opacity: 0.6;
-	}
-
-	.bg-gray {
-		background-color: #17A2B8 !important;
-	}
-
-	/* Background Color Styles */
-	.bg-gray-active {
-		background-color: #28a745 !important;
-	}
-
-	.bg-warning {
-		background-color: #FFA500; /* Use Bootstrap warning color */
-	}
-
-	.bg-success {
-		background-color: #000000; /* Use Bootstrap success color */
-	}
-
-	.bg-danger {
-		background-color: #DC3545; /* Use Bootstrap danger color */
-	}
-
-	/* Responsive Design */
-	@media (max-width: 768px) {
-		.stat-box h3 {
-			font-size: 28px; /* Smaller font size on smaller screens */
-		}
-
-		.stat-box p {
-			font-size: 16px; /* Smaller font size on smaller screens */
-		}
-
-		.stat-box .icon {
-			font-size: 40px; /* Smaller icon size on smaller screens */
-		}
+	.red, .fc-day[data-date].red {
+		background-color: #F44336;
+		color: #fff;
+		border-radius: 5px;
 	}
 </style>
 <script>
-	$(function () {
-		var cData = JSON.parse(`<?php echo $data1; ?>`);
-		var ctx = document.getElementById("chartContainer");
-		var chart = new Chart(ctx, {
-			type: "bar",
-			options: {
-				responsive: true,
-				maintainAspectRatio: false,
-				scales: {
-					xAxes: [{
-						barPercentage: 1.0
-					}],
-					yAxes: [{
-						ticks: {
-							beginAtZero: true,
-							stepSize: 1,
-							callback: function (value) {
-								return value
-							}
-						}
-					}]
+	document.getElementById('ssbutton').addEventListener('click', function () {
+		var element = document.getElementsByClassName('specific')[0];
+		html2canvas(element, {
+			useCORS: true,
+			backgroundColor: null,
+			onrendered: function (canvas) {
+				// Convert canvas to an image and download it
+				var imgData = canvas.toDataURL('image/png');
+				var a = document.createElement('a');
+				a.href = imgData;
+				a.download = '<?= COMPANY ?>' + '_calendar_' +
+					new Date().toLocaleString('en-us', {
+						day: 'numeric',
+						month: 'short',
+						year: 'numeric'
+					}).split('T')[0] + '.png';
+				a.click();
+			}
+		});
+	});
+	document.addEventListener('DOMContentLoaded', function () {
+		var calendarEl = document.getElementById('fullcalendar');
+		var calendar;
+		var userChangedView = false; // Flag to track user view change
+
+		function initFullCalendar(viewType, height, fontSize) {
+			calendar = new FullCalendar.Calendar(calendarEl, {
+				headerToolbar: {
+					left: "prev,next",
+					center: 'title',
+					right: 'dayGridMonth,listMonth'
 				},
-				gridLines: {
-					display: true
+				fixedWeekCount: true,
+				initialView: viewType,
+				eventOverlap: true,
+				timeZone: 'UTC',
+				hiddenDays: [],
+				navLinks: true,
+				dayMaxEvents: 1,
+				contentHeight: 'auto',
+				aspectRatio: 1.35,
+				height: height,
+				events: [],
+				eventContent: function (arg) {
+					return {
+						html: '<p class="text-center" style="font-weight:bold;font-size:' + fontSize + 'px">$' + arg.event.title + '<br>' + arg.event.extendedProps.description + ' Trades</p>'
+					};
 				},
-				responsive: true,
-				legend: {
-					display: true,
+				eventDidMount: function (arg) {
+					applyDayColor(arg.event.startStr, arg.event.extendedProps.totalTradeAmount);
 				},
-				title: {
-					display: true,
-					position: "top",
-					text: "Production By Team Members",
-					fontSize: 18,
-					fontColor: "#111"
-				},
+				viewDidMount: function () {
+					userChangedView = false; // Reset flag after view is rendered
+				}
+			});
+
+			calendar.on('viewDidMount', function () {
+				userChangedView = false; // Reset flag after the calendar view changes
+			});
+
+			calendar.render();
+		}
+
+		function applyDayColor(dateStr, totalTradeAmount) {
+			var dayElement = calendarEl.querySelector('.fc-day[data-date="' + dateStr + '"]');
+			if (dayElement) {
+				if (totalTradeAmount > 0) {
+					dayElement.classList.add('green');
+					dayElement.classList.remove('red');
+				} else {
+					dayElement.classList.add('red');
+					dayElement.classList.remove('green');
+				}
+			}
+		}
+
+		function determineViewAndHeight() {
+			if (userChangedView) return; // Exit if user changed the view manually
+
+			var viewType = window.innerWidth >= 768 ? 'dayGridMonth' : 'listMonth';
+			var height = window.innerWidth >= 768 ? null : window.innerHeight;
+			var fontSize = window.innerWidth >= 768 ? 17 : 9;
+
+			if (calendar) {
+				var currentView = calendar.view.type;
+				if (currentView !== viewType) {
+					calendar.destroy();
+					initFullCalendar(viewType, height, fontSize);
+				} else if (height !== null && calendar.el.offsetHeight !== height) {
+					calendar.setOption('height', height, fontSize);
+					calendar.render(); // Render the calendar after adjusting the height
+				}
+			} else {
+				initFullCalendar(viewType, height, fontSize);
+			}
+		}
+
+		determineViewAndHeight();
+		window.addEventListener('resize', function () {
+			determineViewAndHeight();
+		});
+
+		$.ajax({
+			url: '<?= user_url('getAllTrade') ?>',
+			type: 'GET',
+			dataType: 'json',
+			success: function (data) {
+				var calendarEvents = [];
+				data.forEach(function (eventData) {
+					var title = Math.abs(eventData.totalTradeAmount);
+					var color = eventData.totalTradeAmount < 0 ? '#F44336' : '#4CAF50';
+					calendarEvents.push({
+						id: eventData.id,
+						start: eventData.entryDate,
+						end: eventData.entryDate,
+						allDay: true,
+						title: title,
+						description: eventData.totalTrade,
+						backgroundColor: color,
+						totalTradeAmount: eventData.totalTradeAmount, // Store totalTradeAmount in event data
+					});
+				});
+				calendar.setOption('eventSources', [calendarEvents]);
 			},
-			data: {
-				labels: cData.label,
-				datasets: [
-					{
-						type: "bar",
-						backgroundColor: '#212121',
-						borderWidth: 1,
-						barThickness: 1,
-						label: "Complete",
-						data: cData.totalComplete
-					},
-					{
-						type: "bar",
-						backgroundColor: '#0081CE',
-						borderWidth: 1,
-						barThickness: 1,
-						label: "In-progress",
-						data: cData.totalIncomplete
-					}
-				]
+			error: function (xhr, status, error) {
+				console.error('Error fetching data from server:', error);
+			}
+		});
+
+		// Detect user view change and set flag
+		calendarEl.addEventListener('click', function () {
+			if (!userChangedView) {
+				userChangedView = true;
 			}
 		});
 	});

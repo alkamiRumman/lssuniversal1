@@ -175,13 +175,18 @@ class Admin_model extends CI_Model
 		$this->db->update(TABLE_USERS, $arr, array('id' => $id));
 	}
 
+	function update($arr, $id)
+	{
+		$this->db->update(TABLE_PRODUCTIONS, $arr, array('id' => $id));
+	}
+
+	// production
+
 	function deleteCustomer($id)
 	{
 		$this->db->where('id', $id);
 		$this->db->delete(TABLE_USERS);
 	}
-
-	// production
 
 	function getVenueSearch($searchTerm = "")
 	{
@@ -199,11 +204,6 @@ class Admin_model extends CI_Model
 	function save($arr)
 	{
 		$this->db->insert(TABLE_PRODUCTIONS, $arr);
-	}
-
-	function update($arr, $id)
-	{
-		$this->db->update(TABLE_PRODUCTIONS, $arr, array('id' => $id));
 	}
 
 	function getProductionById($id)
@@ -651,7 +651,8 @@ class Admin_model extends CI_Model
 	}
 
 	// copy run of show
-	public function duplicateRunOfShowSchedule($oldRunOfShowId, $newRunOfShowId) {
+	public function duplicateRunOfShowSchedule($oldRunOfShowId, $newRunOfShowId)
+	{
 		$this->db->select('*');
 		$this->db->where('runOfShowId', $oldRunOfShowId);
 		$titleQuery = $this->db->get(TABLE_RUNOFSHOWTITLES);
@@ -709,7 +710,8 @@ class Admin_model extends CI_Model
 		}
 	}
 
-	public function duplicateRunOfShowCrewTravel($oldRunOfShowId, $newRunOfShowId) {
+	public function duplicateRunOfShowCrewTravel($oldRunOfShowId, $newRunOfShowId)
+	{
 		$this->db->select('*');
 		$this->db->where('runOfShowId', $oldRunOfShowId);
 		$query = $this->db->get(TABLE_RUNOFSHOWCREWTRAVEL);
@@ -720,49 +722,50 @@ class Admin_model extends CI_Model
 			foreach ($result as $row) {
 				$insertData[] = [
 					'runOfShowId' => $newRunOfShowId,
-					'crewMemberId'  => $row['crewMemberId'],
-					'travelTypeTo'  => $row['travelTypeTo'],
-					'airlineTo'  => $row['airlineTo'],
-					'specifyTravelTo'  => $row['specifyTravelTo'],
-					'airportFromTo'  => $row['airportFromTo'],
-					'departureTimeTo'  => $row['departureTimeTo'],
-					'confirmationTo'  => $row['confirmationTo'],
-					'airportToTo'  => $row['airportToTo'],
-					'arrivalTimeTo'  => $row['arrivalTimeTo'],
-					'travelTypeFrom'  => $row['travelTypeFrom'],
-					'airlineFrom'  => $row['airlineFrom'],
-					'specifyTravelFrom'  => $row['specifyTravelFrom'],
-					'airportFromFrom'  => $row['airportFromFrom'],
-					'departureTimeFrom'  => $row['departureTimeFrom'],
+					'crewMemberId' => $row['crewMemberId'],
+					'travelTypeTo' => $row['travelTypeTo'],
+					'airlineTo' => $row['airlineTo'],
+					'specifyTravelTo' => $row['specifyTravelTo'],
+					'airportFromTo' => $row['airportFromTo'],
+					'departureTimeTo' => $row['departureTimeTo'],
+					'confirmationTo' => $row['confirmationTo'],
+					'airportToTo' => $row['airportToTo'],
+					'arrivalTimeTo' => $row['arrivalTimeTo'],
+					'travelTypeFrom' => $row['travelTypeFrom'],
+					'airlineFrom' => $row['airlineFrom'],
+					'specifyTravelFrom' => $row['specifyTravelFrom'],
+					'airportFromFrom' => $row['airportFromFrom'],
+					'departureTimeFrom' => $row['departureTimeFrom'],
 					'confirmationFrom' => $row['confirmationFrom'],
-					'airportToFrom'  => $row['airportToFrom'],
-					'arrivalTimeFrom'  => $row['arrivalTimeFrom'],
-					'groundTransCo'  => $row['groundTransCo'],
-					'vehicleMake'  => $row['vehicleMake'],
-					'driverName'  => $row['driverName'],
-					'driverPhone'  => $row['driverPhone'],
-					'vehicleModel'  => $row['vehicleModel'],
-					'vehicleTag'  => $row['vehicleTag'],
-					'pickUpTime'  => $row['pickUpTime'],
-					'dropOffTime'  => $row['dropOffTime'],
-					'dropOffLocation'  => $row['dropOffLocation'],
-					'groundNotes'  => $row['groundNotes'],
-					'hotelName'  => $row['hotelName'],
-					'hotelStay'  => $row['hotelStay'],
-					'confirmationAccommodation'  => $row['confirmationAccommodation'],
-					'perDiem'  => $row['perDiem'],
-					'hotelAddress'  => $row['hotelAddress'],
-					'roomType'  => $row['roomType'],
-					'checkIn'  => $row['checkIn'],
-					'checkOut'  => $row['checkOut'],
-					'accommodationNote'  => $row['accommodationNote']
+					'airportToFrom' => $row['airportToFrom'],
+					'arrivalTimeFrom' => $row['arrivalTimeFrom'],
+					'groundTransCo' => $row['groundTransCo'],
+					'vehicleMake' => $row['vehicleMake'],
+					'driverName' => $row['driverName'],
+					'driverPhone' => $row['driverPhone'],
+					'vehicleModel' => $row['vehicleModel'],
+					'vehicleTag' => $row['vehicleTag'],
+					'pickUpTime' => $row['pickUpTime'],
+					'dropOffTime' => $row['dropOffTime'],
+					'dropOffLocation' => $row['dropOffLocation'],
+					'groundNotes' => $row['groundNotes'],
+					'hotelName' => $row['hotelName'],
+					'hotelStay' => $row['hotelStay'],
+					'confirmationAccommodation' => $row['confirmationAccommodation'],
+					'perDiem' => $row['perDiem'],
+					'hotelAddress' => $row['hotelAddress'],
+					'roomType' => $row['roomType'],
+					'checkIn' => $row['checkIn'],
+					'checkOut' => $row['checkOut'],
+					'accommodationNote' => $row['accommodationNote']
 				];
 			}
 			$this->db->insert_batch(TABLE_RUNOFSHOWCREWTRAVEL, $insertData);
 		}
 	}
 
-	public function duplicateRunOfShowTalentCrew($oldRunOfShowId, $newRunOfShowId) {
+	public function duplicateRunOfShowTalentCrew($oldRunOfShowId, $newRunOfShowId)
+	{
 		$this->db->select('*');
 		$this->db->where('runOfShowId', $oldRunOfShowId);
 		$query = $this->db->get(TABLE_RUNOFSHOWTALENTCREW);
@@ -773,49 +776,50 @@ class Admin_model extends CI_Model
 			foreach ($result as $row) {
 				$insertData[] = [
 					'runOfShowId' => $newRunOfShowId,
-					'crewMemberId'  => $row['crewMemberId'],
-					'travelTypeTo'  => $row['travelTypeTo'],
-					'airlineTo'  => $row['airlineTo'],
-					'specifyTravelTo'  => $row['specifyTravelTo'],
-					'airportFromTo'  => $row['airportFromTo'],
-					'departureTimeTo'  => $row['departureTimeTo'],
-					'confirmationTo'  => $row['confirmationTo'],
-					'airportToTo'  => $row['airportToTo'],
-					'arrivalTimeTo'  => $row['arrivalTimeTo'],
-					'travelTypeFrom'  => $row['travelTypeFrom'],
-					'airlineFrom'  => $row['airlineFrom'],
-					'specifyTravelFrom'  => $row['specifyTravelFrom'],
-					'airportFromFrom'  => $row['airportFromFrom'],
-					'departureTimeFrom'  => $row['departureTimeFrom'],
+					'crewMemberId' => $row['crewMemberId'],
+					'travelTypeTo' => $row['travelTypeTo'],
+					'airlineTo' => $row['airlineTo'],
+					'specifyTravelTo' => $row['specifyTravelTo'],
+					'airportFromTo' => $row['airportFromTo'],
+					'departureTimeTo' => $row['departureTimeTo'],
+					'confirmationTo' => $row['confirmationTo'],
+					'airportToTo' => $row['airportToTo'],
+					'arrivalTimeTo' => $row['arrivalTimeTo'],
+					'travelTypeFrom' => $row['travelTypeFrom'],
+					'airlineFrom' => $row['airlineFrom'],
+					'specifyTravelFrom' => $row['specifyTravelFrom'],
+					'airportFromFrom' => $row['airportFromFrom'],
+					'departureTimeFrom' => $row['departureTimeFrom'],
 					'confirmationFrom' => $row['confirmationFrom'],
-					'airportToFrom'  => $row['airportToFrom'],
-					'arrivalTimeFrom'  => $row['arrivalTimeFrom'],
-					'groundTransCo'  => $row['groundTransCo'],
-					'vehicleMake'  => $row['vehicleMake'],
-					'driverName'  => $row['driverName'],
-					'driverPhone'  => $row['driverPhone'],
-					'vehicleModel'  => $row['vehicleModel'],
-					'vehicleTag'  => $row['vehicleTag'],
-					'pickUpTime'  => $row['pickUpTime'],
-					'dropOffTime'  => $row['dropOffTime'],
-					'dropOffLocation'  => $row['dropOffLocation'],
-					'groundNotes'  => $row['groundNotes'],
-					'hotelName'  => $row['hotelName'],
-					'hotelStay'  => $row['hotelStay'],
-					'confirmationAccommodation'  => $row['confirmationAccommodation'],
-					'perDiem'  => $row['perDiem'],
-					'hotelAddress'  => $row['hotelAddress'],
-					'roomType'  => $row['roomType'],
-					'checkIn'  => $row['checkIn'],
-					'checkOut'  => $row['checkOut'],
-					'accommodationNote'  => $row['accommodationNote']
+					'airportToFrom' => $row['airportToFrom'],
+					'arrivalTimeFrom' => $row['arrivalTimeFrom'],
+					'groundTransCo' => $row['groundTransCo'],
+					'vehicleMake' => $row['vehicleMake'],
+					'driverName' => $row['driverName'],
+					'driverPhone' => $row['driverPhone'],
+					'vehicleModel' => $row['vehicleModel'],
+					'vehicleTag' => $row['vehicleTag'],
+					'pickUpTime' => $row['pickUpTime'],
+					'dropOffTime' => $row['dropOffTime'],
+					'dropOffLocation' => $row['dropOffLocation'],
+					'groundNotes' => $row['groundNotes'],
+					'hotelName' => $row['hotelName'],
+					'hotelStay' => $row['hotelStay'],
+					'confirmationAccommodation' => $row['confirmationAccommodation'],
+					'perDiem' => $row['perDiem'],
+					'hotelAddress' => $row['hotelAddress'],
+					'roomType' => $row['roomType'],
+					'checkIn' => $row['checkIn'],
+					'checkOut' => $row['checkOut'],
+					'accommodationNote' => $row['accommodationNote']
 				];
 			}
 			$this->db->insert_batch(TABLE_RUNOFSHOWTALENTCREW, $insertData);
 		}
 	}
 
-	public function duplicateRunOfShowPoc($oldRunOfShowId, $newRunOfShowId) {
+	public function duplicateRunOfShowPoc($oldRunOfShowId, $newRunOfShowId)
+	{
 		$this->db->select('*');
 		$this->db->where('runOfShowId', $oldRunOfShowId);
 		$query = $this->db->get(TABLE_RUNOFSHOWPOC);
@@ -826,17 +830,17 @@ class Admin_model extends CI_Model
 			foreach ($result as $row) {
 				$insertData[] = [
 					'runOfShowId' => $newRunOfShowId,
-					'name'  => $row['name'],
-					'title'  => $row['title'],
-					'phone'  => $row['phone'],
-					'email'  => $row['email'],
-					'assistantName'  => $row['assistantName'],
-					'assistantTitle'  => $row['assistantTitle'],
-					'assistantPhone'  => $row['assistantPhone'],
-					'assistantEmail'  => $row['assistantEmail'],
-					'backUpTitle'  => $row['backUpTitle'],
-					'backUpPhone'  => $row['backUpPhone'],
-					'backUpEmail'  => $row['backUpEmail']
+					'name' => $row['name'],
+					'title' => $row['title'],
+					'phone' => $row['phone'],
+					'email' => $row['email'],
+					'assistantName' => $row['assistantName'],
+					'assistantTitle' => $row['assistantTitle'],
+					'assistantPhone' => $row['assistantPhone'],
+					'assistantEmail' => $row['assistantEmail'],
+					'backUpTitle' => $row['backUpTitle'],
+					'backUpPhone' => $row['backUpPhone'],
+					'backUpEmail' => $row['backUpEmail']
 				];
 			}
 			$this->db->insert_batch(TABLE_RUNOFSHOWPOC, $insertData);
@@ -1106,4 +1110,179 @@ class Admin_model extends CI_Model
 	{
 		$this->db->delete(TABLE_TIMEDACCESSLINK, array('id' => $id));
 	}
+
+	// project KPI
+
+	function saveProject($arr)
+	{
+		$this->db->insert(TABLE_PROJECTS, $arr);
+	}
+
+	function getProjectById($id)
+	{
+		$this->db->select('r.*, p.title, p.eventMonth, p.eventYear, v.venueName, v.address, v.city, v.state, v.zip');
+		$this->db->from(TABLE_PROJECTS . ' as r');
+		$this->db->join(TABLE_PRODUCTIONS . ' as p', 'r.productionId = p.id');
+		$this->db->join(TABLE_VENUE . ' as v', 'p.venueId = v.id');
+		$this->db->where('r.id', $id);
+		return $this->db->get()->row();
+	}
+
+	function updateProject($arr, $id)
+	{
+		$this->db->update(TABLE_PROJECTS, $arr, array('id' => $id));
+	}
+
+	function deleteProject($id)
+	{
+		$this->db->where('id', $id);
+		$this->db->delete(TABLE_PROJECTS);
+	}
+
+	// project overview
+	function saveProjectOverview($arr)
+	{
+		$this->db->insert(TABLE_PROJECTOVERVIEW, $arr);
+	}
+
+	function getProjectOverviewByProjectId($id)
+	{
+		$this->db->select('*');
+		$this->db->from(TABLE_PROJECTOVERVIEW);
+		$this->db->where('projectId', $id);
+		return $this->db->get()->row();
+	}
+
+	function updateProjectOverview($arr, $id)
+	{
+		$this->db->update(TABLE_PROJECTOVERVIEW, $arr, array('projectId' => $id));
+	}
+
+	function deleteProjectOverview($id)
+	{
+		$this->db->where('projectId', $id);
+		$this->db->delete(TABLE_PROJECTOVERVIEW);
+	}
+
+	// project KPI
+	public function getProjectKPITitleLastOkr($projectId)
+	{
+		$this->db->select('*');
+		$this->db->from(TABLE_PROJECTKPITITLE);
+		$this->db->where('projectId', $projectId);
+		$this->db->order_by('id', 'desc');
+		return $this->db->get()->row();
+	}
+
+	public function getProjectKPITitleById($id)
+	{
+		$this->db->select('p.*, u.name as responsible, u1.name as accountable, u2.name as consulted, u3.name as informed');
+		$this->db->from(TABLE_PROJECTKPITITLE . ' as p');
+		$this->db->join(TABLE_USERS . ' as u', 'p.responsibleId = u.id', 'left');
+		$this->db->join(TABLE_USERS . ' as u1', 'p.accountableId = u1.id', 'left');
+		$this->db->join(TABLE_USERS . ' as u2', 'p.consultedId = u2.id', 'left');
+		$this->db->join(TABLE_USERS . ' as u3', 'p.informedId = u3.id', 'left');
+		$this->db->where('p.id', $id);
+		return $this->db->get()->row();
+	}
+
+	public function getProjectKPITitleByProjectId($id)
+	{
+		$this->db->select('*');
+		$this->db->from(TABLE_PROJECTKPITITLE);
+		$this->db->where('projectId', $id);
+		return $this->db->get()->result();
+	}
+
+	public function getProjectKPIItemsByTitleId($titleId)
+	{
+		$this->db->select('*');
+		$this->db->from(TABLE_PROJECTKPIITEM);
+		$this->db->where('title_id', $titleId);
+		return $this->db->get()->result();
+	}
+
+	public function getProjectKPIItemsById($id)
+	{
+		$this->db->select('i.*, to.okr as tOkr, to.productionPhase, to.timelineTrack, to.dueDate as tDueDate, u.name as responsible, u1.name as accountable, u2.name as consulted, u3.name as informed');
+		$this->db->from(TABLE_PROJECTKPIITEM . ' as i');
+		$this->db->join(TABLE_PROJECTKPITITLE . ' as to', 'i.title_id = to.id');
+		$this->db->join(TABLE_USERS . ' as u', 'i.responsibleId = u.id', 'left');
+		$this->db->join(TABLE_USERS . ' as u1', 'i.accountableId = u1.id', 'left');
+		$this->db->join(TABLE_USERS . ' as u2', 'i.consultedId = u2.id', 'left');
+		$this->db->join(TABLE_USERS . ' as u3', 'i.informedId = u3.id', 'left');
+		$this->db->where('i.id', $id);
+		return $this->db->get()->row();
+	}
+
+	function getProjectKpiDetails($projectId)
+	{
+		$this->db->select('t.id as tId, t.type as tType, t.okr as tOkr, t.productionPhase as tProductionPhase, t.timelineTrack as tTimelineTrack, t.timelineGoal as tTimelineGoal, 
+			t.timelineAction as tTimelineAction, t.timelineView as tTimelineView, t.milestoneMark as tMilestoneMark, t.metrics as tMetrics, t.startDate as tStartDate, t.dueDate as tDueDate, 
+			t.qtr as tQtr, t.status as tStatus, t.markedDate as tMarkedDate, uu.name as tResponsible, uu1.name as tAccountable, uu2.name as tConsulted, uu3.name as tInformed, t.xfnName as tXfnName, 
+			t.xfnEmail as tXfnEmail, t.studioFloName as tStudioFloName, t.studioFloDirectory as tStudioFloDirectory,
+			i.id as iId, i.title_id, i.type as iType, i.okr as iOkr, i.timelineGoal as iTimelineGoal, i.timelineAction as iTimelineAction, 
+			i.timelineView as iTimelineView, i.milestoneMark as iMilestoneMark, i.metrics as iMetrics, i.startDate as iStartDate, i.dueDate as iDueDate, i.qtr as iQtr, i.status as iStatus, 
+			i.markedDate as iMarkedDate, u.name as responsible, u1.name as accountable, u2.name as consulted, u3.name as informed, i.xfnName as iXfnName, i.xfnEmail as iXfnEmail, i.studioFloName as iStudioFloName, 
+			i.studioFloDirectory as iStudioFloDirectory');
+		$this->db->from(TABLE_PROJECTKPITITLE . ' as t');
+		$this->db->join(TABLE_PROJECTKPIITEM . ' as i', 't.id = i.title_id', 'left');
+		$this->db->join(TABLE_USERS . ' as u', 'i.responsibleId = u.id', 'left');
+		$this->db->join(TABLE_USERS . ' as u1', 'i.accountableId = u1.id', 'left');
+		$this->db->join(TABLE_USERS . ' as u2', 'i.consultedId = u2.id', 'left');
+		$this->db->join(TABLE_USERS . ' as u3', 'i.informedId = u3.id', 'left');
+		$this->db->join(TABLE_USERS . ' as uu', 't.responsibleId = uu.id', 'left');
+		$this->db->join(TABLE_USERS . ' as uu1', 't.accountableId = uu1.id', 'left');
+		$this->db->join(TABLE_USERS . ' as uu2', 't.consultedId = uu2.id', 'left');
+		$this->db->join(TABLE_USERS . ' as uu3', 't.informedId = uu3.id', 'left');
+		$this->db->where('t.projectId', $projectId);
+		$this->db->order_by('t.okr', 'ASC');
+		return $this->db->get()->result_array();
+	}
+
+	function saveProjectKpiTitle($arr)
+	{
+		$this->db->insert(TABLE_PROJECTKPITITLE, $arr);
+	}
+
+	function saveProjectKpiItem($arr)
+	{
+		$this->db->insert(TABLE_PROJECTKPIITEM, $arr);
+	}
+
+	function updateProjectKPITitleById($arr, $id)
+	{
+		$this->db->update(TABLE_PROJECTKPITITLE, $arr, array('id' => $id));
+	}
+
+	public function batchUpdateProjectKPITitleByIds($data, $ids)
+	{
+		// Validate input
+		if (empty($data) || empty($ids) || !is_array($ids)) {
+			return false; // Invalid input
+		}
+		// Build the query dynamically
+		$this->db->where_in('id', $ids);
+		return $this->db->update('project_kpi_titles', $data);
+	}
+
+	function updateProjectKPIItemById($arr, $id)
+	{
+		$this->db->update(TABLE_PROJECTKPIITEM, $arr, array('id' => $id));
+	}
+
+	function deleteProjectKpiTitle($id)
+	{
+		$this->db->where('id', $id);
+		$this->db->delete(TABLE_PROJECTKPITITLE);
+		$this->db->where('title_id', $id);
+		$this->db->delete(TABLE_PROJECTKPIITEM);
+	}
+
+	function deleteProjectKpiItem($id)
+	{
+		$this->db->where('id', $id);
+		$this->db->delete(TABLE_PROJECTKPIITEM);
+	}
+
 }
