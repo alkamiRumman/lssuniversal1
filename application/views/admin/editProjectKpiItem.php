@@ -58,6 +58,8 @@
 								<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
 								<input type="text" class="input-sm form-control" name="startDate" id="startDate"
 									   value="<?= date('d M Y', strtotime($data->startDate)) ?>" required>
+								<input type="hidden" id="tStartDate" name="tStartDate"
+									   value="<?= date('d M Y', strtotime($data->tStartDate)) ?>">
 							</div>
 						</div>
 						<div class="form-group col-md-3">
@@ -235,7 +237,7 @@
 	$('#startDate, #dueDate').datepicker({
 		autoclose: true,
 		todayHighlight: true,
-		startDate: '+0d',
+		startDate: $('#tStartDate').val(),
 		endDate: $('#tDueDate').val(),
 		format: 'dd M yyyy'
 	});

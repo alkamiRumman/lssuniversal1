@@ -22,7 +22,7 @@
 							<table class="table table-bordered table-sm">
 								<tr>
 									<th>Event Month</th>
-									<td id="eventMonth"><?= $data->eventMonth ?></td>
+									<td id="startDate"><?= $data->startDate ?></td>
 								</tr>
 								<tr>
 									<th>Event Year</th>
@@ -86,7 +86,7 @@
 		font-style: italic;
 	}
 
-	td{
+	td {
 		font-weight: normal;
 	}
 </style>
@@ -127,7 +127,7 @@
 		}).on('select2:select', function (event) {
 			var data = event.params.data;
 			$('.detailsTable').show();
-			$('#eventMonth').text(data.eventMonth);
+			$('#startDate').text(data.startDate);
 			$('#eventYear').text(data.eventYear);
 			$('#venue').text(data.venueName);
 		});

@@ -166,15 +166,16 @@
 	/* Responsive Design */
 	@media (max-width: 768px) {
 		.navigationButton {
-			font-size: 15px;
-			width: 95%;
+			font-size: 13px;
+			width: 100%;
 		}
+
 		.stat-box h3 {
 			font-size: 28px; /* Smaller font size on smaller screens */
 		}
 
 		.stat-box p {
-			font-size: 16px; /* Smaller font size on smaller screens */
+			font-size: 15px; /* Smaller font size on smaller screens */
 		}
 
 		.stat-box .icon {

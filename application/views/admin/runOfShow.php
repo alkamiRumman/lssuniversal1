@@ -17,8 +17,8 @@
 							<th>ID</th>
 							<th>Name</th>
 							<th>Description</th>
-							<th>Start Date&Time</th>
-							<th>Last Modified Date&Time</th>
+							<th>Schedule Start</th>
+							<th>Last Modified</th>
 							<th>ACTIONS</th>
 						</tr>
 						</thead>
@@ -112,12 +112,6 @@
 					text: 'Archives',
 					action: function (e, dt, node, config) {
 						window.location = "<?= base_url('admin/archives') ?>";
-					}
-				},
-				{
-					text: 'Files',
-					action: function (e, dt, node, config) {
-						alert('This will be files page!');
 					}
 				}
 			]

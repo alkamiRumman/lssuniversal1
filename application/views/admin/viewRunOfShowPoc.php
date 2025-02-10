@@ -31,8 +31,10 @@
 							<div class="panel-body" style="padding-bottom: 0">
 								<table class="table">
 									<tr>
-										<th>Production Date & Time</th>
-										<td style="font-weight: normal"><?= date('d M Y H:i:s A', strtotime($data->createAt)) ?></td>
+										<th>Production Start Date</th>
+										<td style="font-weight: normal"><?= date('d M Y', strtotime($data->startDate)) . ' ' . date('h:i:s A', strtotime($data->startTime)) ?></td>
+										<th>Production End Date</th>
+										<td style="font-weight: normal"><?= date('d M Y', strtotime($data->endDate)) . ' ' . date('h:i:s A', strtotime($data->endTime)) ?></td>
 										<th>Production Venue</th>
 										<td style="font-weight: normal"><?= $data->venueName ?></td>
 										<th>Venue Address</th>

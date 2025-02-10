@@ -91,6 +91,7 @@ defined('TABLE_THEATRECREW') or define('TABLE_THEATRECREW', "theatreCrew");
 defined('TABLE_PRODUCTIONS') or define('TABLE_PRODUCTIONS', "productions");
 defined('TABLE_MARKETINGFEE') or define('TABLE_MARKETINGFEE', "marketingFee");
 defined('TABLE_RENTALANDMISC') or define('TABLE_RENTALANDMISC', "rentalAndMisc");
+defined('TABLE_TICKETTIERING') or define('TABLE_TICKETTIERING', "ticketTiering");
 defined('TABLE_VENDORINVOICE') or define('TABLE_VENDORINVOICE', "vendorInvoice");
 defined('TABLE_VENDORINVOICEDETAILS') or define('TABLE_VENDORINVOICEDETAILS', "vendorInvoiceDetails");
 defined('TABLE_VENUE') or define('TABLE_VENUE', "venues");

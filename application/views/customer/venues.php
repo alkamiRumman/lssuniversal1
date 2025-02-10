@@ -35,19 +35,19 @@
 								<option value="">Select State</option>
 								<!-- Default placeholder option -->
 								<?php $states = [
-										"Alabama - AL", "Alaska - AK", "Arizona - AZ", "Arkansas - AR",
-										"California - CA", "Colorado - CO", "Connecticut - CT", "Delaware - DE",
-										"District of Columbia - DC", "Florida - FL", "Georgia - GA", "Guam - GU",
-										"Hawaii - HI", "Idaho - ID", "Illinois - IL", "Indiana - IN",
-										"Iowa - IA", "Kansas - KS", "Kentucky - KY", "Louisiana - LA",
-										"Maine - ME", "Maryland - MD", "Massachusetts - MA", "Michigan - MI",
-										"Minnesota - MN", "Mississippi - MS", "Missouri - MO", "Montana - MT",
-										"Nebraska - NE", "Nevada - NV", "New Hampshire - NH", "New Jersey - NJ",
-										"New Mexico - NM", "New York - NY", "North Carolina - NC", "North Dakota - ND",
-										"Ohio - OH", "Oklahoma - OK", "Oregon - OR", "Pennsylvania - PA", "Puerto Rico - PR",
-										"Rhode Island - RI", "South Carolina - SC", "South Dakota - SD", "Tennessee - TN",
-										"Texas - TX", "Utah - UT", "Vermont - VT", "Virginia - VA", "Virgin Islands - VI",
-										"Washington - WA", "West Virginia - WV", "Wisconsin - WI", "Wyoming - WY"
+									"Alabama - AL", "Alaska - AK", "Arizona - AZ", "Arkansas - AR",
+									"California - CA", "Colorado - CO", "Connecticut - CT", "Delaware - DE",
+									"District of Columbia - DC", "Florida - FL", "Georgia - GA", "Guam - GU",
+									"Hawaii - HI", "Idaho - ID", "Illinois - IL", "Indiana - IN",
+									"Iowa - IA", "Kansas - KS", "Kentucky - KY", "Louisiana - LA",
+									"Maine - ME", "Maryland - MD", "Massachusetts - MA", "Michigan - MI",
+									"Minnesota - MN", "Mississippi - MS", "Missouri - MO", "Montana - MT",
+									"Nebraska - NE", "Nevada - NV", "New Hampshire - NH", "New Jersey - NJ",
+									"New Mexico - NM", "New York - NY", "North Carolina - NC", "North Dakota - ND",
+									"Ohio - OH", "Oklahoma - OK", "Oregon - OR", "Pennsylvania - PA", "Puerto Rico - PR",
+									"Rhode Island - RI", "South Carolina - SC", "South Dakota - SD", "Tennessee - TN",
+									"Texas - TX", "Utah - UT", "Vermont - VT", "Virginia - VA", "Virgin Islands - VI",
+									"Washington - WA", "West Virginia - WV", "Wisconsin - WI", "Wyoming - WY"
 								];
 								foreach ($states as $state) {
 									// Set the option as selected if it matches the stored state
@@ -111,7 +111,7 @@
 								<div class="panel-heading">
 									Venue Point of Contact
 									<button class="btn btn-sm btn-info pull-right add"><i
-												class="fa fa-plus"></i>
+											class="fa fa-plus"></i>
 									</button>
 								</div>
 								<div class="panel-body">
@@ -132,10 +132,11 @@
 												</div>
 												<div class="form-group col-md-3">
 													<label for="pocPhone"> Phone Number <b
-																class="text-danger">*</b></label>
+															class="text-danger">*</b></label>
 													<input class="form-control input-sm" type="number" name="pocPhone[]"
 														   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-														   maxlength="10" minlength="10" pattern="[0-9]{10}" title="Must be 10 numbers"
+														   maxlength="10" minlength="10" pattern="[0-9]{10}"
+														   title="Must be 10 numbers"
 														   id="pocPhone" placeholder="Enter Phone Number" required>
 												</div>
 												<div class="form-group col-md-2">
@@ -147,7 +148,7 @@
 												<div class="col-md-1 remove pull-left"><br>
 													<button class="btn btn-sm btn-danger" id="0"
 															onclick="deleteRepeat(this)"><i
-																class="fa fa-close"></i></button>
+															class="fa fa-close"></i></button>
 												</div>
 											</div>
 										</div>
@@ -160,7 +161,7 @@
 								<div class="panel-heading">
 									Attachment
 									<button class="btn btn-sm btn-info pull-right addAttach"><i
-												class="fa fa-plus"></i>
+											class="fa fa-plus"></i>
 									</button>
 								</div>
 								<div class="panel-body">
@@ -183,7 +184,7 @@
 												<div class="col-md-1 removeAttach pull-left"><br>
 													<button class="btn btn-sm btn-danger" id="0"
 															onclick="deleteRepeatAttach(this)"><i
-																class="fa fa-close"></i></button>
+															class="fa fa-close"></i></button>
 												</div>
 											</div>
 										</div>
@@ -383,10 +384,11 @@
 			"columnDefs": [
 				{
 					"render": function (data, type, row) {
-						if (!data.startsWith('http://') && !data.startsWith('https://') && !data.startsWith('www')) {
-							data = 'https://' + data;
+						var url = '';
+						if (!data.startsWith('http://') && !data.startsWith('https://')) {
+							url = 'https://' + data;
 						}
-						return '<a href="' + data + '" class="btn-link" target="_blank">' + data + '</a>';
+						return '<a href="' + url + '" class="btn-link" target="_blank">' + data + '</a>';
 					},
 					"targets": 8
 				},

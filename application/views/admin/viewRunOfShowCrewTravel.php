@@ -30,8 +30,10 @@
 							<div class="panel-body" style="padding-bottom: 0">
 								<table class="table">
 									<tr>
-										<th>Production Date & Time</th>
-										<td style="font-weight: normal"><?= date('d M Y H:i:s A', strtotime($data->createAt)) ?></td>
+										<th>Production Start Date</th>
+										<td style="font-weight: normal"><?= date('d M Y', strtotime($data->startDate)) . ' ' . date('h:i:s A', strtotime($data->startTime)) ?></td>
+										<th>Production End Date</th>
+										<td style="font-weight: normal"><?= date('d M Y', strtotime($data->endDate)) . ' ' . date('h:i:s A', strtotime($data->endTime)) ?></td>
 										<th>Production Venue</th>
 										<td style="font-weight: normal"><?= $data->venueName ?></td>
 										<th>Venue Address</th>
@@ -63,7 +65,7 @@
 											<th>Traveler Information</th>
 											<th>Travel Details</th>
 											<?php if ($data->archivesStatus == 0) { ?>
-											<th>Actions</th>
+												<th>Actions</th>
 											<?php } ?>
 										</tr>
 										</thead>
@@ -216,24 +218,24 @@
 														</table>
 													</td>
 													<?php if ($data->archivesStatus == 0) { ?>
-													<td style="vertical-align: middle; border-bottom: 1px solid black">
-														<div class="dropdown">
-															<button class="btn btn-sm dropdown-toggle"
-																	style="color: white; background-color: black"
-																	type="button"
-																	data-toggle="dropdown">Actions
-																<span class="caret"></span></button>
-															<ul class="dropdown-menu">
-																<li><a href="javascript:void(0);"
-																	   onclick="loadPopup('<?= base_url('admin/editRunOfShowCrewTravel/' . $crewTravelDetail->id) ?>')">Edit</a>
-																</li>
-																<li>
-																	<a href="<?= base_url('admin/deleteRunOfShowCrewTravel/' . $crewTravelDetail->id) ?>"
-																	   onclick="return confirm('Are you sure?')">Delete</a>
-																</li>
-															</ul>
-														</div>
-													</td>
+														<td style="vertical-align: middle; border-bottom: 1px solid black">
+															<div class="dropdown">
+																<button class="btn btn-sm dropdown-toggle"
+																		style="color: white; background-color: black"
+																		type="button"
+																		data-toggle="dropdown">Actions
+																	<span class="caret"></span></button>
+																<ul class="dropdown-menu">
+																	<li><a href="javascript:void(0);"
+																		   onclick="loadPopup('<?= base_url('admin/editRunOfShowCrewTravel/' . $crewTravelDetail->id) ?>')">Edit</a>
+																	</li>
+																	<li>
+																		<a href="<?= base_url('admin/deleteRunOfShowCrewTravel/' . $crewTravelDetail->id) ?>"
+																		   onclick="return confirm('Are you sure?')">Delete</a>
+																	</li>
+																</ul>
+															</div>
+														</td>
 													<?php } ?>
 												</tr>
 											<?php }

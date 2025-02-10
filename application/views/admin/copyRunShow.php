@@ -13,15 +13,15 @@
 							<table class="table table-bordered table-sm">
 								<tr>
 									<th>Production Title</th>
-									<td id="eventMonth"><?= $data->title ?></td>
+									<td id="startDate"><?= $data->title ?></td>
 								</tr>
 								<tr>
-									<th>Event Month</th>
-									<td id="eventMonth"><?= $data->eventMonth ?></td>
+									<th>Production Start Date</th>
+									<td style="font-weight: normal"><?= date('d M Y', strtotime($data->startDate)) . ' ' . date('h:i:s A', strtotime($data->startTime)) ?></td>
 								</tr>
 								<tr>
-									<th>Event Year</th>
-									<td id="eventYear"><?= $data->eventYear ?></td>
+									<th>Production End Date</th>
+									<td style="font-weight: normal"><?= date('d M Y', strtotime($data->endDate)) . ' ' . date('h:i:s A', strtotime($data->endTime)) ?></td>
 								</tr>
 								<tr>
 									<th>Venue</th>
@@ -33,7 +33,7 @@
 					<div class="row">
 						<div class="form-group col-md-12">
 							<label for="description">Description </label>
-							<textarea rows="3" type="text" id="description" name="description"
+							<textarea rows="3" id="description" name="description"
 									  class="form-control"><?= $data->description ?></textarea>
 							<input type="hidden" name="productionId" value="<?= $data->productionId ?>">
 						</div>
@@ -141,7 +141,7 @@
 		}).on('select2:select', function (event) {
 			var data = event.params.data;
 			$('.detailsTable').show();
-			$('#eventMonth').text(data.eventMonth);
+			$('#startDate').text(data.startDate);
 			$('#eventYear').text(data.eventYear);
 			$('#venue').text(data.venueName);
 		});

@@ -96,7 +96,7 @@ class Admin_model extends CI_Model
 		$value = $this->db->get()->result();
 		$data = array();
 		foreach ($value as $val) {
-			if ($val->deleted == 0 && $val->type == 'Customer') {
+			if ($val->deleted == 0 && $val->type != 'Vendor') {
 				$data[] = $val;
 			}
 		}
@@ -210,7 +210,7 @@ class Admin_model extends CI_Model
 	{
 		$this->db->select('p.*, v.venueName, v.address, v.city, v.state, v.zip');
 		$this->db->from(TABLE_PRODUCTIONS . ' as p');
-		$this->db->join(TABLE_VENUE . ' as v', 'p.venueId = v.id');
+		$this->db->join(TABLE_VENUE . ' as v', 'p.venueId = v.id', 'left');
 		$this->db->where('p.id', $id);
 		return $this->db->get()->row();
 	}
@@ -448,6 +448,49 @@ class Admin_model extends CI_Model
 		$this->db->delete(TABLE_RENTALANDMISC);
 	}
 
+
+	//Ticket Tiering
+	function saveTicketTiering($arr)
+	{
+		$this->db->insert(TABLE_TICKETTIERING, $arr);
+	}
+
+	function getTicketTieringByProductionId($id)
+	{
+		$this->db->select('*');
+		$this->db->from(TABLE_TICKETTIERING);
+		$this->db->where('productionId', $id);
+		$this->db->order_by('id', 'asc');
+		return $this->db->get()->result();
+	}
+
+	function getTicketTieringById($id)
+	{
+		$this->db->select('*');
+		$this->db->from(TABLE_TICKETTIERING);
+		$this->db->where('id', $id);
+		return $this->db->get()->row();
+	}
+
+	function updateTicketTiering($arr, $id)
+	{
+		$this->db->update(TABLE_TICKETTIERING, $arr, array('id' => $id));
+	}
+
+	function deleteTicketTiering($id)
+	{
+		$this->db->where('id', $id);
+		$this->db->delete(TABLE_TICKETTIERING);
+	}
+
+	function deleteTicketTieringByProductionId($id)
+	{
+		$this->db->where('productionId', $id);
+		$this->db->delete(TABLE_TICKETTIERING);
+	}
+
+
+	// vendor invoice
 	function saveVendorInvoice($arr)
 	{
 		$this->db->insert(TABLE_VENDORINVOICE, $arr);
@@ -465,7 +508,7 @@ class Admin_model extends CI_Model
 	function getVendorInvoiceById($id)
 	{
 		$this->db->select('v.*, u.name, u.phone, u.username, u.businessName, u.ein, u.businessAddress, u.city, u.state,
-		 	p.title, p.eventMonth, p.eventYear, vv.venueName');
+		 	p.title, p.startDate, p.endDate, p.startTime, p.endTime, vv.venueName');
 		$this->db->from(TABLE_VENDORINVOICE . ' as v');
 		$this->db->join(TABLE_USERS . ' as u', 'v.vendorId = u.id');
 		$this->db->join(TABLE_PRODUCTIONS . ' as p', 'v.productionId = p.id');
@@ -599,7 +642,7 @@ class Admin_model extends CI_Model
 
 	function getRunOfShowById($id)
 	{
-		$this->db->select('r.*, p.title, p.eventMonth, p.eventYear, v.venueName, v.address, v.city, v.state, v.zip');
+		$this->db->select('r.*, p.title, p.startDate, p.startTime, p.endDate, p.endTime, v.venueName, v.address, v.city, v.state, v.zip');
 		$this->db->from(TABLE_RUNOFSHOW . ' as r');
 		$this->db->join(TABLE_PRODUCTIONS . ' as p', 'r.productionId = p.id');
 		$this->db->join(TABLE_VENUE . ' as v', 'p.venueId = v.id');
@@ -870,12 +913,14 @@ class Admin_model extends CI_Model
 		$this->db->delete(TABLE_RUNOFSHOWCREWTRAVEL);
 	}
 
-	function getCrewMemberSearch($searchTerm = "", $id)
+	function getCrewMemberSearch($searchTerm = "", $id = null)
 	{
 		$this->db->select('*, firstName as text');
 		$this->db->from(TABLE_CREWMEMBERS);
 		$this->db->where("firstName like '%" . $searchTerm . "%'");
-		$this->db->where('productionId', $id);
+		if ($id !== null) {
+			$this->db->where('productionId', $id);
+		}
 		$value = $this->db->get()->result();
 		$data = array();
 		foreach ($value as $val) {
@@ -883,6 +928,7 @@ class Admin_model extends CI_Model
 		}
 		return $data;
 	}
+
 
 	public function getRunOfShowCrewTravelDetails($id)
 	{
@@ -904,7 +950,7 @@ class Admin_model extends CI_Model
 	}
 
 	// talent Crew
-	function getTalentCrewMemberSearch($searchTerm = "", $id)
+	function getTalentCrewMemberSearch($searchTerm = "", $id = null)
 	{
 		$this->db->select('*, firstName as text');
 		$this->db->from(TABLE_ENTERTAINER);
@@ -1074,8 +1120,8 @@ class Admin_model extends CI_Model
 	{
 		$this->db->select('c.firstName, c.lastName, rc.*');
 		$this->db->from(TABLE_TIMEDACCESSLINKCREWTRAVEL . ' as t');
-		$this->db->join(TABLE_RUNOFSHOWCREWTRAVEL . ' as rc', 't.crewTravelId = rc.crewMemberId');
-		$this->db->join(TABLE_CREWMEMBERS . ' as c', 't.crewTravelId = c.id');
+		$this->db->join(TABLE_RUNOFSHOWCREWTRAVEL . ' as rc', 't.crewTravelId = rc.crewMemberId and t.runOfShowId = rc.runOfShowId');
+		$this->db->join(TABLE_CREWMEMBERS . ' as c', 'rc.crewMemberId = c.id');
 		$this->db->where('t.timedAccessLinkId', $id);
 		return $this->db->get()->result();
 	}
@@ -1084,8 +1130,8 @@ class Admin_model extends CI_Model
 	{
 		$this->db->select('c.firstName, c.lastName, rc.*');
 		$this->db->from(TABLE_TIMEDACCESSLINKTALENTTRAVEL . ' as t');
-		$this->db->join(TABLE_RUNOFSHOWTALENTCREW . ' as rc', 't.talentTravelId = rc.crewMemberId');
-		$this->db->join(TABLE_ENTERTAINER . ' as c', 't.talentTravelId = c.id');
+		$this->db->join(TABLE_RUNOFSHOWTALENTCREW . ' as rc', 't.talentTravelId = rc.crewMemberId and t.runOfShowId = rc.runOfShowId');
+		$this->db->join(TABLE_ENTERTAINER . ' as c', 'rc.crewMemberId = c.id');
 		$this->db->where('t.timedAccessLinkId', $id);
 		return $this->db->get()->result();
 	}
@@ -1120,7 +1166,7 @@ class Admin_model extends CI_Model
 
 	function getProjectById($id)
 	{
-		$this->db->select('r.*, p.title, p.eventMonth, p.eventYear, v.venueName, v.address, v.city, v.state, v.zip');
+		$this->db->select('r.*, p.title, p.startDate, p.startTime, p.endDate, p.endTime, p.createAt as productionCreateAt, v.venueName, v.address, v.city, v.state, v.zip');
 		$this->db->from(TABLE_PROJECTS . ' as r');
 		$this->db->join(TABLE_PRODUCTIONS . ' as p', 'r.productionId = p.id');
 		$this->db->join(TABLE_VENUE . ' as v', 'p.venueId = v.id');
@@ -1204,7 +1250,7 @@ class Admin_model extends CI_Model
 
 	public function getProjectKPIItemsById($id)
 	{
-		$this->db->select('i.*, to.okr as tOkr, to.productionPhase, to.timelineTrack, to.dueDate as tDueDate, u.name as responsible, u1.name as accountable, u2.name as consulted, u3.name as informed');
+		$this->db->select('i.*, to.okr as tOkr, to.productionPhase, to.timelineTrack, to.startDate as tStartDate, to.dueDate as tDueDate, u.name as responsible, u1.name as accountable, u2.name as consulted, u3.name as informed');
 		$this->db->from(TABLE_PROJECTKPIITEM . ' as i');
 		$this->db->join(TABLE_PROJECTKPITITLE . ' as to', 'i.title_id = to.id');
 		$this->db->join(TABLE_USERS . ' as u', 'i.responsibleId = u.id', 'left');
@@ -1236,7 +1282,7 @@ class Admin_model extends CI_Model
 		$this->db->join(TABLE_USERS . ' as uu2', 't.consultedId = uu2.id', 'left');
 		$this->db->join(TABLE_USERS . ' as uu3', 't.informedId = uu3.id', 'left');
 		$this->db->where('t.projectId', $projectId);
-		$this->db->order_by('t.okr', 'ASC');
+//		$this->db->order_by('CAST(t.okr AS UNSIGNED)', 'ASC');
 		return $this->db->get()->result_array();
 	}
 
@@ -1255,20 +1301,14 @@ class Admin_model extends CI_Model
 		$this->db->update(TABLE_PROJECTKPITITLE, $arr, array('id' => $id));
 	}
 
-	public function batchUpdateProjectKPITitleByIds($data, $ids)
-	{
-		// Validate input
-		if (empty($data) || empty($ids) || !is_array($ids)) {
-			return false; // Invalid input
-		}
-		// Build the query dynamically
-		$this->db->where_in('id', $ids);
-		return $this->db->update('project_kpi_titles', $data);
-	}
-
 	function updateProjectKPIItemById($arr, $id)
 	{
 		$this->db->update(TABLE_PROJECTKPIITEM, $arr, array('id' => $id));
+	}
+
+	function updateProjectKPIItemByTitleId($arr, $id)
+	{
+		$this->db->update(TABLE_PROJECTKPIITEM, $arr, array('title_id' => $id));
 	}
 
 	function deleteProjectKpiTitle($id)
@@ -1285,4 +1325,17 @@ class Admin_model extends CI_Model
 		$this->db->delete(TABLE_PROJECTKPIITEM);
 	}
 
+	// project kpi road map
+	function getProjectKpiRoadmapDetails($projectId)
+	{
+		$this->db->select('t.id as tId, t.type as tType, t.okr as tOkr, t.productionPhase as tProductionPhase, t.timelineTrack as tTimelineTrack, t.timelineView as tTimelineView, t.milestoneMark as tMilestoneMark,
+			t.qtr as tQtr, t.status as tStatus,
+			i.id as iId, i.title_id, i.type as iType, i.okr as iOkr, i.timelineGoal as iTimelineGoal,
+			i.timelineView as iTimelineView, i.milestoneMark as iMilestoneMark, i.startDate as iStartDate, i.dueDate as iDueDate, i.qtr as iQtr, i.status as iStatus,');
+		$this->db->from(TABLE_PROJECTKPIITEM . ' as i');
+		$this->db->join(TABLE_PROJECTKPITITLE . ' as t', 't.id = i.title_id', 'left');
+		$this->db->where('t.projectId', $projectId);
+//		$this->db->order_by("FIELD(t.productionPhase, 'Pre-Production', 'Production', 'Post-Production', 'Weave')");
+		return $this->db->get()->result_array();
+	}
 }

@@ -110,12 +110,6 @@
 				{
 					text: 'Archives',
 					className: 'active',
-				},
-				{
-					text: 'Files',
-					action: function (e, dt, node, config) {
-						alert('This will be files page!');
-					}
 				}
 			]
 		});

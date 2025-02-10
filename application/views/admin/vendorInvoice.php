@@ -135,6 +135,15 @@
 				},
 				{
 					"render": function (data, type, row) {
+						if (data.length > 0) {
+							return '<span class="btn-link">' + data + '"</span>';
+						} else {
+							return data;
+						}
+					}, "targets": 10
+				},
+				{
+					"render": function (data, type, row) {
 						// Construct the select dropdown HTML with basic styling
 						var html = '<select class="completedStatus styled-select" id="' + row.id + '" name="status" onchange="updateSelectColor(this)">' +
 							'<option value="Unpaid" ' + (data === "Unpaid" ? "selected" : "") + ' data-color="#FFA500">Unpaid</option>' +

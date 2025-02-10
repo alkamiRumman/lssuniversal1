@@ -16,53 +16,33 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="form-group col-md-6">
-							<label for="eventMonth">EVENT MONTH <span class="text-danger">*</span></label>
-							<select class="form-control input-sm" name="eventMonth" id="eventMonth" required>
-								<option <?= (date('F') == 'January') ? 'selected' : '' ?>
-										value="January">January
-								</option>
-								<option <?= (date('F') == 'February') ? 'selected' : '' ?>
-										value="February">February
-								</option>
-								<option <?= (date('F') == 'March') ? 'selected' : '' ?>
-										value="March">March
-								</option>
-								<option <?= (date('F') == 'April') ? 'selected' : '' ?>
-										value="April">April
-								</option>
-								<option <?= (date('F') == 'May') ? 'selected' : '' ?>
-										value="May">May
-								</option>
-								<option <?= (date('F') == 'June') ? 'selected' : '' ?>
-										value="June">June
-								</option>
-								<option <?= (date('F') == 'July') ? 'selected' : '' ?>
-										value="July">July
-								</option>
-								<option <?= (date('F') == 'August') ? 'selected' : '' ?>
-										value="August">August
-								</option>
-								<option <?= (date('F') == 'September') ? 'selected' : '' ?>
-										value="September">September
-								</option>
-								<option <?= (date('F') == 'October') ? 'selected' : '' ?>
-										value="October">October
-								</option>
-								<option <?= (date('F') == 'November') ? 'selected' : '' ?>
-										value="November">November
-								</option>
-								<option <?= (date('F') == 'December') ? 'selected' : '' ?>
-										value="December">December
-								</option>
-							</select>
+						<div class="form-group col-md-4">
+							<label for="startDate">START DATE <b class="text-danger">*</b></label>
+							<div class="input-group date">
+								<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+								<input type="text" class="form-control" name="startDate" id="startDate"
+									   value="<?= $data ? date('d M Y', strtotime($data->startDate)) : '' ?>"
+									   required>
+							</div>
 						</div>
-						<div class="form-group col-md-6">
-							<label for="eventYear">EVENT YEAR <span class="text-danger">*</span></label>
-							<input class="form-control input-sm" type="number" minlength="4"
-								   min="<?= date('Y') ?>"
-								   name="eventYear" value="<?= date('Y') ?>"
-								   id="eventYear" required>
+						<div class="form-group col-md-4">
+							<label for="startTime">START TIME <b class="text-danger">*</b></label>
+							<input type="time" class="form-control" name="startTime"
+								   value="<?= $data ? $data->startTime : '' ?>" id="startTime" required>
+						</div>
+						<div class="form-group col-md-4">
+							<label for="endDate">END DATE <b class="text-danger">*</b></label>
+							<div class="input-group date">
+								<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+								<input type="text" class="form-control" name="endDate" id="endDate"
+									   value="<?= $data ? date('d M Y', strtotime($data->endDate)) : '' ?>"
+									   required>
+							</div>
+						</div>
+						<div class="form-group col-md-4">
+							<label for="endTime">END TIME <b class="text-danger">*</b></label>
+							<input type="time" class="form-control" value="<?= $data ? $data->endTime : '' ?>"
+								   name="endTime" id="endTime" required>
 						</div>
 					</div>
 					<div class="row">

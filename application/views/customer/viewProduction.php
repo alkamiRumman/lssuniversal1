@@ -3,7 +3,8 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="btn btn-sm btn-primary pull-right printButton" id="Print">Print</button>
-				<button type="button" class="btn btn-sm btn-danger pull-right" data-dismiss="modal" aria-label="Close">Close
+				<button type="button" class="btn btn-sm btn-danger pull-right" data-dismiss="modal" aria-label="Close">
+					Close
 				</button>
 				<?php if ($data->adminStatus == 1) { ?>
 					<a href="<?= customer_url('productionMarkRead/') . $data->id ?>"
@@ -43,12 +44,12 @@
 										<td style="background-color: #D9D9D9;color: black"><?= $data->title ?></td>
 									</tr>
 									<tr>
-										<th style="background-color: #BCBCBC; color: black">Event Month</th>
-										<td style="background-color: #D9D9D9;color: black"><?= $data->eventMonth ?></td>
+										<th style="background-color: #BCBCBC; color: black">Start Date</th>
+										<td style="background-color: #D9D9D9;color: black"><?= date('d M Y', strtotime($data->startDate)) . ' ' . date('h:i:s A', strtotime($data->startTime)) ?></td>
 									</tr>
 									<tr>
-										<th style="background-color: #BCBCBC; color: black">Event Year</th>
-										<td style="background-color: #D9D9D9;color: black"><?= $data->eventYear ?></td>
+										<th style="background-color: #BCBCBC; color: black">End Date</th>
+										<td style="background-color: #D9D9D9;color: black"><?= date('d M Y', strtotime($data->endDate)) . ' ' . date('h:i:s A', strtotime($data->endTime)) ?></td>
 									</tr>
 								</table>
 							</div>

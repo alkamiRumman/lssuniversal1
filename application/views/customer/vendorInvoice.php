@@ -24,7 +24,7 @@
 							<th>MSA</th>
 							<th>STATUS</th>
 							<th>Last Update</th>
-							<th>ACTIONS</th>
+							<th>ACTION</th>
 						</tr>
 						</thead>
 						<tbody style="font-weight: normal">
@@ -98,6 +98,15 @@
 							return data;
 						}
 					}, "targets": 9
+				},
+				{
+					"render": function (data, type, row) {
+						if (data.length > 0) {
+							return '<span class="btn-link">' + data + '"</span>';
+						} else {
+							return data;
+						}
+					}, "targets": 10
 				},
 				{
 					"render": function (data, type, row) {
@@ -209,6 +218,7 @@
 			case 10:
 				loadPopup('<?= customer_url('viewVendorInvoiceMSA/') ?>' + data.id);
 				break;
+			case 11:
 			case 13:
 				break;
 			default:

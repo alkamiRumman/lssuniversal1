@@ -40,7 +40,9 @@
 					<div class="box-footer">
 						<div class="row">
 							<div class="form-group col-md-12">
-								<button type="submit" id="submit" class="btn btn-success pull-right">Save</button>
+								<button type="submit" id="submit" style="background-color: black; color: white"
+										class="btn btn-success pull-right">Save
+								</button>
 							</div>
 						</div>
 					</div>

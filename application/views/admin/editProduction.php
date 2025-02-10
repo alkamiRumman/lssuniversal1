@@ -9,65 +9,46 @@
 					<div class="panel panel-default">
 						<div class="panel-body">
 							<div class="row">
-								<div class="col-md-6">
-									<label for="title">PRODUCTION TITLE <span class="text-danger">*</span></label>
+								<div class="col-md-4">
+									<label for="title">PRODUCTION TITLE<span class="text-danger">*</span></label>
 									<input class="form-control input-sm" type="text" name="title" id="title" required
 										   placeholder="Enter production title"
 										   value="<?= $data ? $data->title : '' ?>">
 								</div>
 								<div class="col-md-2">
-									<label for="id">PRODUCTION ID <span class="text-danger">*</span></label>
+									<label for="id">PRODUCTION ID<span class="text-danger">*</span></label>
 									<input class="form-control input-sm" type="text" name="id" id="id" readonly
 										   title="Production Id" value="<?= $data->id ?>"
 										   style="border-color: #007bff;">
 								</div>
 								<div class="col-md-2">
-									<label for="eventMonth">EVENT MONTH <span class="text-danger">*</span></label>
-									<select class="form-control input-sm" name="eventMonth" id="eventMonth" required>
-										<option <?= ($data && $data->eventMonth == 'January') || (!$data && date('F') == 'January') ? 'selected' : '' ?>
-												value="January">January
-										</option>
-										<option <?= ($data && $data->eventMonth == 'February') || (!$data && date('F') == 'February') ? 'selected' : '' ?>
-												value="February">February
-										</option>
-										<option <?= ($data && $data->eventMonth == 'March') || (!$data && date('F') == 'March') ? 'selected' : '' ?>
-												value="March">March
-										</option>
-										<option <?= ($data && $data->eventMonth == 'April') || (!$data && date('F') == 'April') ? 'selected' : '' ?>
-												value="April">April
-										</option>
-										<option <?= ($data && $data->eventMonth == 'May') || (!$data && date('F') == 'May') ? 'selected' : '' ?>
-												value="May">May
-										</option>
-										<option <?= ($data && $data->eventMonth == 'June') || (!$data && date('F') == 'June') ? 'selected' : '' ?>
-												value="June">June
-										</option>
-										<option <?= ($data && $data->eventMonth == 'July') || (!$data && date('F') == 'July') ? 'selected' : '' ?>
-												value="July">July
-										</option>
-										<option <?= ($data && $data->eventMonth == 'August') || (!$data && date('F') == 'August') ? 'selected' : '' ?>
-												value="August">August
-										</option>
-										<option <?= ($data && $data->eventMonth == 'September') || (!$data && date('F') == 'September') ? 'selected' : '' ?>
-												value="September">September
-										</option>
-										<option <?= ($data && $data->eventMonth == 'October') || (!$data && date('F') == 'October') ? 'selected' : '' ?>
-												value="October">October
-										</option>
-										<option <?= ($data && $data->eventMonth == 'November') || (!$data && date('F') == 'November') ? 'selected' : '' ?>
-												value="November">November
-										</option>
-										<option <?= ($data && $data->eventMonth == 'December') || (!$data && date('F') == 'December') ? 'selected' : '' ?>
-												value="December">December
-										</option>
-									</select>
+									<label for="startDate">START DATE<b class="text-danger">*</b></label>
+									<div class="input-group date">
+										<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+										<input type="text" class="form-control input-sm" name="startDate" id="startDate"
+											   value="<?= $data ? date('d M Y', strtotime($data->startDate)) : '' ?>"
+											   required>
+									</div>
+								</div>
+								<div class="col-md-1">
+									<label for="startTime">START TIME<b class="text-danger">*</b></label>
+									<input type="time" class="form-control input-sm" value="<?= $data->startTime ?>"
+										   name="startTime" id="startTime" required>
 								</div>
 								<div class="col-md-2">
-									<label for="eventYear">EVENT YEAR <span class="text-danger">*</span></label>
-									<input class="form-control input-sm" type="number" minlength="4"
-										   min="<?= date('Y') ?>"
-										   name="eventYear" value="<?= $data ? $data->eventYear : date('Y') ?>"
-										   id="eventYear" required>
+									<label for="endDate">END DATE<b class="text-danger">*</b></label>
+									<div class="input-group date">
+										<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+										<input type="text" class="form-control input-sm" name="endDate" id="endDate"
+											   value="<?= $data ? date('d M Y', strtotime($data->endDate)) : '' ?>"
+											   required>
+									</div>
+								</div>
+								<div class="col-md-1">
+									<label for="endTime">END TIME<b class="text-danger">*</b></label>
+									<input type="time" class="form-control input-sm" value="<?= $data->endTime ?>"
+										   name="endTime"
+										   id="endTime" required>
 								</div>
 							</div>
 						</div>
@@ -365,7 +346,7 @@
 															<a href="javascript:void(0);"
 															   onclick="loadPopup('<?= base_url('admin/editCrewMember/' . $datum->id) ?>')"
 															   class="btn btn-xs btn-info"><i
-																		class="fa fa-edit"></i></a>
+																	class="fa fa-edit"></i></a>
 															<a href="javascript:void(0);"
 															   class="btn btn-xs btn-danger deleteCrew"
 															   id="<?= $datum->id ?>">
@@ -458,7 +439,7 @@
 															<a href="javascript:void(0);"
 															   onclick="loadPopup('<?= base_url('admin/editEntertainer/' . $datum->id) ?>')"
 															   class="btn btn-xs btn-info"><i
-																		class="fa fa-edit"></i></a>
+																	class="fa fa-edit"></i></a>
 															<a href="javascript:void(0);"
 															   class="btn btn-xs btn-danger deleteEntertainer"
 															   id="<?= $datum->id ?>">
@@ -520,7 +501,7 @@
 															<a href="javascript:void(0);"
 															   onclick="loadPopup('<?= base_url('admin/editTheatreCrew/' . $datum->id) ?>')"
 															   class="btn btn-xs btn-info"><i
-																		class="fa fa-edit"></i></a>
+																	class="fa fa-edit"></i></a>
 															<a href="javascript:void(0);"
 															   class="btn btn-xs btn-danger deleteTheatreCrew"
 															   id="<?= $datum->id ?>">
@@ -701,7 +682,7 @@
 															<a href="javascript:void(0);"
 															   onclick="loadPopup('<?= base_url('admin/editMarketingFee/' . $datum->id) ?>')"
 															   class="btn btn-xs btn-info"><i
-																		class="fa fa-edit"></i></a>
+																	class="fa fa-edit"></i></a>
 															<a href="javascript:void(0);"
 															   class="btn btn-xs btn-danger deleteMarketingFees"
 															   id="<?= $datum->id ?>">
@@ -757,7 +738,7 @@
 															<a href="javascript:void(0);"
 															   onclick="loadPopup('<?= base_url('admin/editRentalAndMisc/' . $datum->id) ?>')"
 															   class="btn btn-xs btn-info"><i
-																		class="fa fa-edit"></i></a>
+																	class="fa fa-edit"></i></a>
 															<a href="javascript:void(0);"
 															   class="btn btn-xs btn-danger deleteRentalAndMisc"
 															   id="<?= $datum->id ?>">
@@ -862,6 +843,117 @@
 													   step="any" min="0" name="projectedROI" id="projectedROI"
 													   readonly>
 											</div>
+										</div>
+										<div class="col-md-2">
+											<label for="ticketTieringCheckbox">TICKET TIERING </label><br>
+											<input class="itemTimelineView-checkbox"
+												   id="ticketTieringCheckbox"
+												   type="checkbox"
+												   onchange="ticketTieringBox(event)"
+												   value="1"
+												   name="ticketTieringCheckbox" <?= $data->ticketTieringCheckbox == 1 ? 'checked' : '' ?>
+												   style="width:20px;height:20px;">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div
+						class="row ticketTieringBox" <?= $data ? ($data->ticketTieringCheckbox == 1 ? '' : 'style="display: none;"') : 'style="display: none;"' ?>>
+						<div class="col-md-12">
+							<div class="box box-default" style="background-color: #D3D3D3">
+								<div class="box-header with-border">
+									<div class="row">
+										<div class="col-md-7">
+											<h3 class="box-title"><b>TICKET TIERING</b></h3>
+										</div>
+										<div class="col-md-2 form-group">
+											<div class="input-group">
+												<span style="background-color: black; color: white"
+													  class="input-group-addon">VENUE CAPACITY</span>
+												<input class="form-control input-sm" type="number"
+													   step="any" min="0" name="graphicDesign"
+													   value="<?= $data ? $data->totalVenueCapacity : '' ?>"
+													   id="ticketTieringVenueCapacity" readonly>
+											</div>
+										</div>
+										<div class="col-md-2 form-group">
+											<div class="input-group">
+												<span style="background-color: black; color: white"
+													  class="input-group-addon">REMAINING SEATS</span>
+												<input class="form-control input-sm" type="number"
+													   step="any" min="0" name="remainingSeats"
+													   value="<?= $data ? $data->remainingSeats : '' ?>"
+													   id="remainingSeats" readonly>
+											</div>
+										</div>
+										<div class="col-md-1 form-group">
+											<a href="javascript:void(0);"
+											   style="background-color: #2D2D2D; color: white"
+											   onclick="loadPopup('<?= admin_url('addTicketTiering/') . $data->id ?>' + '/' + document.getElementById('baseTicketPrice').value + '/' + document.getElementById('remainingSeats').value)"
+											   class="btn btn-sm pull-right"><i class="fa fa-plus"></i> Add New</a>
+										</div>
+									</div>
+									<div class="box-body">
+										<div class="table-responsive" id="ticketTieringTableDiv"
+											 style="overflow: auto;">
+											<table id="ticketTieringTable" style="width: 99%;"
+												   class="table table-bordered table-hover table-ticketTieringTable">
+												<thead>
+												<tr>
+													<th>TIER LEVEL</th>
+													<th>SELECTION</th>
+													<th># OF SEATS</th>
+													<th>BASE TICKET PRICE</th>
+													<th>TICKET MARK-UP</th>
+													<th>NEW TICKET PRICE</th>
+													<th>ROI</th>
+													<th>ACTION</th>
+												</tr>
+												</thead>
+												<tbody>
+												<?php if ($ticketTieringData) {
+													foreach ($ticketTieringData as $datum): ?>
+														<tr id="<?= $datum->id ?>"
+															class="<?= $datum->comp == 1 ? 'bg-red' : '' ?>">
+															<td><?= $datum->tierLevel ?></td>
+															<td><?= $datum->section ?></td>
+															<td><?= $datum->ofSeats ?></td>
+															<td><?= $datum->baseTicketPrice ?></td>
+															<td><?= $datum->ticketMarkUp ?></td>
+															<td><?= $datum->newTicketPrice ?></td>
+															<td><?= $datum->roi ?></td>
+															<td>
+																<a href="javascript:void(0);"
+																   onclick="loadPopup('<?= base_url('admin/editTicketTiering/' . $datum->id) ?>' + '/' + document.getElementById('baseTicketPrice').value + '/' + document.getElementById('remainingSeats').value)"
+																   class="btn btn-xs btn-info"><i
+																		class="fa fa-edit"></i></a>
+																<a href="javascript:void(0);"
+																   class="btn btn-xs btn-danger"
+																   onclick="deleteTicketTiering(event, <?= $datum->id ?>)"
+																   id="<?= $datum->id ?>">
+																	<i class="fa fa-trash"></i></a>
+															</td>
+														</tr>
+													<?php endforeach;
+												} ?>
+												</tbody>
+												<tfoot>
+												<tr>
+													<th colspan="6" class="text-right">Total Ticket Tiering ROI</th>
+													<th>
+														<input type="hidden" name="totalROI"
+															   id="totalROI"
+															   value="<?= $ticketTieringData ? number_format(array_sum(array_column($ticketTieringData, 'roi')), 2) : 0 ?>">
+														<input type="hidden" id="totalOfSeats" name="totalOfSeats"
+															   value="<?= number_format(array_sum(array_column($ticketTieringData, 'ofSeats')), 2); ?>">
+														$<?= number_format(array_sum(array_column($ticketTieringData, 'roi')), 2) ?>
+													</th>
+													<th></th>
+												</tr>
+												</tfoot>
+											</table>
 										</div>
 									</div>
 								</div>
@@ -975,6 +1067,38 @@
 	}
 </style>
 <script>
+	function ticketTieringBox(event) {
+		console.log(event);
+		const checkbox = $(event.target);
+		const isChecked = checkbox.is(':checked') ? 1 : 0;
+		console.log('clicked');
+		console.log(isChecked);
+		if (isChecked) {
+			$('.ticketTieringBox').show();
+		} else {
+			$('.ticketTieringBox').hide();
+		}
+	}
+
+	$('#totalOfSeats').on('change', function () {
+		var totalOfSeats = parseInt($('#totalOfSeats').val()) || 0;
+		var totalSeats = parseInt($('#totalVenueCapacity').val()) || 0;
+		var remaining = totalSeats - totalOfSeats;
+		$('#remainingSeats').val(remaining);
+	})
+
+	$('#startDate, #endDate').datepicker({
+		autoclose: true,
+		todayHighlight: true,
+		changeMonth: true,
+		changeYear: true,
+		dateFormat: 'dd M yy'
+	});
+
+	$('#startTime, #endTime').on('focus click', function () {
+		this.showPicker();
+	});
+
 	$(function () {
 		$(".selectVenue").select2({
 			placeholder: "Select Venue",

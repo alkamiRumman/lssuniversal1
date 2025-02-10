@@ -72,7 +72,7 @@
 								<table class="table table-bordered table-sm">
 									<tr>
 										<th>Event Month</th>
-										<td id="eventMonth"></td>
+										<td id="startDate"></td>
 									</tr>
 									<tr>
 										<th>Event Year</th>
@@ -164,7 +164,8 @@
 							</div>
 							<div class="form-group col-md-6">
 								<label for="w9Form"> w9Form <b class="text-danger">*</b></label>
-								<input class="form-control" type="file" name="w9Form" id="w9Form" accept="application/pdf"
+								<input class="form-control" type="file" name="w9Form" id="w9Form"
+									   accept="application/pdf"
 									   placeholder="Select File Here">
 							</div>
 						</div>
@@ -379,7 +380,7 @@
 		}).on('select2:select', function (event) {
 			var data = event.params.data;
 			console.log(data.id);
-			$('#eventMonth').text(data.eventMonth);
+			$('#startDate').text(data.startDate);
 			$('#eventYear').text(data.eventYear);
 			$('#venue').text(data.venueName);
 		});

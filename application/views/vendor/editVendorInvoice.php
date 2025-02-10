@@ -64,12 +64,12 @@
 								</div>
 								<table class="table table-bordered table-sm">
 									<tr>
-										<th>Event Month</th>
-										<td id="eventMonth"><?= $data->eventMonth ?></td>
+										<th>Production Start Date</th>
+										<td id="startDate"><?= date('d M Y', strtotime($data->startDate)) . ' ' . date('h:i:s A', strtotime($data->startTime)) ?></td>
 									</tr>
 									<tr>
-										<th>Event Year</th>
-										<td id="eventYear"><?= $data->eventYear ?></td>
+										<th>Production End Date</th>
+										<td id="endDate"><?= date('d M Y', strtotime($data->endDate)) . ' ' . date('h:i:s A', strtotime($data->endTime)) ?></td>
 									</tr>
 									<tr>
 										<th>Venue</th>
@@ -123,7 +123,7 @@
 												<td class="total"><?= $detail->total ?></td>
 												<td>
 													<button type="button" class="btn btn-sm btn-danger remove-row"><i
-																class="fa fa-trash"></i></button>
+															class="fa fa-trash"></i></button>
 												</td>
 											</tr>
 										<?php }
@@ -155,7 +155,8 @@
 						<div class="row mt-3">
 							<div class="col-md-12">
 								<label for="vendorNotes">Vendor Notes</label>
-								<input type="hidden" name="invoiceAmount" class="invoiceAmount" value="<?= $data->invoiceAmount ?>">
+								<input type="hidden" name="invoiceAmount" class="invoiceAmount"
+									   value="<?= $data->invoiceAmount ?>">
 								<textarea class="form-control input-sm" name="vendorNotes"
 										  id="vendorNotes" rows="2"><?= $data->vendorNotes ?></textarea>
 							</div>
@@ -173,7 +174,8 @@
 							</div>
 							<div class="form-group col-md-6">
 								<label for="w9Form"> W9 Form <span class="text-danger">*</span></label>
-								<input class="form-control" type="file" name="w9Form" id="w9Form" accept="application/pdf"
+								<input class="form-control" type="file" name="w9Form" id="w9Form"
+									   accept="application/pdf"
 									   placeholder="Select File Here">
 							</div>
 						</div>
@@ -332,9 +334,13 @@
 			}
 		}).on('select2:select', function (event) {
 			var data = event.params.data;
-			console.log(data.id);
-			$('#eventMonth').text(data.eventMonth);
-			$('#eventYear').text(data.eventYear);
+			var startDate = moment(data.startDate, "YYYY-MM-DD").format("DD MMM YYYY");
+			var startTime = moment(data.startDate, "HH:mm:ss").format("hh:mm:ss A");
+			var endDate = moment(data.endDate, "YYYY-MM-DD ").format("DD MMM YYYY");
+			var endTime = moment(data.endDate, "HH:mm:ss").format("hh:mm:ss A");
+			$('.detailsTable').show();
+			$('#startDate').text(startDate + ' ' + startTime);
+			$('#endDate').text(endDate + ' ' + endTime);
 			$('#venue').text(data.venueName);
 		});
 	});

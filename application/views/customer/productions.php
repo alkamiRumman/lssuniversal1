@@ -15,8 +15,8 @@
 						<tr>
 							<th>PRODUCTION ID</th>
 							<th>PRODUCTION TITLE</th>
-							<th>EVENT MONTH</th>
-							<th>EVENT YEAR</th>
+							<th>START DATE</th>
+							<th>END DATE</th>
 							<th>VENUE NAME</th>
 							<th>ADDRESS</th>
 							<th>CITY</th>
@@ -168,15 +168,26 @@
 				},
 				{
 					"render": function (data, type, row) {
+						console.log(row['startTime']);
+						return moment(data).format('DD MMM YYYY') + ' ' + moment(row['startTime'], 'HH:mm:ss').format('hh:mm:ss A');
+					}, "targets": 2, "sType": 'date'
+				},
+				{
+					"render": function (data, type, row) {
+						return moment(data).format('DD MMM YYYY') + ' ' + moment(row['endTime'], 'HH:mm:ss').format('hh:mm:ss A');
+					}, "targets": 3, "sType": 'date'
+				},
+				{
+					"render": function (data, type, row) {
 						if (data) {
 							return moment(data).format('DD MMM YYYY hh:mm:ss A');
 						} else {
 							return data;
 						}
-					}, "targets": [18, 17], "sType": 'date'
+					}, "targets": 18, "sType": 'date'
 				}
 			],
-			'aoColumns': [{mData: "id"}, {mData: "title"}, {mData: "eventMonth"}, {mData: "eventYear"}, {mData: "venueName"},
+			'aoColumns': [{mData: "id"}, {mData: "title"}, {mData: "startDate"}, {mData: "endDate"}, {mData: "venueName"},
 				{mData: "address"}, {mData: "city"}, {mData: "state"}, {mData: "totalVenueCapacity"}, {mData: "totalProductionCost"},
 				{mData: "finalTotalTicketFee"}, {mData: "overallProductionCost"}, {mData: "baseTicketPrice"}, {mData: "ticketMarkup"}, {mData: "newTicketPrice"},
 				{mData: "projectedROI"}, {mData: "completedStatus"}, {mData: "createAt"}, {mData: "updateAt"}, {

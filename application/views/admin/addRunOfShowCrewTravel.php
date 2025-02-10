@@ -1,5 +1,5 @@
 <div class="modal fade in" id="modal-default" style="display: block;overflow: auto;">
-	<div class="modal-dialog modal-lg" style="width: 90%">
+	<div class="modal-dialog modal-lg" style="width: 95%">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="btn btn-danger pull-right" data-dismiss="modal" aria-label="Close">Close
@@ -117,7 +117,8 @@
 												<!-- Arizona -->
 												<optgroup label="Arizona - AZ">
 													<option value="Flagstaff - FLG">Flagstaff - FLG</option>
-													<option value="Phoenix, Phoenix Sky Harbor International Airport - PHX">
+													<option
+														value="Phoenix, Phoenix Sky Harbor International Airport - PHX">
 														Phoenix,
 														Phoenix Sky Harbor International Airport - PHX
 													</option>
@@ -198,7 +199,8 @@
 												<!-- Florida -->
 												<optgroup label="Florida - FL">
 													<option value="Daytona Beach - DAB">Daytona Beach - DAB</option>
-													<option value="Fort Lauderdale-Hollywood International Airport - FLL">
+													<option
+														value="Fort Lauderdale-Hollywood International Airport - FLL">
 														Fort
 														Lauderdale-Hollywood International Airport - FLL
 													</option>
@@ -382,7 +384,8 @@
 
 												<!-- Nevada -->
 												<optgroup label="Nevada - NV">
-													<option value="Las Vegas, Las Vegas McCarran International Airport - LAS">
+													<option
+														value="Las Vegas, Las Vegas McCarran International Airport - LAS">
 														Las Vegas,
 														Las Vegas McCarran International Airport - LAS
 													</option>
@@ -427,7 +430,8 @@
 													</option>
 													<option value="Buffalo - BUF">Buffalo - BUF</option>
 													<option value="Islip - ISP">Islip - ISP</option>
-													<option value="New York, John F Kennedy International Airport - JFK">
+													<option
+														value="New York, John F Kennedy International Airport - JFK">
 														New York, John
 														F Kennedy International Airport - JFK
 													</option>
@@ -669,7 +673,8 @@
 												<!-- Arizona -->
 												<optgroup label="Arizona - AZ">
 													<option value="Flagstaff - FLG">Flagstaff - FLG</option>
-													<option value="Phoenix, Phoenix Sky Harbor International Airport - PHX">
+													<option
+														value="Phoenix, Phoenix Sky Harbor International Airport - PHX">
 														Phoenix,
 														Phoenix Sky Harbor International Airport - PHX
 													</option>
@@ -750,7 +755,8 @@
 												<!-- Florida -->
 												<optgroup label="Florida - FL">
 													<option value="Daytona Beach - DAB">Daytona Beach - DAB</option>
-													<option value="Fort Lauderdale-Hollywood International Airport - FLL">
+													<option
+														value="Fort Lauderdale-Hollywood International Airport - FLL">
 														Fort
 														Lauderdale-Hollywood International Airport - FLL
 													</option>
@@ -934,7 +940,8 @@
 
 												<!-- Nevada -->
 												<optgroup label="Nevada - NV">
-													<option value="Las Vegas, Las Vegas McCarran International Airport - LAS">
+													<option
+														value="Las Vegas, Las Vegas McCarran International Airport - LAS">
 														Las Vegas,
 														Las Vegas McCarran International Airport - LAS
 													</option>
@@ -979,7 +986,8 @@
 													</option>
 													<option value="Buffalo - BUF">Buffalo - BUF</option>
 													<option value="Islip - ISP">Islip - ISP</option>
-													<option value="New York, John F Kennedy International Airport - JFK">
+													<option
+														value="New York, John F Kennedy International Airport - JFK">
 														New York, John
 														F Kennedy International Airport - JFK
 													</option>
@@ -1260,7 +1268,8 @@
 												<!-- Arizona -->
 												<optgroup label="Arizona - AZ">
 													<option value="Flagstaff - FLG">Flagstaff - FLG</option>
-													<option value="Phoenix, Phoenix Sky Harbor International Airport - PHX">
+													<option
+														value="Phoenix, Phoenix Sky Harbor International Airport - PHX">
 														Phoenix,
 														Phoenix Sky Harbor International Airport - PHX
 													</option>
@@ -1341,7 +1350,8 @@
 												<!-- Florida -->
 												<optgroup label="Florida - FL">
 													<option value="Daytona Beach - DAB">Daytona Beach - DAB</option>
-													<option value="Fort Lauderdale-Hollywood International Airport - FLL">
+													<option
+														value="Fort Lauderdale-Hollywood International Airport - FLL">
 														Fort
 														Lauderdale-Hollywood International Airport - FLL
 													</option>
@@ -1525,7 +1535,8 @@
 
 												<!-- Nevada -->
 												<optgroup label="Nevada - NV">
-													<option value="Las Vegas, Las Vegas McCarran International Airport - LAS">
+													<option
+														value="Las Vegas, Las Vegas McCarran International Airport - LAS">
 														Las Vegas,
 														Las Vegas McCarran International Airport - LAS
 													</option>
@@ -1570,7 +1581,8 @@
 													</option>
 													<option value="Buffalo - BUF">Buffalo - BUF</option>
 													<option value="Islip - ISP">Islip - ISP</option>
-													<option value="New York, John F Kennedy International Airport - JFK">
+													<option
+														value="New York, John F Kennedy International Airport - JFK">
 														New York, John
 														F Kennedy International Airport - JFK
 													</option>
@@ -1813,7 +1825,8 @@
 												<!-- Arizona -->
 												<optgroup label="Arizona - AZ">
 													<option value="Flagstaff - FLG">Flagstaff - FLG</option>
-													<option value="Phoenix, Phoenix Sky Harbor International Airport - PHX">
+													<option
+														value="Phoenix, Phoenix Sky Harbor International Airport - PHX">
 														Phoenix,
 														Phoenix Sky Harbor International Airport - PHX
 													</option>
@@ -1894,7 +1907,8 @@
 												<!-- Florida -->
 												<optgroup label="Florida - FL">
 													<option value="Daytona Beach - DAB">Daytona Beach - DAB</option>
-													<option value="Fort Lauderdale-Hollywood International Airport - FLL">
+													<option
+														value="Fort Lauderdale-Hollywood International Airport - FLL">
 														Fort
 														Lauderdale-Hollywood International Airport - FLL
 													</option>
@@ -2078,7 +2092,8 @@
 
 												<!-- Nevada -->
 												<optgroup label="Nevada - NV">
-													<option value="Las Vegas, Las Vegas McCarran International Airport - LAS">
+													<option
+														value="Las Vegas, Las Vegas McCarran International Airport - LAS">
 														Las Vegas,
 														Las Vegas McCarran International Airport - LAS
 													</option>
@@ -2123,7 +2138,8 @@
 													</option>
 													<option value="Buffalo - BUF">Buffalo - BUF</option>
 													<option value="Islip - ISP">Islip - ISP</option>
-													<option value="New York, John F Kennedy International Airport - JFK">
+													<option
+														value="New York, John F Kennedy International Airport - JFK">
 														New York, John
 														F Kennedy International Airport - JFK
 													</option>
@@ -2364,12 +2380,12 @@
 									</div>
 									<div class="row">
 										<div class="form-group col-md-2">
-											<label for="pickUpTime">Pick-Up Time</label>
+											<label for="pickUpTime">Pick-Up </label>
 											<input type="time" name="pickUpTime" id="pickUpTime"
 												   class="input-sm form-control">
 										</div>
 										<div class="form-group col-md-2">
-											<label for="dropOffTime">Drop-Off Time</label>
+											<label for="dropOffTime">Drop-Off </label>
 											<input type="time" name="dropOffTime" id="dropOffTime"
 												   class="input-sm form-control">
 										</div>

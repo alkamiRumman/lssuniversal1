@@ -1,19 +1,20 @@
 <?php
 // Sample task data (replace this with actual data from your PHP model or database)
 $tasks = [
-		['phase' => 'Pre-production', 'title' => "Primary Task", 'name' => "Task 1", 'start_date' => "2024-04-10", 'end_date' => "2024-05-25"],
-		['phase' => 'Pre-production', 'title' => "Primary Task", 'name' => "Task 2", 'start_date' => "2024-04-15", 'end_date' => "2024-06-10"],
-		['phase' => 'Pre-production', 'title' => "Secondary Task", 'name' => "Task 3", 'start_date' => "2024-04-05", 'end_date' => "2024-06-15"],
-		['phase' => 'Pre-production', 'title' => "Secondary Task", 'name' => "Task 4", 'start_date' => "2024-07-01", 'end_date' => "2024-09-10"],
-		['phase' => 'Production', 'title' => "Optional Task", 'name' => "Task 5", 'start_date' => "2024-10-20", 'end_date' => "2024-11-15"],
-		['phase' => 'Production', 'title' => "Optional Task", 'name' => "Task 6", 'start_date' => "2024-10-25", 'end_date' => "2024-12-05"],
-		['phase' => 'Standard', 'title' => "New Task", 'name' => "Task 7", 'start_date' => "2024-06-20", 'end_date' => "2024-10-04"],
-		['phase' => 'Standard', 'title' => "Redefine Task", 'name' => "Task 8", 'start_date' => "2025-02-25", 'end_date' => "2025-10-05"],
-		['phase' => 'Standard', 'title' => "Redo Task", 'name' => "Task 9", 'start_date' => "2025-02-25", 'end_date' => "2025-05-05"],
+	['phase' => 'Pre-production', 'title' => "Primary Task", 'name' => "Task 1", 'start_date' => "2024-04-10", 'end_date' => "2024-05-25"],
+	['phase' => 'Pre-production', 'title' => "Primary Task", 'name' => "Task 2", 'start_date' => "2024-04-15", 'end_date' => "2024-06-10"],
+	['phase' => 'Pre-production', 'title' => "Secondary Task", 'name' => "Task 3", 'start_date' => "2024-04-05", 'end_date' => "2024-06-15"],
+	['phase' => 'Pre-production', 'title' => "Secondary Task", 'name' => "Task 4", 'start_date' => "2024-07-01", 'end_date' => "2024-09-10"],
+	['phase' => 'Production', 'title' => "Optional Task", 'name' => "Task 5", 'start_date' => "2024-10-20", 'end_date' => "2024-11-15"],
+	['phase' => 'Production', 'title' => "Optional Task", 'name' => "Task 6", 'start_date' => "2024-10-25", 'end_date' => "2024-12-05"],
+	['phase' => 'Standard', 'title' => "New Task", 'name' => "Task 7", 'start_date' => "2024-06-20", 'end_date' => "2024-10-04"],
+	['phase' => 'Standard', 'title' => "Redefine Task", 'name' => "Task 8", 'start_date' => "2025-02-25", 'end_date' => "2025-10-05"],
+	['phase' => 'Standard', 'title' => "Redo Task", 'name' => "Task 9", 'start_date' => "2025-02-25", 'end_date' => "2025-05-05"],
 ];
 
 // Function to generate random colors for task titles
-function generateRandomColor($title) {
+function generateRandomColor($title)
+{
 	// Simple hash to generate a consistent color per title
 	$hash = crc32($title);
 	$hue = $hash % 360; // Hue between 0 and 359
@@ -21,11 +22,11 @@ function generateRandomColor($title) {
 }
 
 // Find the min and max dates to dynamically calculate the quarters and months
-$minTimestamp = min(array_map(function($task) {
+$minTimestamp = min(array_map(function ($task) {
 	return strtotime($task['start_date']);
 }, $tasks));
 
-$maxTimestamp = max(array_map(function($task) {
+$maxTimestamp = max(array_map(function ($task) {
 	return strtotime($task['end_date']);
 }, $tasks));
 
@@ -107,9 +108,9 @@ foreach ($tasks as $task) {
 
 		.gantt-bar {
 			position: absolute;
-			top: 0;
+			top: 15%;
 			left: 0;
-			height: 100%;
+			height: 80%;
 			border-radius: 3px;
 			color: white;
 			font-size: 10px;
@@ -204,15 +205,16 @@ foreach ($tasks as $task) {
 									$totalMonths = $endIndex - $startIndex + 1;
 									$barWidth = ($totalDays / (cal_days_in_month(CAL_GREGORIAN, $taskStartDate->format('n'), $taskStartDate->format('Y')) * $totalMonths)) * 100;
 
-                                    // Ensure barWidth does not exceed 100%
-                                    if ($barWidth > 100) $barWidth = 100;
-                                    ?>
+									// Ensure barWidth does not exceed 100%
+									if ($barWidth > 100) $barWidth = 100;
+									?>
 									<tr>
 										<?php if (!$phaseRendered): ?>
 											<td class="phase-column" rowspan="<?= $rowspan ?>"><?= $phase ?></td>
 											<?php $phaseRendered = true; ?>
 										<?php endif; ?>
-										<td class="task-name-column" style="background-color: <?= generateRandomColor($title); ?>"><?= htmlspecialchars($title) ?></td>
+										<td class="task-name-column"
+											style="background-color: <?= generateRandomColor($title); ?>"><?= htmlspecialchars($title) ?></td>
 										<?php foreach ($months as $index => $monthYear): ?>
 											<td class="timeline-column" style="position: relative;">
 												<?php
@@ -220,10 +222,10 @@ foreach ($tasks as $task) {
 													// Display Gantt bar
 													?>
 													<div class="gantt-bar" style="
-															left: <?= $startOffset ?>%;
-															width: <?= $barWidth ?>%;
-															background-color: <?= generateRandomColor($title); ?>;
-															">
+														left: <?= $startOffset ?>%;
+														width: <?= $barWidth ?>%;
+														background-color: <?= generateRandomColor($title); ?>;
+														">
 														<?= htmlspecialchars($task['name']) ?>
 													</div>
 												<?php endif; ?>

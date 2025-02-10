@@ -2,7 +2,7 @@
 	<div class="col-md-12">
 		<div class="box box-info">
 			<div class="box-header with-border">
-				<h3 class="box-title"><b>Project Brief & Team</b></h3>
+				<h3 class="box-title"><b>Project Brief & Team KPI's</b></h3>
 				<a href="javascript:void(0);"
 				   onclick="loadPopup('<?= admin_url('addProject') ?>')"
 				   class="btn btn-sm pull-right" style="color: white; background-color: black">Create New</a>
@@ -100,12 +100,6 @@
 					text: 'Archives',
 					action: function (e, dt, node, config) {
 						window.location = "<?= base_url('admin/archivesProject') ?>";
-					}
-				},
-				{
-					text: 'Roadmap',
-					action: function (e, dt, node, config) {
-						window.location = "<?= base_url('admin/roadmap') ?>";
 					}
 				}
 			]

@@ -57,12 +57,12 @@
 								</div>
 								<table class="table table-bordered table-sm">
 									<tr>
-										<th>Event Month</th>
-										<td id="eventMonth"></td>
+										<th>Start Date</th>
+										<td id="startDate"></td>
 									</tr>
 									<tr>
-										<th>Event Year</th>
-										<td id="eventYear"></td>
+										<th>End Date</th>
+										<td id="endDate"></td>
 									</tr>
 									<tr>
 										<th>Venue</th>
@@ -293,9 +293,13 @@
 			}
 		}).on('select2:select', function (event) {
 			var data = event.params.data;
-			console.log(data.id);
-			$('#eventMonth').text(data.eventMonth);
-			$('#eventYear').text(data.eventYear);
+			var startDate = moment(data.startDate, "YYYY-MM-DD").format("DD MMM YYYY");
+			var startTime = moment(data.startDate, "HH:mm:ss").format("hh:mm:ss A");
+			var endDate = moment(data.endDate, "YYYY-MM-DD ").format("DD MMM YYYY");
+			var endTime = moment(data.endDate, "HH:mm:ss").format("hh:mm:ss A");
+			$('.detailsTable').show();
+			$('#startDate').text(startDate + ' ' + startTime);
+			$('#endDate').text(endDate + ' ' + endTime);
 			$('#venue').text(data.venueName);
 		});
 	});

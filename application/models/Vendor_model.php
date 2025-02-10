@@ -59,11 +59,6 @@ class Vendor_model extends CI_Model
 		}
 	}
 
-	function update($arr, $id)
-	{
-		$this->db->update(TABLE_USERS, $arr, array('id' => $id));
-	}
-
 	function getProductionSearch($searchTerm = "")
 	{
 		$this->db->select('p.*, p.title as text, v.venueName');
@@ -97,7 +92,7 @@ class Vendor_model extends CI_Model
 	function getVendorInvoiceById($id)
 	{
 		$this->db->select('v.*, u.name, u.phone, u.username, u.businessName, u.ein, u.businessAddress, u.city, u.state,
-		 	p.title, p.eventMonth, p.eventYear, vv.venueName');
+		 	p.title, p.startDate, p.startTime, p.endDate, p.endTime, vv.venueName');
 		$this->db->from(TABLE_VENDORINVOICE . ' as v');
 		$this->db->join(TABLE_USERS . ' as u', 'v.vendorId = u.id');
 		$this->db->join(TABLE_PRODUCTIONS . ' as p', 'v.productionId = p.id');
@@ -133,6 +128,11 @@ class Vendor_model extends CI_Model
 	function updateVendorInvoice($arr, $id)
 	{
 		$this->db->update(TABLE_VENDORINVOICE, $arr, array('id' => $id));
+	}
+
+	function update($arr, $id)
+	{
+		$this->db->update(TABLE_USERS, $arr, array('id' => $id));
 	}
 
 	function deleteVendorInvoiceDetailsByInvoiceId($id)

@@ -1,5 +1,5 @@
 <div class="modal fade in" id="modal-default" style="display: block;overflow: auto;">
-	<div class="modal-dialog modal-lg" style="width: 90%">
+	<div class="modal-dialog modal-lg" style="width: 95%">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="btn btn-danger pull-right" data-dismiss="modal" aria-label="Close">Close
@@ -20,7 +20,8 @@
 											<select class="form-control input-sm" style="width: 100%"
 													name="crewMemberId"
 													id="crewMemberId" required>
-												<option selected value="<?= $data->crewMemberId ?>"><?= $data->firstName ?></option>
+												<option selected
+														value="<?= $data->crewMemberId ?>"><?= $data->firstName ?></option>
 											</select>
 										</div>
 										<div class="col-md-6">
@@ -44,9 +45,15 @@
 											<label for="travelTypeTo">Travel Type </label>
 											<select class="form-control input-sm" name="travelTypeTo"
 													id="travelTypeTo">
-												<option <?= $data->travelTypeTo == 'Airline' ? 'selected' : '' ?> value="Airline">Airline</option>
-												<option <?= $data->travelTypeTo == 'Amtrak' ? 'selected' : '' ?> value="Amtrak">Amtrak</option>
-												<option <?= $data->travelTypeTo == 'Bus' ? 'selected' : '' ?> value="Bus">Bus</option>
+												<option <?= $data->travelTypeTo == 'Airline' ? 'selected' : '' ?>
+													value="Airline">Airline
+												</option>
+												<option <?= $data->travelTypeTo == 'Amtrak' ? 'selected' : '' ?>
+													value="Amtrak">Amtrak
+												</option>
+												<option <?= $data->travelTypeTo == 'Bus' ? 'selected' : '' ?>
+													value="Bus">Bus
+												</option>
 											</select>
 										</div>
 										<div class="form-group col-md-4">
@@ -54,26 +61,52 @@
 											<select class="form-control input-sm" name="airlineTo"
 													id="airlineTo" style="width: 100%">
 												<option value="">Select Airline</option>
-												<option <?= $data->airlineTo == 'Alaska Airlines' ? 'selected' : '' ?> value="Alaska Airlines">Alaska Airlines</option>
-												<option <?= $data->airlineTo == 'Allegiant Air' ? 'selected' : '' ?> value="Allegiant Air">Allegiant Air</option>
-												<option <?= $data->airlineTo == 'American Airlines' ? 'selected' : '' ?> value="American Airlines">American Airlines</option>
-												<option <?= $data->airlineTo == 'Breeze Airways' ? 'selected' : '' ?> value="Breeze Airways">Breeze Airways</option>
-												<option <?= $data->airlineTo == 'Delta Air' ? 'selected' : '' ?> value="Delta Air Lines">Delta Air Lines</option>
-												<option <?= $data->airlineTo == 'Frontier Airlines' ? 'selected' : '' ?> value="Frontier Airlines">Frontier Airlines</option>
-												<option <?= $data->airlineTo == 'Hawaiian Airlines' ? 'selected' : '' ?> value="Hawaiian Airlines">Hawaiian Airlines</option>
-												<option <?= $data->airlineTo == 'JetBlue"' ? 'selected' : '' ?> value="JetBlue">JetBlue</option>
-												<option <?= $data->airlineTo == 'Southwest Airlines' ? 'selected' : '' ?> value="Southwest Airlines">Southwest Airlines</option>
-												<option <?= $data->airlineTo == 'Spirit Airlines' ? 'selected' : '' ?> value="Spirit Airlines">Spirit Airlines</option>
-												<option <?= $data->airlineTo == 'Sun Country Airlines' ? 'selected' : '' ?> value="Sun Country Airlines">Sun Country Airlines</option>
-												<option <?= $data->airlineTo == 'United Airlines' ? 'selected' : '' ?> value="United Airlines">United Airlines</option>
+												<option <?= $data->airlineTo == 'Alaska Airlines' ? 'selected' : '' ?>
+													value="Alaska Airlines">Alaska Airlines
+												</option>
+												<option <?= $data->airlineTo == 'Allegiant Air' ? 'selected' : '' ?>
+													value="Allegiant Air">Allegiant Air
+												</option>
+												<option <?= $data->airlineTo == 'American Airlines' ? 'selected' : '' ?>
+													value="American Airlines">American Airlines
+												</option>
+												<option <?= $data->airlineTo == 'Breeze Airways' ? 'selected' : '' ?>
+													value="Breeze Airways">Breeze Airways
+												</option>
+												<option <?= $data->airlineTo == 'Delta Air' ? 'selected' : '' ?>
+													value="Delta Air Lines">Delta Air Lines
+												</option>
+												<option <?= $data->airlineTo == 'Frontier Airlines' ? 'selected' : '' ?>
+													value="Frontier Airlines">Frontier Airlines
+												</option>
+												<option <?= $data->airlineTo == 'Hawaiian Airlines' ? 'selected' : '' ?>
+													value="Hawaiian Airlines">Hawaiian Airlines
+												</option>
+												<option <?= $data->airlineTo == 'JetBlue"' ? 'selected' : '' ?>
+													value="JetBlue">JetBlue
+												</option>
+												<option <?= $data->airlineTo == 'Southwest Airlines' ? 'selected' : '' ?>
+													value="Southwest Airlines">Southwest Airlines
+												</option>
+												<option <?= $data->airlineTo == 'Spirit Airlines' ? 'selected' : '' ?>
+													value="Spirit Airlines">Spirit Airlines
+												</option>
+												<option <?= $data->airlineTo == 'Sun Country Airlines' ? 'selected' : '' ?>
+													value="Sun Country Airlines">Sun Country Airlines
+												</option>
+												<option <?= $data->airlineTo == 'United Airlines' ? 'selected' : '' ?>
+													value="United Airlines">United Airlines
+												</option>
 											</select>
 										</div>
 									</div>
 									<div class="row">
 										<div class="form-group col-md-4">
 											<label for="specifyTravelTo">Specify Travel </label>
-											<input class="form-control input-sm" type="text" <?= $data->travelTypeTo == 'Airline' ? 'readonly' : '' ?>
-												   name="specifyTravelTo" id="specifyTravelTo" value="<?= $data->specifyTravelTo ?>">
+											<input class="form-control input-sm"
+												   type="text" <?= $data->travelTypeTo == 'Airline' ? 'readonly' : '' ?>
+												   name="specifyTravelTo" id="specifyTravelTo"
+												   value="<?= $data->specifyTravelTo ?>">
 										</div>
 										<div class="form-group col-md-4">
 											<label for="airportFromTo">Airport From</label><br>
@@ -83,11 +116,15 @@
 												<option value="">Select Airline From</option>
 												<!-- Alabama -->
 												<optgroup label="Alabama - AL">
-													<option value="Birmingham International Airport - BHM">Birmingham International
+													<option value="Birmingham International Airport - BHM">Birmingham
+														International
 														Airport - BHM
 													</option>
-													<option value="Dothan Regional Airport - DHN">Dothan Regional Airport - DHN</option>
-													<option value="Huntsville International Airport - HSV">Huntsville International
+													<option value="Dothan Regional Airport - DHN">Dothan Regional
+														Airport - DHN
+													</option>
+													<option value="Huntsville International Airport - HSV">Huntsville
+														International
 														Airport - HSV
 													</option>
 													<option value="Mobile - MOB">Mobile - MOB</option>
@@ -96,13 +133,16 @@
 
 												<!-- Alaska -->
 												<optgroup label="Alaska - AK">
-													<option value="Anchorage International Airport - ANC">Anchorage International
+													<option value="Anchorage International Airport - ANC">Anchorage
+														International
 														Airport - ANC
 													</option>
-													<option value="Fairbanks International Airport - FAI">Fairbanks International
+													<option value="Fairbanks International Airport - FAI">Fairbanks
+														International
 														Airport - FAI
 													</option>
-													<option value="Juneau International Airport - JNU">Juneau International Airport -
+													<option value="Juneau International Airport - JNU">Juneau
+														International Airport -
 														JNU
 													</option>
 												</optgroup>
@@ -110,23 +150,29 @@
 												<!-- Arizona -->
 												<optgroup label="Arizona - AZ">
 													<option value="Flagstaff - FLG">Flagstaff - FLG</option>
-													<option value="Phoenix, Phoenix Sky Harbor International Airport - PHX">Phoenix,
+													<option
+														value="Phoenix, Phoenix Sky Harbor International Airport - PHX">
+														Phoenix,
 														Phoenix Sky Harbor International Airport - PHX
 													</option>
-													<option value="Tucson International Airport - TUS">Tucson International Airport -
+													<option value="Tucson International Airport - TUS">Tucson
+														International Airport -
 														TUS
 													</option>
-													<option value="Yuma International Airport - YUM">Yuma International Airport - YUM
+													<option value="Yuma International Airport - YUM">Yuma International
+														Airport - YUM
 													</option>
 												</optgroup>
 
 												<!-- Arkansas -->
 												<optgroup label="Arkansas - AR">
 													<option value="Fayetteville - FYV">Fayetteville - FYV</option>
-													<option value="Little Rock National Airport - LIT">Little Rock National Airport -
+													<option value="Little Rock National Airport - LIT">Little Rock
+														National Airport -
 														LIT
 													</option>
-													<option value="Northwest Arkansas Regional Airport - XNA">Northwest Arkansas
+													<option value="Northwest Arkansas Regional Airport - XNA">Northwest
+														Arkansas
 														Regional Airport - XNA
 													</option>
 												</optgroup>
@@ -136,7 +182,8 @@
 													<option value="Burbank - BUR">Burbank - BUR</option>
 													<option value="Fresno - FAT">Fresno - FAT</option>
 													<option value="Long Beach - LGB">Long Beach - LGB</option>
-													<option value="Los Angeles International Airport - LAX">Los Angeles International
+													<option value="Los Angeles International Airport - LAX">Los Angeles
+														International
 														Airport - LAX
 													</option>
 													<option value="Oakland - OAK">Oakland - OAK</option>
@@ -144,7 +191,8 @@
 													<option value="Palm Springs - PSP">Palm Springs - PSP</option>
 													<option value="Sacramento - SMF">Sacramento - SMF</option>
 													<option value="San Diego - SAN">San Diego - SAN</option>
-													<option value="San Francisco International Airport - SFO">San Francisco
+													<option value="San Francisco International Airport - SFO">San
+														Francisco
 														International Airport - SFO
 													</option>
 													<option value="San Jose - SJC">San Jose - SJC</option>
@@ -154,8 +202,10 @@
 												<!-- Colorado -->
 												<optgroup label="Colorado - CO">
 													<option value="Aspen - ASE">Aspen - ASE</option>
-													<option value="Colorado Springs - COS">Colorado Springs - COS</option>
-													<option value="Denver International Airport - DEN">Denver International Airport -
+													<option value="Colorado Springs - COS">Colorado Springs - COS
+													</option>
+													<option value="Denver International Airport - DEN">Denver
+														International Airport -
 														DEN
 													</option>
 													<option value="Grand Junction - GJT">Grand Junction - GJT</option>
@@ -169,10 +219,12 @@
 												</optgroup>
 
 												<optgroup label="District of Columbia - DC">
-													<option value="Washington, Dulles International Airport - IAD">Washington, Dulles
+													<option value="Washington, Dulles International Airport - IAD">
+														Washington, Dulles
 														International Airport
 													</option>
-													<option value="Washington National Airport - DCA">Washington National Airport -
+													<option value="Washington National Airport - DCA">Washington
+														National Airport -
 														DCA
 													</option>
 												</optgroup>
@@ -180,15 +232,19 @@
 												<!-- Florida -->
 												<optgroup label="Florida - FL">
 													<option value="Daytona Beach - DAB">Daytona Beach - DAB</option>
-													<option value="Fort Lauderdale-Hollywood International Airport - FLL">Fort
+													<option
+														value="Fort Lauderdale-Hollywood International Airport - FLL">
+														Fort
 														Lauderdale-Hollywood International Airport - FLL
 													</option>
 													<option value="Fort Myers - RSW">Fort Myers - RSW</option>
 													<option value="Jacksonville - JAX">Jacksonville - JAX</option>
-													<option value="Key West International Airport - EYW">Key West International Airport
+													<option value="Key West International Airport - EYW">Key West
+														International Airport
 														- EYW
 													</option>
-													<option value="Miami International Airport - MIA">Miami International Airport -
+													<option value="Miami International Airport - MIA">Miami
+														International Airport -
 														MIA
 													</option>
 													<option value="Orlando - MCO">Orlando - MCO</option>
@@ -197,14 +253,16 @@
 													<option value="Sarasota - SRQ">Sarasota - SRQ</option>
 													<option value="Tampa - TPA">Tampa - TPA</option>
 													<option value="West Palm Beach - PBI">West Palm Beach - PBI</option>
-													<option value="Panama City-Bay County International Airport - PFN">Panama City-Bay
+													<option value="Panama City-Bay County International Airport - PFN">
+														Panama City-Bay
 														County International Airport - PFN
 													</option>
 												</optgroup>
 
 												<!-- Georgia -->
 												<optgroup label="Georgia - GA">
-													<option value="Atlanta Hartsfield International Airport - ATL">Atlanta Hartsfield
+													<option value="Atlanta Hartsfield International Airport - ATL">
+														Atlanta Hartsfield
 														International Airport - ATL
 													</option>
 													<option value="Augusta - AGS">Augusta - AGS</option>
@@ -214,7 +272,8 @@
 												<!-- Hawaii -->
 												<optgroup label="Hawaii - HI">
 													<option value="Hilo - ITO">Hilo - ITO</option>
-													<option value="Honolulu International Airport - HNL">Honolulu International Airport
+													<option value="Honolulu International Airport - HNL">Honolulu
+														International Airport
 														- HNL
 													</option>
 													<option value="Kahului - OGG">Kahului - OGG</option>
@@ -229,8 +288,11 @@
 
 												<!-- Illinois -->
 												<optgroup label="Illinois - IL">
-													<option value="Chicago Midway Airport - MDW">Chicago Midway Airport - MDW</option>
-													<option value="Chicago, O'Hare International Airport - ORD">Chicago, O'Hare
+													<option value="Chicago Midway Airport - MDW">Chicago Midway Airport
+														- MDW
+													</option>
+													<option value="Chicago, O'Hare International Airport - ORD">Chicago,
+														O'Hare
 														International Airport - ORD
 													</option>
 													<option value="Moline - MLI">Moline - MLI</option>
@@ -241,7 +303,8 @@
 												<optgroup label="Indiana - IN">
 													<option value="Evansville - EVV">Evansville - EVV</option>
 													<option value="Fort Wayne - FWA">Fort Wayne - FWA</option>
-													<option value="Indianapolis International Airport - IND">Indianapolis International
+													<option value="Indianapolis International Airport - IND">
+														Indianapolis International
 														Airport - IND
 													</option>
 													<option value="South Bend - SBN">South Bend - SBN</option>
@@ -354,7 +417,8 @@
 
 												<!-- Nevada -->
 												<optgroup label="Nevada - NV">
-													<option value="Las Vegas, Las Vegas McCarran International Airport - LAS">
+													<option
+														value="Las Vegas, Las Vegas McCarran International Airport - LAS">
 														Las Vegas,
 														Las Vegas McCarran International Airport - LAS
 													</option>
@@ -399,7 +463,8 @@
 													</option>
 													<option value="Buffalo - BUF">Buffalo - BUF</option>
 													<option value="Islip - ISP">Islip - ISP</option>
-													<option value="New York, John F Kennedy International Airport - JFK">
+													<option
+														value="New York, John F Kennedy International Airport - JFK">
 														New York, John
 														F Kennedy International Airport - JFK
 													</option>
@@ -587,7 +652,8 @@
 													<option value="Rock Springs - RKS">Rock Springs - RKS</option>
 												</optgroup>
 											</select>
-											<input type="hidden" id="airportFromToVal" value="<?= $data->airportFromTo ?>">
+											<input type="hidden" id="airportFromToVal"
+												   value="<?= $data->airportFromTo ?>">
 										</div>
 										<div class="form-group col-md-4">
 											<label for="departureTimeTo">Departure Time</label>
@@ -642,7 +708,8 @@
 												<!-- Arizona -->
 												<optgroup label="Arizona - AZ">
 													<option value="Flagstaff - FLG">Flagstaff - FLG</option>
-													<option value="Phoenix, Phoenix Sky Harbor International Airport - PHX">
+													<option
+														value="Phoenix, Phoenix Sky Harbor International Airport - PHX">
 														Phoenix,
 														Phoenix Sky Harbor International Airport - PHX
 													</option>
@@ -723,7 +790,8 @@
 												<!-- Florida -->
 												<optgroup label="Florida - FL">
 													<option value="Daytona Beach - DAB">Daytona Beach - DAB</option>
-													<option value="Fort Lauderdale-Hollywood International Airport - FLL">
+													<option
+														value="Fort Lauderdale-Hollywood International Airport - FLL">
 														Fort
 														Lauderdale-Hollywood International Airport - FLL
 													</option>
@@ -907,7 +975,8 @@
 
 												<!-- Nevada -->
 												<optgroup label="Nevada - NV">
-													<option value="Las Vegas, Las Vegas McCarran International Airport - LAS">
+													<option
+														value="Las Vegas, Las Vegas McCarran International Airport - LAS">
 														Las Vegas,
 														Las Vegas McCarran International Airport - LAS
 													</option>
@@ -952,7 +1021,8 @@
 													</option>
 													<option value="Buffalo - BUF">Buffalo - BUF</option>
 													<option value="Islip - ISP">Islip - ISP</option>
-													<option value="New York, John F Kennedy International Airport - JFK">
+													<option
+														value="New York, John F Kennedy International Airport - JFK">
 														New York, John
 														F Kennedy International Airport - JFK
 													</option>
@@ -1161,9 +1231,15 @@
 											<label for="travelTypeFrom">Travel Type </label>
 											<select class="form-control input-sm" name="travelTypeFrom"
 													id="travelTypeFrom">
-												<option <?= $data->travelTypeFrom == 'Airline' ? 'selected' : '' ?> value="Airline">Airline</option>
-												<option <?= $data->travelTypeFrom == 'Amtrak' ? 'selected' : '' ?> value="Amtrak">Amtrak</option>
-												<option <?= $data->travelTypeFrom == 'Bus' ? 'selected' : '' ?> value="Bus">Bus</option>
+												<option <?= $data->travelTypeFrom == 'Airline' ? 'selected' : '' ?>
+													value="Airline">Airline
+												</option>
+												<option <?= $data->travelTypeFrom == 'Amtrak' ? 'selected' : '' ?>
+													value="Amtrak">Amtrak
+												</option>
+												<option <?= $data->travelTypeFrom == 'Bus' ? 'selected' : '' ?>
+													value="Bus">Bus
+												</option>
 											</select>
 										</div>
 										<div class="form-group col-md-4">
@@ -1171,26 +1247,52 @@
 											<select class="form-control input-sm" name="airlineFrom"
 													id="airlineFrom" style="width: 100%">
 												<option value="">Select Airline</option>
-												<option <?= $data->airlineFrom == 'Alaska Airlines' ? 'selected' : '' ?> value="Alaska Airlines">Alaska Airlines</option>
-												<option <?= $data->airlineFrom == 'Allegiant Air' ? 'selected' : '' ?> value="Allegiant Air">Allegiant Air</option>
-												<option <?= $data->airlineFrom == 'American Airlines' ? 'selected' : '' ?> value="American Airlines">American Airlines</option>
-												<option <?= $data->airlineFrom == 'Breeze Airways' ? 'selected' : '' ?> value="Breeze Airways">Breeze Airways</option>
-												<option <?= $data->airlineFrom == 'Delta Air' ? 'selected' : '' ?> value="Delta Air Lines">Delta Air Lines</option>
-												<option <?= $data->airlineFrom == 'Frontier Airlines' ? 'selected' : '' ?> value="Frontier Airlines">Frontier Airlines</option>
-												<option <?= $data->airlineFrom == 'Hawaiian Airlines' ? 'selected' : '' ?> value="Hawaiian Airlines">Hawaiian Airlines</option>
-												<option <?= $data->airlineFrom == 'JetBlue"' ? 'selected' : '' ?> value="JetBlue">JetBlue</option>
-												<option <?= $data->airlineFrom == 'Southwest Airlines' ? 'selected' : '' ?> value="Southwest Airlines">Southwest Airlines</option>
-												<option <?= $data->airlineFrom == 'Spirit Airlines' ? 'selected' : '' ?> value="Spirit Airlines">Spirit Airlines</option>
-												<option <?= $data->airlineFrom == 'Sun Country Airlines' ? 'selected' : '' ?> value="Sun Country Airlines">Sun Country Airlines</option>
-												<option <?= $data->airlineFrom == 'United Airlines' ? 'selected' : '' ?> value="United Airlines">United Airlines</option>
+												<option <?= $data->airlineFrom == 'Alaska Airlines' ? 'selected' : '' ?>
+													value="Alaska Airlines">Alaska Airlines
+												</option>
+												<option <?= $data->airlineFrom == 'Allegiant Air' ? 'selected' : '' ?>
+													value="Allegiant Air">Allegiant Air
+												</option>
+												<option <?= $data->airlineFrom == 'American Airlines' ? 'selected' : '' ?>
+													value="American Airlines">American Airlines
+												</option>
+												<option <?= $data->airlineFrom == 'Breeze Airways' ? 'selected' : '' ?>
+													value="Breeze Airways">Breeze Airways
+												</option>
+												<option <?= $data->airlineFrom == 'Delta Air' ? 'selected' : '' ?>
+													value="Delta Air Lines">Delta Air Lines
+												</option>
+												<option <?= $data->airlineFrom == 'Frontier Airlines' ? 'selected' : '' ?>
+													value="Frontier Airlines">Frontier Airlines
+												</option>
+												<option <?= $data->airlineFrom == 'Hawaiian Airlines' ? 'selected' : '' ?>
+													value="Hawaiian Airlines">Hawaiian Airlines
+												</option>
+												<option <?= $data->airlineFrom == 'JetBlue"' ? 'selected' : '' ?>
+													value="JetBlue">JetBlue
+												</option>
+												<option <?= $data->airlineFrom == 'Southwest Airlines' ? 'selected' : '' ?>
+													value="Southwest Airlines">Southwest Airlines
+												</option>
+												<option <?= $data->airlineFrom == 'Spirit Airlines' ? 'selected' : '' ?>
+													value="Spirit Airlines">Spirit Airlines
+												</option>
+												<option <?= $data->airlineFrom == 'Sun Country Airlines' ? 'selected' : '' ?>
+													value="Sun Country Airlines">Sun Country Airlines
+												</option>
+												<option <?= $data->airlineFrom == 'United Airlines' ? 'selected' : '' ?>
+													value="United Airlines">United Airlines
+												</option>
 											</select>
 										</div>
 									</div>
 									<div class="row">
 										<div class="form-group col-md-4">
 											<label for="specifyTravelFrom">Specify Travel </label>
-											<input class="form-control input-sm" type="text" <?= $data->travelTypeFrom == 'Airline' ? 'readonly' : '' ?>
-												   name="specifyTravelFrom" id="specifyTravelFrom" value="<?= $data->specifyTravelFrom ?>">
+											<input class="form-control input-sm"
+												   type="text" <?= $data->travelTypeFrom == 'Airline' ? 'readonly' : '' ?>
+												   name="specifyTravelFrom" id="specifyTravelFrom"
+												   value="<?= $data->specifyTravelFrom ?>">
 										</div>
 										<div class="form-group col-md-4">
 											<label for="airportFromFrom">Airport From</label><br>
@@ -1234,7 +1336,8 @@
 												<!-- Arizona -->
 												<optgroup label="Arizona - AZ">
 													<option value="Flagstaff - FLG">Flagstaff - FLG</option>
-													<option value="Phoenix, Phoenix Sky Harbor International Airport - PHX">
+													<option
+														value="Phoenix, Phoenix Sky Harbor International Airport - PHX">
 														Phoenix,
 														Phoenix Sky Harbor International Airport - PHX
 													</option>
@@ -1315,7 +1418,8 @@
 												<!-- Florida -->
 												<optgroup label="Florida - FL">
 													<option value="Daytona Beach - DAB">Daytona Beach - DAB</option>
-													<option value="Fort Lauderdale-Hollywood International Airport - FLL">
+													<option
+														value="Fort Lauderdale-Hollywood International Airport - FLL">
 														Fort
 														Lauderdale-Hollywood International Airport - FLL
 													</option>
@@ -1499,7 +1603,8 @@
 
 												<!-- Nevada -->
 												<optgroup label="Nevada - NV">
-													<option value="Las Vegas, Las Vegas McCarran International Airport - LAS">
+													<option
+														value="Las Vegas, Las Vegas McCarran International Airport - LAS">
 														Las Vegas,
 														Las Vegas McCarran International Airport - LAS
 													</option>
@@ -1544,7 +1649,8 @@
 													</option>
 													<option value="Buffalo - BUF">Buffalo - BUF</option>
 													<option value="Islip - ISP">Islip - ISP</option>
-													<option value="New York, John F Kennedy International Airport - JFK">
+													<option
+														value="New York, John F Kennedy International Airport - JFK">
 														New York, John
 														F Kennedy International Airport - JFK
 													</option>
@@ -1732,12 +1838,14 @@
 													<option value="Rock Springs - RKS">Rock Springs - RKS</option>
 												</optgroup>
 											</select>
-											<input type="hidden" id="airportFromFromVal" value="<?= $data->airportFromFrom ?>">
+											<input type="hidden" id="airportFromFromVal"
+												   value="<?= $data->airportFromFrom ?>">
 										</div>
 										<div class="form-group col-md-4">
 											<label for="departureTimeFrom">Departure Time</label>
 											<input type="time" name="departureTimeFrom" id="departureTimeFrom"
-												   class="input-sm form-control" value="<?= $data->departureTimeFrom ?>">
+												   class="input-sm form-control"
+												   value="<?= $data->departureTimeFrom ?>">
 										</div>
 									</div>
 									<div class="row">
@@ -1788,7 +1896,8 @@
 												<!-- Arizona -->
 												<optgroup label="Arizona - AZ">
 													<option value="Flagstaff - FLG">Flagstaff - FLG</option>
-													<option value="Phoenix, Phoenix Sky Harbor International Airport - PHX">
+													<option
+														value="Phoenix, Phoenix Sky Harbor International Airport - PHX">
 														Phoenix,
 														Phoenix Sky Harbor International Airport - PHX
 													</option>
@@ -1869,7 +1978,8 @@
 												<!-- Florida -->
 												<optgroup label="Florida - FL">
 													<option value="Daytona Beach - DAB">Daytona Beach - DAB</option>
-													<option value="Fort Lauderdale-Hollywood International Airport - FLL">
+													<option
+														value="Fort Lauderdale-Hollywood International Airport - FLL">
 														Fort
 														Lauderdale-Hollywood International Airport - FLL
 													</option>
@@ -2053,7 +2163,8 @@
 
 												<!-- Nevada -->
 												<optgroup label="Nevada - NV">
-													<option value="Las Vegas, Las Vegas McCarran International Airport - LAS">
+													<option
+														value="Las Vegas, Las Vegas McCarran International Airport - LAS">
 														Las Vegas,
 														Las Vegas McCarran International Airport - LAS
 													</option>
@@ -2098,7 +2209,8 @@
 													</option>
 													<option value="Buffalo - BUF">Buffalo - BUF</option>
 													<option value="Islip - ISP">Islip - ISP</option>
-													<option value="New York, John F Kennedy International Airport - JFK">
+													<option
+														value="New York, John F Kennedy International Airport - JFK">
 														New York, John
 														F Kennedy International Airport - JFK
 													</option>
@@ -2286,7 +2398,8 @@
 													<option value="Rock Springs - RKS">Rock Springs - RKS</option>
 												</optgroup>
 											</select>
-											<input type="hidden" id="airportToFromVal" value="<?= $data->airportToFrom ?>">
+											<input type="hidden" id="airportToFromVal"
+												   value="<?= $data->airportToFrom ?>">
 										</div>
 										<div class="form-group col-md-4">
 											<label for="arrivalTimeFrom">Arrival Time</label>
@@ -2308,12 +2421,14 @@
 										<div class="form-group col-md-4">
 											<label for="groundTransCo">Ground Trans Co. </label>
 											<input class="form-control input-sm" type="text"
-												   name="groundTransCo" id="groundTransCo" value="<?= $data->groundTransCo ?>">
+												   name="groundTransCo" id="groundTransCo"
+												   value="<?= $data->groundTransCo ?>">
 										</div>
 										<div class="form-group col-md-4">
 											<label for="vehicleMake">Vehicle Make</label><br>
 											<input class="form-control input-sm" type="text"
-												   name="vehicleMake" id="vehicleMake" value="<?= $data->vehicleMake ?>">
+												   name="vehicleMake" id="vehicleMake"
+												   value="<?= $data->vehicleMake ?>">
 										</div>
 									</div>
 									<div class="row">
@@ -2340,12 +2455,12 @@
 									</div>
 									<div class="row">
 										<div class="form-group col-md-2">
-											<label for="pickUpTime">Pick-Up Time</label>
+											<label for="pickUpTime">Pick-Up </label>
 											<input type="time" name="pickUpTime" id="pickUpTime"
 												   class="input-sm form-control" value="<?= $data->pickUpTime ?>">
 										</div>
 										<div class="form-group col-md-2">
-											<label for="dropOffTime">Drop-Off Time</label>
+											<label for="dropOffTime">Drop-Off </label>
 											<input type="time" name="dropOffTime" id="dropOffTime"
 												   class="input-sm form-control" value="<?= $data->dropOffTime ?>">
 										</div>
@@ -2381,7 +2496,8 @@
 										</div>
 										<div class="form-group col-md-3">
 											<label for="confirmationAccommodation">Confirmation</label>
-											<input class="form-control input-sm" type="text" value="<?= $data->confirmationAccommodation ?>"
+											<input class="form-control input-sm" type="text"
+												   value="<?= $data->confirmationAccommodation ?>"
 												   name="confirmationAccommodation" id="confirmationAccommodation">
 										</div>
 										<div class="form-group col-md-3">
@@ -2394,7 +2510,8 @@
 										<div class="form-group col-md-3">
 											<label for="hotelAddress">Hotel Address</label>
 											<input class="form-control input-sm" type="text"
-												   name="hotelAddress" id="hotelAddress" value="<?= $data->hotelAddress ?>">
+												   name="hotelAddress" id="hotelAddress"
+												   value="<?= $data->hotelAddress ?>">
 										</div>
 										<div class="form-group col-md-3">
 											<label for="roomType">Room Type</label>
@@ -2416,7 +2533,8 @@
 										<div class="form-group col-md-6">
 											<label for="accommodationNote">Notes</label>
 											<input type="text" name="accommodationNote" id="accommodationNote"
-												   class="input-sm form-control" value="<?= $data->accommodationNote ?>">
+												   class="input-sm form-control"
+												   value="<?= $data->accommodationNote ?>">
 										</div>
 									</div>
 								</div>

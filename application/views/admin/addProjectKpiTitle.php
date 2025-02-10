@@ -175,7 +175,7 @@
 	$('#startDate, #dueDate').datepicker({
 		autoclose: true,
 		todayHighlight: true,
-		startDate: '+0d',
+		// startDate: '+0d',
 		format: 'dd M yyyy'
 	});
 

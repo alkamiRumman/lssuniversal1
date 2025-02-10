@@ -110,7 +110,7 @@
 			case 4:
 				break;
 			default:
-				window.location = "<?= base_url('admin/viewProject/') ?>" + data.id;
+				window.location = "<?= base_url('admin/overviewProject/') ?>" + data.id;
 				break;
 		}
 	});

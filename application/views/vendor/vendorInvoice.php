@@ -232,6 +232,7 @@
 			case 7:
 				loadPopup('<?= vendor_url('viewVendorInvoiceMSA/') ?>' + data.id);
 				break;
+			case 8:
 			case 10:
 				break;
 			default:

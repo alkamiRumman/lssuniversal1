@@ -3,143 +3,151 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="btn btn-sm btn-primary pull-right printButton" id="Print">Print</button>
-				<button type="button" class="btn btn-sm btn-danger pull-right" data-dismiss="modal" aria-label="Close">Close
+				<button type="button" class="btn btn-sm btn-danger pull-right" data-dismiss="modal" aria-label="Close">
+					Close
 				</button>
-				<?php if ($data->adminCustomerStatus == 1) { ?>
-					<a href="<?= vendor_url('vendorInvoiceMarkRead/') . $data->id ?>"
+				<?php if ($data->vendorStatus == 1) { ?>
+					<a href="<?= admin_url('vendorInvoiceMarkRead/') . $data->id ?>"
 					   onclick="return confirm('Are you sure?')"
 					   class="btn btn-sm pull-right btn-warning">Mark as read</a>
 				<?php } ?>
 				<h4 class="modal-title"><b> Vendor Invoice Details</b></h4>
 			</div>
-			<div class="modal-body">
-				<div class="row">
-					<div class="col-xs-12 text-center">
-						<img class="responsive-img img-fluid" style="max-height: 150px;"
-							 src="<?= base_url('images/3.png') ?>" alt="User Image">
-					</div>
-				</div>
-				<hr style="border: 1px solid black;">
-				<div class="panel panel-body">
+			<form id="formEdit" action="<?= admin_url('saveVendorInvoice') ?>" method="post"
+				  enctype="multipart/form-data">
+				<div class="modal-body" id="printThis">
 					<div class="row">
-						<div class="col-xs-6">
-							<table class="table no-border table-sm">
-								<tr>
-									<th>Vendor Id</th>
-									<td><?= $data->vendorId ?></td>
-								</tr>
-								<tr>
-									<th>POC Name</th>
-									<td><?= $data->name ?></td>
-								</tr>
-								<tr>
-									<th>POC Phone</th>
-									<td><?= $data->phone ?></td>
-								</tr>
-								<tr>
-									<th>POC Email</th>
-									<td><?= $data->username ?></td>
-								</tr>
-								<tr>
-									<th>EIN</th>
-									<td><?= $data->ein ?></td>
-								</tr>
-								<tr>
-									<th>Business Address</th>
-									<td><?= $data->businessAddress . ', ' . $data->city . ', ' . $data->state ?></td>
-								</tr>
-							</table>
-						</div>
-						<div class="col-xs-6">
-							<table class="table no-border table-sm">
-								<tr>
-									<th>Production Title</th>
-									<td><?= $data->title ?></td>
-								</tr>
-								<tr>
-									<th>Production Calender</th>
-									<td><?= $data->eventMonth . ', ' . $data->eventYear ?></td>
-								</tr>
-								<tr>
-									<th>Venue</th>
-									<td><?= $data->venueName ?></td>
-								</tr>
-								<tr>
-									<th>Date</th>
-									<td><?= date('d F Y', strtotime($data->submissionDate)) ?></td>
-								</tr>
-								<tr>
-									<th>Net</th>
-									<td><?= $data->net ?></td>
-								</tr>
-								<tr>
-									<th>Due Date</th>
-									<td><?= date('d F Y', strtotime($data->dueDate)) ?></td>
-								</tr>
-							</table>
+						<div class="col-xs-12 text-center">
+							<img class="responsive-img img-fluid" style="max-height: 150px;"
+								 src="<?= base_url('images/3.png') ?>" alt="User Image">
 						</div>
 					</div>
-
-					<div class="row mt-3">
-						<div class="col-xs-12">
-							<div class="table-container" style="position: relative;">
-								<table class="table table-bordered table-striped" id="dynamicTable">
-									<thead>
-									<tr class="bg-info text-center">
-										<th>No</th>
-										<th>Description</th>
-										<th>Qty</th>
-										<th>Price</th>
-										<th>Total</th>
-									</tr>
-									</thead>
-									<tbody>
-									<?php if ($details) {
-										foreach ($details as $key => $detail) { ?>
-											<tr>
-												<td><?= ($key + 1) ?></td>
-												<td><?= $detail->description ?></td>
-												<td><?= $detail->qty ?></td>
-												<td><?= $detail->price ?></td>
-												<td><?= $detail->total ?></td>
-											</tr>
-										<?php }
-									} else { ?>
-										<tr>
-											<td colspan="6" class="text-center text-bold text-danger">No record
-												found!!
-											</td>
-										</tr>
-									<?php } ?>
-									</tbody>
-									<tfoot>
+					<hr style="border: 1px solid black;">
+					<div class="panel panel-body">
+						<div class="row">
+							<div class="col-xs-6">
+								<table class="table no-border table-sm">
 									<tr>
-										<th colspan="4" class="text-right font-weight-bold">Total Sum:</th>
-										<th id="totalSum"><?= $data->invoiceAmount ?></th>
+										<th>Vendor Id</th>
+										<td><?= $data->vendorId ?></td>
 									</tr>
-									</tfoot>
+									<tr>
+										<th>POC Name</th>
+										<td><?= $data->name ?></td>
+									</tr>
+									<tr>
+										<th>POC Phone</th>
+										<td><?= $data->phone ?></td>
+									</tr>
+									<tr>
+										<th>POC Email</th>
+										<td><?= $data->username ?></td>
+									</tr>
+									<tr>
+										<th>EIN</th>
+										<td><?= $data->ein ?></td>
+									</tr>
+									<tr>
+										<th>Business Address</th>
+										<td><?= $data->businessAddress . ', ' . $data->city . ', ' . $data->state ?></td>
+									</tr>
 								</table>
-								<?php if ($data->status == 'Paid') { ?>
-									<div class="rubber">
-										PAID
-									</div>
-								<?php } ?>
+							</div>
+							<div class="col-xs-6">
+								<table class="table no-border table-sm">
+									<tr>
+										<th>Production Title</th>
+										<td><?= $data->title ?></td>
+									</tr>
+									<tr>
+										<th>Production Start Date</th>
+										<td><?= date('d M Y', strtotime($data->startDate)) . ' ' . date('h:i:s A', strtotime($data->startTime)) ?></td>
+									</tr>
+									<tr>
+										<th>Production End Date</th>
+										<td><?= date('d M Y', strtotime($data->endDate)) . ' ' . date('h:i:s A', strtotime($data->endTime)) ?></td>
+									</tr>
+									<tr>
+										<th>Venue</th>
+										<td><?= $data->venueName ?></td>
+									</tr>
+									<tr>
+										<th>Date</th>
+										<td><?= date('d F Y', strtotime($data->submissionDate)) ?></td>
+									</tr>
+									<tr>
+										<th>Net</th>
+										<td><?= $data->net ?></td>
+									</tr>
+									<tr>
+										<th>Due Date</th>
+										<td><?= date('d F Y', strtotime($data->dueDate)) ?></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+
+						<div class="row mt-3">
+							<div class="col-xs-12">
+								<div class="table-container" style="position: relative;">
+									<table class="table table-bordered table-striped" id="dynamicTable">
+										<thead>
+										<tr class="bg-info text-center">
+											<th>No</th>
+											<th>Description</th>
+											<th>Qty</th>
+											<th>Price</th>
+											<th>Total</th>
+										</tr>
+										</thead>
+										<tbody>
+										<?php if ($details) {
+											foreach ($details as $key => $detail) { ?>
+												<tr>
+													<td><?= ($key + 1) ?></td>
+													<td><?= $detail->description ?></td>
+													<td><?= $detail->qty ?></td>
+													<td><?= $detail->price ?></td>
+													<td><?= $detail->total ?></td>
+												</tr>
+											<?php }
+										} else { ?>
+											<tr>
+												<td colspan="6" class="text-center text-bold text-danger">No record
+													found!!
+												</td>
+											</tr>
+										<?php } ?>
+										</tbody>
+										<tfoot>
+										<tr>
+											<th colspan="4" class="text-right font-weight-bold">Total Sum:</th>
+											<th id="totalSum"><?= $data->invoiceAmount ?></th>
+										</tr>
+										</tfoot>
+									</table>
+									<?php if ($data->status == 'Paid') { ?>
+										<div class="rubber">
+											PAID
+										</div>
+									<?php } ?>
+								</div>
+							</div>
+						</div>
+						<div class="row mt-3">
+							<div class="col-xs-12">
+								<label for="vendorNotes">Vendor Notes</label>
+								<p><?= $data->vendorNotes ?></p>
 							</div>
 						</div>
 					</div>
-					<div class="row mt-3">
-						<div class="col-xs-12">
-							<label for="vendorNotes">Vendor Notes</label>
-							<p><?= $data->vendorNotes ?></p>
-						</div>
-					</div>
 				</div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-danger pull-right" data-dismiss="modal" aria-label="Close">
-					Close
-				</button>
-			</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pull-right" data-dismiss="modal" aria-label="Close">
+						Close
+					</button>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>
@@ -233,6 +241,16 @@
 		@page {
 			size: A4;
 			margin: 2cm;
+		}
+
+		.table {
+			padding: 0;
+			margin: 0;
+			page-break-inside: auto; /* Ensure tables break nicely if they exceed one page */
+		}
+
+		.table th, .table td {
+			font-size: 12px; /* Smaller font for compact display */
 		}
 
 		#printSection, #printSection * {

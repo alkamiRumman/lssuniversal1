@@ -113,12 +113,18 @@ class Admin extends MY_Controller
 
 	function getCustomers()
 	{
-		$action = '<a href="javascript:void(0);" onclick="loadPopup(\'' . base_url('admin/editCustomer/$1') . '\')" class="btn btn-sm btn-success"><i class="fa fa-edit"></i></a>
-            <a href="deleteCustomer/$1' . '" onclick="return confirm(\'Are you sure?\')" class="btn btn-sm btn-danger">
-            <i class="fa fa-trash"></a>';
+		$action = '<div class="dropdown">
+			<button class="btn btn-sm dropdown-toggle" style="color: white; background-color: black" type="button" data-toggle="dropdown">Actions
+			<span class="caret"></span></button>
+			<ul class="dropdown-menu">
+			  <li><a href="javascript:void(0);" onclick="loadPopup(\'' . base_url('admin/editCustomer/$1') . '\')">Edit</a></li>
+			<li><a href="' . base_url('admin/deleteCustomer/$1') . '" onclick="return confirm(\'Are you sure?\')">Delete</a></li>
+			</ul>
+		  </div>';
 		$this->datatables->select('id, name, username, phone, type, createAt, updateAt');
 		$this->datatables->from(TABLE_USERS);
 		$this->datatables->where(array('id !=' => getSession()->id, 'type !=' => 'Vendor', 'deleted' => 0));
+
 		$this->datatables->addColumn('actions', $action, 'id');
 		$this->datatables->generate();
 	}
@@ -173,11 +179,51 @@ class Admin extends MY_Controller
 			<li><a href="' . base_url('admin/deleteCustomer/$1') . '" onclick="return confirm(\'Are you sure?\')">Delete</a></li>
 			</ul>
 		  </div>';
-		$this->datatables->select('id, name, username, phone, type, businessName, ein, businessAddress, city, state, zip, businessLine1, service1, businessLine2, service2, businessLine3, service3, w9Form, createAt, updateAt');
+		$this->datatables->select('id, name, username, phone, type, status, businessName, ein, businessAddress, city, state, zip, businessLine1, service1, businessLine2, service2, businessLine3, service3, w9Form, createAt, updateAt');
 		$this->datatables->from(TABLE_USERS);
 		$this->datatables->where(array('type' => 'Vendor', 'deleted' => 0));
 		$this->datatables->addColumn('actions', $action, 'id');
 		$this->datatables->generate();
+	}
+
+	function updateVendorActiveStatus()
+	{
+		$imagePath = FCPATH . 'images/3.png';
+		$imageData = base64_encode(file_get_contents($imagePath));
+		$imageSrc = 'data:image/png;base64,' . $imageData;
+
+		$id = $this->input->post('id');
+		$vendor = $this->admin->getCustomerById($id);
+		$status = $arr['status'] = $this->input->post('value');
+		$arr['updateAt'] = date('Y-m-d H:i:s');
+//		return dnp($vendor);
+		if ($status == 0) {
+			$this->email->from('live@lssuniversal.com', COMPANY);
+			$this->email->to($vendor->username);
+			$this->email->subject('Welcome LSS Universal’s Vendor Network!');
+			$this->email->message('<h2>Hello ' . $vendor->name . ',</h2><p>
+					We are thrilled to officially welcome you to the Legendary Studio Shows (LSS) Universal Vendor Network!</p>
+					<p>By joining our network, you are now part of a vibrant and expanding community of trusted partners dedicated to delivering exceptional entertainment. At LSS, we focus on building lasting relationships that foster creativity, efficiency, and shared success. As a valued vendor, you’ll gain access to new opportunities, cutting-edge tools, and valuable resources that will help grow your business and collaborate with LSS Universal and our network of business partners.</p>
+					<p>We’re excited to work with you and support your ongoing success!</p>
+					<p><b>### Next Steps: </b><br>To ensure a smooth billing and payment process, please log in to your vendor account and update your profile with your W-9 and any additional required information noted in your account. Simply visit <a href="https://live.lssuniversal.com" target="_blank">https://live.lssuniversal.com</a> and log in using the username and credentials you created during registration.</p>
+					<p>Once again, welcome aboard! We look forward to the exciting opportunities ahead.</p>
+					<p>Thank You,</p><br>
+					<img class="img-responsive center-block" src="' . $imageSrc . '" height="60" style="margin: 0">');
+		} else {
+			$this->email->from('live@lssuniversal.com', COMPANY);
+			$this->email->to($vendor->username);
+			$this->email->subject('Vendor Access Approval Status: Denied');
+			$this->email->message('<h2>Hello ' . $vendor->name . ',</h2><p>
+					Thank you for your interest in joining the LSS Universal Vendor Network. After reviewing your application, we regret to inform you that it has not been authorized at this time.</p>
+					<p>We encourage you to reach out to the authorized LSS Universal representative who invited you to join the network for further guidance and consideration. They may be able to assist you in exploring other opportunities or help clarify any next steps.</p>
+					<p>We appreciate your understanding and hope to have the opportunity to work with you in the future. Should you have any questions, please feel free to contact us.</p>
+					<p>Thank You,</p><br>
+					<img class="img-responsive center-block" src="' . $imageSrc . '" height="60" style="margin: 0">');
+		}
+		if ($this->email->send()) {
+			$this->admin->updateCustomer($arr, $id);
+			echo json_encode(array('status' => 'success'));
+		}
 	}
 
 	function getCustomerSearch()
@@ -234,6 +280,7 @@ class Admin extends MY_Controller
 		$this->data['theatreCrewData'] = $this->admin->getTheatreCrewByProductionId($id);
 		$this->data['marketingFeeData'] = $this->admin->getMarketingFeeByProductionId($id);
 		$this->data['rentalAndMiscData'] = $this->admin->getRentalAndMiscByProductionId($id);
+		$this->data['ticketTieringData'] = $this->admin->getTicketTieringByProductionId($id);
 		$this->makeView('/add');
 	}
 
@@ -241,8 +288,10 @@ class Admin extends MY_Controller
 	{
 		$id = $this->input->post('id');
 		$arr['title'] = $this->input->post('title');
-		$arr['eventMonth'] = $this->input->post('eventMonth');
-		$arr['eventYear'] = $this->input->post('eventYear');
+		$arr['startDate'] = date('Y-m-d', strtotime($this->input->post('startDate')));
+		$arr['startTime'] = $this->input->post('startTime');
+		$arr['endDate'] = date('Y-m-d', strtotime($this->input->post('endDate')));
+		$arr['endTime'] = $this->input->post('endTime');
 		$arr['venueId'] = $this->input->post('venueId');
 		$arr['rentalFee'] = $this->input->post('rentalFee');
 		$arr['backLine'] = $this->input->post('backLine');
@@ -283,6 +332,8 @@ class Admin extends MY_Controller
 		$arr['ticketMarkup'] = $this->input->post('ticketMarkup');
 		$arr['newTicketPrice'] = $this->input->post('newTicketPrice');
 		$arr['projectedROI'] = $this->input->post('projectedROI');
+		$arr['ticketTieringCheckbox'] = $this->input->post('ticketTieringCheckbox');
+		$arr['remainingSeats'] = $this->input->post('remainingSeats');
 		$arr['status'] = 1;
 		$arr['customerStatus'] = 0;
 		$arr['adminStatus'] = 1;
@@ -304,8 +355,10 @@ class Admin extends MY_Controller
 	function update($id)
 	{
 		$arr['title'] = $this->input->post('title');
-		$arr['eventMonth'] = $this->input->post('eventMonth');
-		$arr['eventYear'] = $this->input->post('eventYear');
+		$arr['startDate'] = date('Y-m-d', strtotime($this->input->post('startDate')));
+		$arr['startTime'] = $this->input->post('startTime');
+		$arr['endDate'] = date('Y-m-d', strtotime($this->input->post('endDate')));
+		$arr['endTime'] = $this->input->post('endTime');
 		$arr['venueId'] = $this->input->post('venueId');
 		$arr['rentalFee'] = $this->input->post('rentalFee');
 		$arr['backLine'] = $this->input->post('backLine');
@@ -346,6 +399,8 @@ class Admin extends MY_Controller
 		$arr['ticketMarkup'] = $this->input->post('ticketMarkup');
 		$arr['newTicketPrice'] = $this->input->post('newTicketPrice');
 		$arr['projectedROI'] = $this->input->post('projectedROI');
+		$arr['ticketTieringCheckbox'] = $this->input->post('ticketTieringCheckbox');
+		$arr['remainingSeats'] = $this->input->post('remainingSeats');
 		$arr['updateAt'] = date('Y-m-d H:i:s');
 		$arr['customerStatus'] = 0;
 		$arr['adminStatus'] = 1;
@@ -366,8 +421,10 @@ class Admin extends MY_Controller
 
 		$id = $this->input->post('id');
 		$arr['title'] = $this->input->post('title');
-		$arr['eventMonth'] = $this->input->post('eventMonth');
-		$arr['eventYear'] = $this->input->post('eventYear');
+		$arr['startDate'] = date('Y-m-d', strtotime($this->input->post('startDate')));
+		$arr['startTime'] = $this->input->post('startTime');
+		$arr['endDate'] = date('Y-m-d', strtotime($this->input->post('endDate')));
+		$arr['endTime'] = $this->input->post('endTime');
 		$arr['venueId'] = $this->input->post('venueId');
 		$arr['rentalFee'] = $this->input->post('rentalFee');
 		$arr['backLine'] = $this->input->post('backLine');
@@ -408,6 +465,8 @@ class Admin extends MY_Controller
 		$arr['ticketMarkup'] = $this->input->post('ticketMarkup');
 		$arr['newTicketPrice'] = $this->input->post('newTicketPrice');
 		$arr['projectedROI'] = $this->input->post('projectedROI');
+		$arr['ticketTieringCheckbox'] = $this->input->post('ticketTieringCheckbox');
+		$arr['remainingSeats'] = $this->input->post('remainingSeats');
 		$arr['customerStatus'] = 0;
 		$arr['adminStatus'] = 1;
 		if ($this->admin->getProductionCheckById($id)) {
@@ -604,6 +663,7 @@ class Admin extends MY_Controller
 		$this->admin->deleteMarketingFee($id);
 	}
 
+	// Rentals And Misc Fee
 	function addRentalAndMisc($id)
 	{
 		$this->data['id'] = $id;
@@ -616,8 +676,6 @@ class Admin extends MY_Controller
 		$this->popupView('/editRentalAndMisc');
 	}
 
-	// Rentals And Misc Fee
-
 	function updateRentalAndMisc($id)
 	{
 		$arr['title'] = $this->input->post('title');
@@ -629,6 +687,78 @@ class Admin extends MY_Controller
 	function deleteRentalAndMisc($id)
 	{
 		$this->admin->deleteRentalAndMisc($id);
+	}
+
+	// Ticket Tiering
+	function addTicketTiering($id, $value, $remainingSeats)
+	{
+		$this->data['id'] = $id;
+		$this->data['value'] = $value;
+		$this->data['remainingSeats'] = $remainingSeats;
+		$this->popupView('/addTicketTiering');
+	}
+
+	function saveTicketTiering($id)
+	{
+//		return dnd($_POST);
+		$remainingSeats = $this->input->post('remainingSeats');
+		if ($remainingSeats <= 0) {
+			echo false;
+		} else {
+			$arr['productionId'] = $id;
+			$arr['tierLevel'] = $this->input->post('tierLevel');
+			$arr['section'] = $this->input->post('section');
+			$ofSeats = $arr['ofSeats'] = $this->input->post('ofSeats');
+			$arr['baseTicketPrice'] = $this->input->post('baseTicketPrice');
+			$arr['ticketMarkUp'] = $this->input->post('ticketMarkUp');
+			$arr['newTicketPrice'] = $this->input->post('newTicketPrice');
+			$arr['roi'] = $this->input->post('roi');
+			$arr['comp'] = $this->input->post('comp') ? $this->input->post('comp') : 0;
+			$this->admin->saveTicketTiering($arr);
+			$remainingSeats = $ar['remainingSeats'] = $remainingSeats - $ofSeats;
+			$this->admin->update($ar, $id);
+			echo $remainingSeats;
+		}
+	}
+
+	function editTicketTiering($id, $value, $remianingSeats)
+	{
+		$this->data['remainingSeats'] = $remianingSeats;
+		$this->data['value'] = $value;
+		$this->data['data'] = $this->admin->getTicketTieringById($id);
+		$this->popupView('/editTicketTiering');
+	}
+
+	function updateTicketTiering($id)
+	{
+		$remainingSeats = $this->input->post('remainingSeats');
+		if ($remainingSeats <= 0) {
+			echo false;
+		} else {
+			$arr['tierLevel'] = $this->input->post('tierLevel');
+			$arr['section'] = $this->input->post('section');
+			$ofSeats = $arr['ofSeats'] = $this->input->post('ofSeats');
+			$arr['baseTicketPrice'] = $this->input->post('baseTicketPrice');
+			$arr['ticketMarkUp'] = $this->input->post('ticketMarkUp');
+			$arr['newTicketPrice'] = $this->input->post('newTicketPrice');
+			$arr['roi'] = $this->input->post('roi');
+			$arr['comp'] = $this->input->post('comp') ? $this->input->post('comp') : 0;
+			$arr['updateAt'] = date('Y-m-d H:i:s');
+			$ticketTiering = $this->admin->getTicketTieringById($id);
+			$this->admin->updateTicketTiering($arr, $id);
+			$remainingSeats = $ar['remainingSeats'] = $remainingSeats + $ticketTiering->ofSeats - $ofSeats;
+			$this->admin->update($ar, $ticketTiering->productionId);
+			echo $remainingSeats;
+		}
+	}
+
+	function deleteTicketTiering($id, $remainingSeats)
+	{
+		$ticketTiering = $this->admin->getTicketTieringById($id);
+		$remainingSeats = $ar['remainingSeats'] = $remainingSeats + $ticketTiering->ofSeats;
+		$this->admin->update($ar, $ticketTiering->productionId);
+		$this->admin->deleteTicketTiering($id);
+		echo $remainingSeats;
 	}
 
 	function productions()
@@ -650,12 +780,12 @@ class Admin extends MY_Controller
 			<li><a href="' . base_url('admin/deleteProduction/$1') . '" onclick="return confirm(\'Are you sure?\')">Delete</a></li>
 			</ul>
 		  </div>';
-		$this->datatables->select('p.id as id, p.id, p.title, p.customerStatus, p.eventMonth, p.eventYear, v.venueName, v.address, v.city, v.state, v.zip, p.totalVenueCapacity, 
+		$this->datatables->select('p.id as id, p.id, p.title, p.customerStatus, p.startDate, p.startTime, p.endDate, p.endTime, v.venueName, v.address, v.city, v.state, v.zip, p.totalVenueCapacity, 
 			p.totalProductionCost, p.finalTotalTicketFee, p.overallProductionCost, p.baseTicketPrice, p.ticketMarkup, p.newTicketPrice, 
 			p.projectedROI, p.createAt, p.updateAt, p.completedStatus, u.name, u.deleted, p.addedBy');
 		$this->datatables->from(TABLE_PRODUCTIONS . ' as p');
-		$this->datatables->join(TABLE_USERS . ' as u', 'p.addedBy = u.id');
-		$this->datatables->join(TABLE_VENUE . ' as v', 'p.venueId = v.id');
+		$this->datatables->join(TABLE_USERS . ' as u', 'p.addedBy = u.id', 'left');
+		$this->datatables->join(TABLE_VENUE . ' as v', 'p.venueId = v.id', 'left');
 		$this->datatables->where(array('p.status' => 1));
 		$this->datatables->order_by('id', 'desc');
 		$this->datatables->addColumn('actions', $action, 'id');
@@ -669,6 +799,7 @@ class Admin extends MY_Controller
 		$this->admin->deleteEntertainerByProductionId($id);
 		$this->admin->deleteMarketingFeeByProductionId($id);
 		$this->admin->deleteRentalAndMiscByProductionId($id);
+		$this->admin->deleteTicketTieringByProductionId($id);
 		$this->admin->deleteTheatreCrewByProductionId($id);
 		$this->session->set_flashdata('success', 'Production Removed Successfully.');
 		redirect('admin/productions');
@@ -682,6 +813,7 @@ class Admin extends MY_Controller
 		$this->data['theatreCrewData'] = $this->admin->getTheatreCrewByProductionId($id);
 		$this->data['marketingFeeData'] = $this->admin->getMarketingFeeByProductionId($id);
 		$this->data['rentalAndMiscData'] = $this->admin->getRentalAndMiscByProductionId($id);
+		$this->data['ticketTieringData'] = $this->admin->getTicketTieringByProductionId($id);
 		$this->popupView('/viewProduction');
 	}
 
@@ -711,6 +843,7 @@ class Admin extends MY_Controller
 		$this->data['theatreCrewData'] = $this->admin->getTheatreCrewByProductionId($id);
 		$this->data['marketingFeeData'] = $this->admin->getMarketingFeeByProductionId($id);
 		$this->data['rentalAndMiscData'] = $this->admin->getRentalAndMiscByProductionId($id);
+		$this->data['ticketTieringData'] = $this->admin->getTicketTieringByProductionId($id);
 		$this->makeView('/editProduction');
 	}
 
@@ -749,8 +882,10 @@ class Admin extends MY_Controller
 	function saveCopyProduction($id)
 	{
 		$arr['title'] = $this->input->post('title');
-		$arr['eventMonth'] = $this->input->post('eventMonth');
-		$arr['eventYear'] = $this->input->post('eventYear');
+		$arr['startDate'] = date('Y-m-d', strtotime($this->input->post('startDate')));
+		$arr['startTime'] = $this->input->post('startTime');
+		$arr['endDate'] = date('Y-m-d', strtotime($this->input->post('endDate')));
+		$arr['endTime'] = $this->input->post('endTime');
 		$arr['venueId'] = $this->input->post('venueId');
 		$arr['addedBy'] = $this->input->post('addedBy');
 		$data = $this->admin->getProductionById($id);
@@ -960,9 +1095,9 @@ class Admin extends MY_Controller
 		  </div>';
 		$this->datatables->select('v.id as id, v.id, v.vendorStatus, p.title, u.name, u.phone, u.username, v.invoiceNumber, v.submissionDate, v.dueDate, v.net, v.invoiceAmount, v.msa, v.status, v.createAt, v.updateAt');
 		$this->datatables->from(TABLE_VENDORINVOICE . ' as v');
-		$this->datatables->join(TABLE_USERS . ' as u', 'v.vendorId = u.id');
-		$this->datatables->join(TABLE_PRODUCTIONS . ' as p', 'v.productionId = p.id');
-		$this->datatables->join(TABLE_VENUE . ' as vv', 'p.venueId = vv.id');
+		$this->datatables->join(TABLE_USERS . ' as u', 'v.vendorId = u.id', 'left');
+		$this->datatables->join(TABLE_PRODUCTIONS . ' as p', 'v.productionId = p.id', 'left');
+		$this->datatables->join(TABLE_VENUE . ' as vv', 'p.venueId = vv.id', 'left');
 		$this->datatables->order_by('id', 'desc');
 		$this->datatables->addColumn('actions', $action, 'id');
 		$this->datatables->generate();
@@ -1171,7 +1306,6 @@ class Admin extends MY_Controller
 	}
 
 	// venue
-
 	function venues()
 	{
 		$this->data['title'] = 'House of Venues';
@@ -1273,7 +1407,7 @@ class Admin extends MY_Controller
 
 		$this->datatables->join($subquery, 'first_poc.venueId = v.id', 'left');
 		$this->datatables->join(TABLE_VENUEPOC . ' as p', 'p.id = first_poc.min_id', 'left');
-		$this->datatables->join(TABLE_USERS . ' as u', 'v.createBy = u.id');
+		$this->datatables->join(TABLE_USERS . ' as u', 'v.createBy = u.id', 'left');
 		$this->datatables->order_by('v.id', 'desc');
 		$this->datatables->addColumn('actions', $action, 'id');
 		$this->datatables->generate();
@@ -1423,7 +1557,7 @@ class Admin extends MY_Controller
 
 		$this->datatables->select('r.id as id, p.title, r.description, r.date, r.time, r.updateAt');
 		$this->datatables->from(TABLE_RUNOFSHOW . ' as r');
-		$this->datatables->join(TABLE_PRODUCTIONS . ' as p', 'r.productionId = p.id');
+		$this->datatables->join(TABLE_PRODUCTIONS . ' as p', 'r.productionId = p.id', 'left');
 		$this->datatables->where(array('r.archivesStatus' => 0));
 		$this->datatables->addColumn('actions', $action, 'id');
 		$this->datatables->generate();
@@ -1602,7 +1736,7 @@ class Admin extends MY_Controller
 
 		$this->datatables->select('r.id as id, p.title, r.description, r.date, r.time, r.updateAt');
 		$this->datatables->from(TABLE_RUNOFSHOW . ' as r');
-		$this->datatables->join(TABLE_PRODUCTIONS . ' as p', 'r.productionId = p.id');
+		$this->datatables->join(TABLE_PRODUCTIONS . ' as p', 'r.productionId = p.id', 'left');
 		$this->datatables->where(array('r.archivesStatus' => 1));
 		$this->datatables->addColumn('actions', $action, 'id');
 		$this->datatables->generate();
@@ -1647,6 +1781,7 @@ class Admin extends MY_Controller
 		$arr['crewMemberId'] = $this->input->post('crewMemberId');
 		$arr['travelTypeTo'] = $this->input->post('travelTypeTo');
 		$arr['airlineTo'] = $this->input->post('airlineTo');
+		$arr['dateTo'] = date('Y-m-d', strtotime($this->input->post('dateTo')));
 		$arr['specifyTravelTo'] = $this->input->post('specifyTravelTo');
 		$arr['airportFromTo'] = $this->input->post('airportFromTo');
 		$arr['departureTimeTo'] = $this->input->post('departureTimeTo');
@@ -1655,6 +1790,7 @@ class Admin extends MY_Controller
 		$arr['arrivalTimeTo'] = $this->input->post('arrivalTimeTo');
 		$arr['travelTypeFrom'] = $this->input->post('travelTypeFrom');
 		$arr['airlineFrom'] = $this->input->post('airlineFrom');
+		$arr['dateFrom'] = date('Y-m-d', strtotime($this->input->post('dateFrom')));
 		$arr['specifyTravelFrom'] = $this->input->post('specifyTravelFrom');
 		$arr['airportFromFrom'] = $this->input->post('airportFromFrom');
 		$arr['departureTimeFrom'] = $this->input->post('departureTimeFrom');
@@ -1677,7 +1813,9 @@ class Admin extends MY_Controller
 		$arr['perDiem'] = $this->input->post('perDiem');
 		$arr['hotelAddress'] = $this->input->post('hotelAddress');
 		$arr['roomType'] = $this->input->post('roomType');
+		$arr['checkInDate'] = $this->input->post('checkInDate') ? date('Y-m-d', strtotime($this->input->post('checkInDate'))) : null;
 		$arr['checkIn'] = $this->input->post('checkIn');
+		$arr['checkOutDate'] = $this->input->post('checkOutDate') ? date('Y-m-d', strtotime($this->input->post('checkOutDate'))) : null;
 		$arr['checkOut'] = $this->input->post('checkOut');
 		$arr['accommodationNote'] = $this->input->post('accommodationNote');
 		$this->admin->saveRunOfShowCrewTravel($arr);
@@ -1693,9 +1831,11 @@ class Admin extends MY_Controller
 
 	function updateRunOfShowCrewTravel($id)
 	{
+		// return dnp($_POST);
 		$arr['crewMemberId'] = $this->input->post('crewMemberId');
 		$arr['travelTypeTo'] = $this->input->post('travelTypeTo');
 		$arr['airlineTo'] = $this->input->post('airlineTo');
+		$arr['dateTo'] = date('Y-m-d', strtotime($this->input->post('dateTo')));
 		$arr['specifyTravelTo'] = $this->input->post('specifyTravelTo');
 		$arr['airportFromTo'] = $this->input->post('airportFromTo');
 		$arr['departureTimeTo'] = $this->input->post('departureTimeTo');
@@ -1704,6 +1844,7 @@ class Admin extends MY_Controller
 		$arr['arrivalTimeTo'] = $this->input->post('arrivalTimeTo');
 		$arr['travelTypeFrom'] = $this->input->post('travelTypeFrom');
 		$arr['airlineFrom'] = $this->input->post('airlineFrom');
+		$arr['dateFrom'] = date('Y-m-d', strtotime($this->input->post('dateFrom')));
 		$arr['specifyTravelFrom'] = $this->input->post('specifyTravelFrom');
 		$arr['airportFromFrom'] = $this->input->post('airportFromFrom');
 		$arr['departureTimeFrom'] = $this->input->post('departureTimeFrom');
@@ -1726,7 +1867,9 @@ class Admin extends MY_Controller
 		$arr['perDiem'] = $this->input->post('perDiem');
 		$arr['hotelAddress'] = $this->input->post('hotelAddress');
 		$arr['roomType'] = $this->input->post('roomType');
+		$arr['checkInDate'] = $this->input->post('checkInDate') ? date('Y-m-d', strtotime($this->input->post('checkInDate'))) : null;
 		$arr['checkIn'] = $this->input->post('checkIn');
+		$arr['checkOutDate'] = $this->input->post('checkOutDate') ? date('Y-m-d', strtotime($this->input->post('checkOutDate'))) : null;
 		$arr['checkOut'] = $this->input->post('checkOut');
 		$arr['accommodationNote'] = $this->input->post('accommodationNote');
 		$arr['updateAt'] = date('Y-m-d H:i:s');
@@ -1771,6 +1914,7 @@ class Admin extends MY_Controller
 		$arr['crewMemberId'] = $this->input->post('crewMemberId');
 		$arr['travelTypeTo'] = $this->input->post('travelTypeTo');
 		$arr['airlineTo'] = $this->input->post('airlineTo');
+		$arr['dateTo'] = date('Y-m-d', strtotime($this->input->post('dateTo')));
 		$arr['specifyTravelTo'] = $this->input->post('specifyTravelTo');
 		$arr['airportFromTo'] = $this->input->post('airportFromTo');
 		$arr['departureTimeTo'] = $this->input->post('departureTimeTo');
@@ -1779,6 +1923,7 @@ class Admin extends MY_Controller
 		$arr['arrivalTimeTo'] = $this->input->post('arrivalTimeTo');
 		$arr['travelTypeFrom'] = $this->input->post('travelTypeFrom');
 		$arr['airlineFrom'] = $this->input->post('airlineFrom');
+		$arr['dateFrom'] = date('Y-m-d', strtotime($this->input->post('dateFrom')));
 		$arr['specifyTravelFrom'] = $this->input->post('specifyTravelFrom');
 		$arr['airportFromFrom'] = $this->input->post('airportFromFrom');
 		$arr['departureTimeFrom'] = $this->input->post('departureTimeFrom');
@@ -1801,7 +1946,9 @@ class Admin extends MY_Controller
 		$arr['perDiem'] = $this->input->post('perDiem');
 		$arr['hotelAddress'] = $this->input->post('hotelAddress');
 		$arr['roomType'] = $this->input->post('roomType');
+		$arr['checkInDate'] = $this->input->post('checkInDate') ? date('Y-m-d', strtotime($this->input->post('checkInDate'))) : null;
 		$arr['checkIn'] = $this->input->post('checkIn');
+		$arr['checkOutDate'] = $this->input->post('checkOutDate') ? date('Y-m-d', strtotime($this->input->post('checkOutDate'))) : null;
 		$arr['checkOut'] = $this->input->post('checkOut');
 		$arr['accommodationNote'] = $this->input->post('accommodationNote');
 		$this->admin->saveRunOfShowTalentCrew($arr);
@@ -1820,6 +1967,7 @@ class Admin extends MY_Controller
 		$arr['crewMemberId'] = $this->input->post('crewMemberId');
 		$arr['travelTypeTo'] = $this->input->post('travelTypeTo');
 		$arr['airlineTo'] = $this->input->post('airlineTo');
+		$arr['dateTo'] = date('Y-m-d', strtotime($this->input->post('dateTo')));
 		$arr['specifyTravelTo'] = $this->input->post('specifyTravelTo');
 		$arr['airportFromTo'] = $this->input->post('airportFromTo');
 		$arr['departureTimeTo'] = $this->input->post('departureTimeTo');
@@ -1828,6 +1976,7 @@ class Admin extends MY_Controller
 		$arr['arrivalTimeTo'] = $this->input->post('arrivalTimeTo');
 		$arr['travelTypeFrom'] = $this->input->post('travelTypeFrom');
 		$arr['airlineFrom'] = $this->input->post('airlineFrom');
+		$arr['dateFrom'] = date('Y-m-d', strtotime($this->input->post('dateFrom')));
 		$arr['specifyTravelFrom'] = $this->input->post('specifyTravelFrom');
 		$arr['airportFromFrom'] = $this->input->post('airportFromFrom');
 		$arr['departureTimeFrom'] = $this->input->post('departureTimeFrom');
@@ -1850,7 +1999,9 @@ class Admin extends MY_Controller
 		$arr['perDiem'] = $this->input->post('perDiem');
 		$arr['hotelAddress'] = $this->input->post('hotelAddress');
 		$arr['roomType'] = $this->input->post('roomType');
+		$arr['checkInDate'] = $this->input->post('checkInDate') ? date('Y-m-d', strtotime($this->input->post('checkInDate'))) : null;
 		$arr['checkIn'] = $this->input->post('checkIn');
+		$arr['checkOutDate'] = $this->input->post('checkOutDate') ? date('Y-m-d', strtotime($this->input->post('checkOutDate'))) : null;
 		$arr['checkOut'] = $this->input->post('checkOut');
 		$arr['accommodationNote'] = $this->input->post('accommodationNote');
 		$arr['updateAt'] = date('Y-m-d H:i:s');
@@ -2113,7 +2264,7 @@ class Admin extends MY_Controller
 	{
 		$timeAccessLink = $this->data['timedAccessLink'] = $this->admin->getTimedAccessLinkDetailsById($id);
 		$this->data['data'] = $this->admin->getRunOfShowById($timeAccessLink->runOfShowId);
-//		return dnp($timeAccessLink->showProduction);
+//		return dnp($timeAccessLink);
 		if ($timeAccessLink->showProduction == 1) {
 			$this->data['runOfShowDetails'] = $this->admin->getRunOfShowScheduleDetails($timeAccessLink->runOfShowId);
 		}
@@ -2149,8 +2300,8 @@ class Admin extends MY_Controller
 		<button class="btn btn-sm dropdown-toggle" style="color: white; background-color: black" type="button" data-toggle="dropdown">Actions
 		<span class="caret"></span></button>
 		<ul class="dropdown-menu">
-			<li><a href="javascript:void(0);" onclick="loadPopup(\'' . base_url('admin/projectOverview/$1') . '\')">Overview</a></li>
-			<li><a href="javascript:void(0);" onclick="loadPopup(\'' . base_url('admin/projectTeamKpi/$1') . '\')">Team KPI</a></li>
+			<li><a href="' . base_url('admin/overviewProject/$1') . '">Overview</a></li>
+			<li><a href="' . base_url('admin/projectKpi/$1') . '">Team KPI</a></li>
 			<li><a href="' . base_url('admin/changeProjectArchiveStatus/$1') . '" onclick="return confirm(\'Are you sure?\')">Archive</a></li>
 			<li><a href="javascript:void(0);" onclick="loadPopup(\'' . base_url('admin/editProject/$1') . '\')">Edit</a></li>
 			<li><a href="' . base_url('admin/deleteProject/$1') . '" onclick="return confirm(\'Are you sure?\')">Delete</a></li>
@@ -2158,7 +2309,7 @@ class Admin extends MY_Controller
 	  </div>';
 		$this->datatables->select('r.id as id, p.title, r.description, r.updateAt');
 		$this->datatables->from(TABLE_PROJECTS . ' as r');
-		$this->datatables->join(TABLE_PRODUCTIONS . ' as p', 'r.productionId = p.id');
+		$this->datatables->join(TABLE_PRODUCTIONS . ' as p', 'r.productionId = p.id', 'left');
 		$this->datatables->where(array('r.archivesStatus' => 0));
 		$this->datatables->addColumn('actions', $action, 'id');
 		$this->datatables->generate();
@@ -2221,12 +2372,14 @@ class Admin extends MY_Controller
 		<span class="caret"></span></button>
 		<ul class="dropdown-menu">
 			<li><a href="' . base_url('admin/changeProjectUnarchivedStatus/$1') . '" onclick="return confirm(\'Are you sure?\')">Unarchived</a></li>
+			<li><a href="' . base_url('admin/overviewProject/$1') . '">Overview</a></li>
+			<li><a href="' . base_url('admin/projectKpi/$1') . '">Team KPI</a></li>
 			<li><a href="' . base_url('admin/deleteProject/$1') . '" onclick="return confirm(\'Are you sure?\')">Delete</a></li>
 		</ul>
 	  </div>';
 		$this->datatables->select('r.id as id, p.title, r.description, r.updateAt');
 		$this->datatables->from(TABLE_PROJECTS . ' as r');
-		$this->datatables->join(TABLE_PRODUCTIONS . ' as p', 'r.productionId = p.id');
+		$this->datatables->join(TABLE_PRODUCTIONS . ' as p', 'r.productionId = p.id', 'left');
 		$this->datatables->where(array('r.archivesStatus' => 1));
 		$this->datatables->addColumn('actions', $action, 'id');
 		$this->datatables->generate();
@@ -2310,6 +2463,79 @@ class Admin extends MY_Controller
 		$this->makeView('/projectKpi');
 	}
 
+	function changeTitleTimelineView()
+	{
+		$id = $this->input->post('id');
+		$value = $this->input->post('value');
+		if ($id && is_numeric($value)) {
+			$arr['timelineView'] = $value;
+			$this->admin->updateProjectKPIItemByTitleId($arr, $id);
+			$this->admin->updateProjectKPITitleById($arr, $id);
+			echo json_encode(['success' => true]);
+		} else {
+			echo json_encode(['success' => false]);
+		}
+	}
+
+	function changeTitleMilestoneMark()
+	{
+		$id = $this->input->post('id');
+		$value = $this->input->post('value');
+		if ($id && is_numeric($value)) {
+			$arr['milestoneMark'] = $value;
+			$this->admin->updateProjectKPIItemByTitleId($arr, $id);
+			$this->admin->updateProjectKPITitleById($arr, $id);
+			echo json_encode(['success' => true]);
+		} else {
+			echo json_encode(['success' => false]);
+		}
+	}
+
+	function changeItemTimelineView()
+	{
+		$id = $this->input->post('id');
+		$value = $this->input->post('value');
+		$titleId = $this->input->post('titleId');
+		if ($id && is_numeric($value)) {
+			$arr['timelineView'] = $value;
+			$this->admin->updateProjectKPIItemById($arr, $id);
+			$titleDetails = $this->admin->getProjectKPIItemsByTitleId($titleId);
+			$timelineViewResult = 1;
+			foreach ($titleDetails as $titleDetail) {
+				if ($titleDetail->timelineView == 0) {
+					$timelineViewResult = 0;
+				}
+			}
+			$ar['timelineView'] = $timelineViewResult;
+			$this->admin->updateProjectKPITitleById($ar, $titleId);
+			echo json_encode(['success' => true]);
+		} else {
+			echo json_encode(['success' => false]);
+		}
+	}
+
+	function changeItemMilestoneMark()
+	{
+		$id = $this->input->post('id');
+		$value = $this->input->post('value');
+		$titleId = $this->input->post('titleId');
+		if ($id && is_numeric($value)) {
+			$arr['milestoneMark'] = $value;
+			$this->admin->updateProjectKPIItemById($arr, $id);
+			$titleDetails = $this->admin->getProjectKPIItemsByTitleId($titleId);
+			$milestoneMarkResult = 1;
+			foreach ($titleDetails as $titleDetail) {
+				if ($titleDetail->milestoneMark == 0) {
+					$milestoneMarkResult = 0;
+				}
+			}
+			$ar['milestoneMark'] = $milestoneMarkResult;
+			$this->admin->updateProjectKPITitleById($ar, $titleId);
+			echo json_encode(['success' => true]);
+		} else {
+			echo json_encode(['success' => false]);
+		}
+	}
 
 	function addProjectKpiTitle($id)
 	{
@@ -2410,19 +2636,24 @@ class Admin extends MY_Controller
 		$metric = 0;
 		$titleDetails = $this->admin->getProjectKPIItemsByTitleId($titleId);
 		$totalDetails = count($titleDetails);
-		foreach ($titleDetails as $titleDetail) {
-			$metric += $titleDetail->metrics;
-			$averageMetrics = $ar['metrics'] = round($metric / $totalDetails, 2);
-			if ($averageMetrics == 100) {
-				$ar['markedDate'] = date('Y-m-d');
-				$ar['status'] = 'Completed';
-			} else if ($averageMetrics > 0 && $averageMetrics <= 100) {
-				$ar['markedDate'] = null;
-				$ar['status'] = 'In-Progress';
-			} else {
-				$ar['markedDate'] = null;
-				$ar['status'] = 'Not Started';
+		if ($titleDetails) {
+			foreach ($titleDetails as $titleDetail) {
+				$metric += $titleDetail->metrics;
+				$averageMetrics = $ar['metrics'] = round($metric / $totalDetails, 2);
+				if ($averageMetrics == 100) {
+					$ar['markedDate'] = date('Y-m-d');
+					$ar['status'] = 'Completed';
+				} else if ($averageMetrics > 0 && $averageMetrics <= 100) {
+					$ar['markedDate'] = null;
+					$ar['status'] = 'In-Progress';
+				} else {
+					$ar['markedDate'] = null;
+					$ar['status'] = 'Not Started';
+				}
 			}
+		} else {
+			$ar['markedDate'] = null;
+			$ar['status'] = 'Not Started';
 		}
 		$this->admin->updateProjectKPITitleById($ar, $titleId);
 		$this->session->set_flashdata('success', 'Project KPI Key Result Removed Successfully.');
@@ -2551,7 +2782,7 @@ class Admin extends MY_Controller
 		$totalDetails = count($titleDetails);
 		foreach ($titleDetails as $titleDetail) {
 			$metric += $titleDetail->metrics;
-			$ar['metrics'] = round($metric / $totalDetails, 2);
+			$metricResult = $ar['metrics'] = round($metric / $totalDetails, 2);
 			if ($titleDetail->timelineView == 1) {
 				$ar['timelineView'] = 1;
 			} else {
@@ -2561,6 +2792,17 @@ class Admin extends MY_Controller
 				$ar['milestoneMark'] = 1;
 			} else {
 				$ar['milestoneMark'] = 0;
+			}
+
+			if ($metricResult == 100) {
+				$ar['markedDate'] = date('Y-m-d');
+				$ar['status'] = 'Completed';
+			} else if ($metricResult > 0 && $metricResult <= 100) {
+				$ar['markedDate'] = null;
+				$ar['status'] = 'In-Progress';
+			} else {
+				$ar['markedDate'] = null;
+				$ar['status'] = 'Not Started';
 			}
 		}
 //		return dnp($ar);
@@ -2581,15 +2823,18 @@ class Admin extends MY_Controller
 		$this->popupView('/viewProjectKpiItemBlockReason');
 	}
 
-	function roadmap()
+	function projectRoadmap($id)
 	{
-		$this->data['title'] = 'Roadmap';
-		$this->makeView('/roadmap');
+		$this->data['title'] = 'Project Roadmap';
+		$this->data['data'] = $this->admin->getProjectById($id);
+		$this->data['projectKpiDetails'] = $this->admin->getProjectKpiRoadmapDetails($id);
+//		return dnp($this->data);
+		$this->makeView('/projectRoadmap');
 	}
 
-	function roadmap1()
+	function viewProjectKpiItem($id)
 	{
-		$this->data['title'] = 'Roadmap';
-		$this->makeView('/roadmap1');
+		$this->data['data'] = $this->admin->getProjectKPIItemsById($id);
+		$this->popupView('/viewProjectKpiItem');
 	}
 }

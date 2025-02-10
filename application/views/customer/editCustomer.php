@@ -38,19 +38,19 @@
 								<option value="">Select State</option>
 								<!-- Default placeholder option -->
 								<?php $states = [
-										"Alabama - AL", "Alaska - AK", "Arizona - AZ", "Arkansas - AR",
-										"California - CA", "Colorado - CO", "Connecticut - CT", "Delaware - DE",
-										"District of Columbia - DC", "Florida - FL", "Georgia - GA", "Guam - GU",
-										"Hawaii - HI", "Idaho - ID", "Illinois - IL", "Indiana - IN",
-										"Iowa - IA", "Kansas - KS", "Kentucky - KY", "Louisiana - LA",
-										"Maine - ME", "Maryland - MD", "Massachusetts - MA", "Michigan - MI",
-										"Minnesota - MN", "Mississippi - MS", "Missouri - MO", "Montana - MT",
-										"Nebraska - NE", "Nevada - NV", "New Hampshire - NH", "New Jersey - NJ",
-										"New Mexico - NM", "New York - NY", "North Carolina - NC", "North Dakota - ND",
-										"Ohio - OH", "Oklahoma - OK", "Oregon - OR", "Pennsylvania - PA", "Puerto Rico - PR",
-										"Rhode Island - RI", "South Carolina - SC", "South Dakota - SD", "Tennessee - TN",
-										"Texas - TX", "Utah - UT", "Vermont - VT", "Virginia - VA", "Virgin Islands - VI",
-										"Washington - WA", "West Virginia - WV", "Wisconsin - WI", "Wyoming - WY"
+									"Alabama - AL", "Alaska - AK", "Arizona - AZ", "Arkansas - AR",
+									"California - CA", "Colorado - CO", "Connecticut - CT", "Delaware - DE",
+									"District of Columbia - DC", "Florida - FL", "Georgia - GA", "Guam - GU",
+									"Hawaii - HI", "Idaho - ID", "Illinois - IL", "Indiana - IN",
+									"Iowa - IA", "Kansas - KS", "Kentucky - KY", "Louisiana - LA",
+									"Maine - ME", "Maryland - MD", "Massachusetts - MA", "Michigan - MI",
+									"Minnesota - MN", "Mississippi - MS", "Missouri - MO", "Montana - MT",
+									"Nebraska - NE", "Nevada - NV", "New Hampshire - NH", "New Jersey - NJ",
+									"New Mexico - NM", "New York - NY", "North Carolina - NC", "North Dakota - ND",
+									"Ohio - OH", "Oklahoma - OK", "Oregon - OR", "Pennsylvania - PA", "Puerto Rico - PR",
+									"Rhode Island - RI", "South Carolina - SC", "South Dakota - SD", "Tennessee - TN",
+									"Texas - TX", "Utah - UT", "Vermont - VT", "Virginia - VA", "Virgin Islands - VI",
+									"Washington - WA", "West Virginia - WV", "Wisconsin - WI", "Wyoming - WY"
 								];
 								foreach ($states as $state) {
 									// Set the option as selected if it matches the stored state
@@ -72,38 +72,38 @@
 									name="businessLine1" required>
 								<option value="" selected disabled>Select a Category</option>
 								<option <?= $data->businessLine1 == 'Catering and Food Service' ? 'selected' : '' ?>
-										value="Catering and Food Service">Catering and Food Service
+									value="Catering and Food Service">Catering and Food Service
 								</option>
 								<option <?= $data->businessLine1 == 'A/V and Technical Service' ? 'selected' : '' ?>
-										value="A/V and Technical Service">A/V and Technical Service
+									value="A/V and Technical Service">A/V and Technical Service
 								</option>
 								<option <?= $data->businessLine1 == 'Event Décor and Design' ? 'selected' : '' ?>
-										value="Event Décor and Design">Event Décor and Design
+									value="Event Décor and Design">Event Décor and Design
 								</option>
 								<option <?= $data->businessLine1 == 'Entertainment Services' ? 'selected' : '' ?>
-										value="Entertainment Services">Entertainment Services
+									value="Entertainment Services">Entertainment Services
 								</option>
 								<option <?= $data->businessLine1 == 'Photography and Videography' ? 'selected' : '' ?>
-										value="Photography and Videography">Photography and Videography
+									value="Photography and Videography">Photography and Videography
 								</option>
 								<option <?= $data->businessLine1 == 'Rentals and Equipment' ? 'selected' : '' ?>
-										value="Rentals and Equipment">Rentals and Equipment
+									value="Rentals and Equipment">Rentals and Equipment
 								</option>
 								<option <?= $data->businessLine1 == 'Security and Safety Service' ? 'selected' : '' ?>
-										value="Security and Safety Service">Security and Safety Service
+									value="Security and Safety Service">Security and Safety Service
 								</option>
 								<option <?= $data->businessLine1 == 'Stage Build' ? 'selected' : '' ?>
-										value="Stage Build">Stage Build
+									value="Stage Build">Stage Build
 								</option>
 								<option <?= $data->businessLine1 == 'Transportation and Logistics' ? 'selected' : '' ?>
-										value="Transportation and Logistics">Transportation and Logistics
+									value="Transportation and Logistics">Transportation and Logistics
 								</option>
 								<option <?= $data->businessLine1 == 'Marketing, Promotions and Advertising' ? 'selected' : '' ?>
-										value="Marketing, Promotions and Advertising">Marketing, Promotions and
+									value="Marketing, Promotions and Advertising">Marketing, Promotions and
 									Advertising
 								</option>
 								<option <?= $data->businessLine1 == 'Event Staffing' ? 'selected' : '' ?>
-										value="Event Staffing">Event Staffing
+									value="Event Staffing">Event Staffing
 								</option>
 							</select>
 						</div>
@@ -119,38 +119,38 @@
 									name="businessLine2">
 								<option value="" selected disabled>Select a Category</option>
 								<option <?= $data->businessLine2 == 'Catering and Food Service' ? 'selected' : '' ?>
-										value="Catering and Food Service">Catering and Food Service
+									value="Catering and Food Service">Catering and Food Service
 								</option>
 								<option <?= $data->businessLine2 == 'A/V and Technical Service' ? 'selected' : '' ?>
-										value="A/V and Technical Service">A/V and Technical Service
+									value="A/V and Technical Service">A/V and Technical Service
 								</option>
 								<option <?= $data->businessLine2 == 'Event Décor and Design' ? 'selected' : '' ?>
-										value="Event Décor and Design">Event Décor and Design
+									value="Event Décor and Design">Event Décor and Design
 								</option>
 								<option <?= $data->businessLine2 == 'Entertainment Services' ? 'selected' : '' ?>
-										value="Entertainment Services">Entertainment Services
+									value="Entertainment Services">Entertainment Services
 								</option>
 								<option <?= $data->businessLine2 == 'Photography and Videography' ? 'selected' : '' ?>
-										value="Photography and Videography">Photography and Videography
+									value="Photography and Videography">Photography and Videography
 								</option>
 								<option <?= $data->businessLine2 == 'Rentals and Equipment' ? 'selected' : '' ?>
-										value="Rentals and Equipment">Rentals and Equipment
+									value="Rentals and Equipment">Rentals and Equipment
 								</option>
 								<option <?= $data->businessLine2 == 'Security and Safety Service' ? 'selected' : '' ?>
-										value="Security and Safety Service">Security and Safety Service
+									value="Security and Safety Service">Security and Safety Service
 								</option>
 								<option <?= $data->businessLine2 == 'Stage Build' ? 'selected' : '' ?>
-										value="Stage Build">Stage Build
+									value="Stage Build">Stage Build
 								</option>
 								<option <?= $data->businessLine2 == 'Transportation and Logistics' ? 'selected' : '' ?>
-										value="Transportation and Logistics">Transportation and Logistics
+									value="Transportation and Logistics">Transportation and Logistics
 								</option>
 								<option <?= $data->businessLine2 == 'Marketing, Promotions and Advertising' ? 'selected' : '' ?>
-										value="Marketing, Promotions and Advertising">Marketing, Promotions and
+									value="Marketing, Promotions and Advertising">Marketing, Promotions and
 									Advertising
 								</option>
 								<option <?= $data->businessLine2 == 'Event Staffing' ? 'selected' : '' ?>
-										value="Event Staffing">Event Staffing
+									value="Event Staffing">Event Staffing
 								</option>
 							</select>
 						</div>
@@ -166,38 +166,38 @@
 									name="businessLine3">
 								<option value="" selected disabled>Select a Category</option>
 								<option <?= $data->businessLine3 == 'Catering and Food Service' ? 'selected' : '' ?>
-										value="Catering and Food Service">Catering and Food Service
+									value="Catering and Food Service">Catering and Food Service
 								</option>
 								<option <?= $data->businessLine3 == 'A/V and Technical Service' ? 'selected' : '' ?>
-										value="A/V and Technical Service">A/V and Technical Service
+									value="A/V and Technical Service">A/V and Technical Service
 								</option>
 								<option <?= $data->businessLine3 == 'Event Décor and Design' ? 'selected' : '' ?>
-										value="Event Décor and Design">Event Décor and Design
+									value="Event Décor and Design">Event Décor and Design
 								</option>
 								<option <?= $data->businessLine3 == 'Entertainment Services' ? 'selected' : '' ?>
-										value="Entertainment Services">Entertainment Services
+									value="Entertainment Services">Entertainment Services
 								</option>
 								<option <?= $data->businessLine3 == 'Photography and Videography' ? 'selected' : '' ?>
-										value="Photography and Videography">Photography and Videography
+									value="Photography and Videography">Photography and Videography
 								</option>
 								<option <?= $data->businessLine3 == 'Rentals and Equipment' ? 'selected' : '' ?>
-										value="Rentals and Equipment">Rentals and Equipment
+									value="Rentals and Equipment">Rentals and Equipment
 								</option>
 								<option <?= $data->businessLine3 == 'Security and Safety Service' ? 'selected' : '' ?>
-										value="Security and Safety Service">Security and Safety Service
+									value="Security and Safety Service">Security and Safety Service
 								</option>
 								<option <?= $data->businessLine3 == 'Stage Build' ? 'selected' : '' ?>
-										value="Stage Build">Stage Build
+									value="Stage Build">Stage Build
 								</option>
 								<option <?= $data->businessLine3 == 'Transportation and Logistics' ? 'selected' : '' ?>
-										value="Transportation and Logistics">Transportation and Logistics
+									value="Transportation and Logistics">Transportation and Logistics
 								</option>
 								<option <?= $data->businessLine3 == 'Marketing, Promotions and Advertising' ? 'selected' : '' ?>
-										value="Marketing, Promotions and Advertising">Marketing, Promotions and
+									value="Marketing, Promotions and Advertising">Marketing, Promotions and
 									Advertising
 								</option>
 								<option <?= $data->businessLine3 == 'Event Staffing' ? 'selected' : '' ?>
-										value="Event Staffing">Event Staffing
+									value="Event Staffing">Event Staffing
 								</option>
 							</select>
 						</div>
@@ -250,7 +250,9 @@
 					<div class="box-footer">
 						<div class="row">
 							<div class="form-group col-md-12">
-								<button type="submit" id="submitEdit" class="btn btn-info pull-right">Update</button>
+								<button type="submit" id="submitEdit" style="background-color: black; color: white;"
+										class="btn btn-info pull-right">Update
+								</button>
 							</div>
 						</div>
 					</div>

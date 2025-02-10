@@ -9,64 +9,46 @@
 					<div class="panel panel-default">
 						<div class="panel-body">
 							<div class="row">
-								<div class="col-md-6">
-									<label for="title">PRODUCTION TITLE <span class="text-danger">*</span></label>
+								<div class="col-md-4">
+									<label for="title">PRODUCTION TITLE<span class="text-danger">*</span></label>
 									<input class="form-control input-sm" type="text" name="title" id="title" required
 										   placeholder="Enter production title"
 										   value="<?= $data ? $data->title : '' ?>">
 								</div>
 								<div class="col-md-2">
-									<label for="id">PRODUCTION ID <span class="text-danger">*</span></label>
+									<label for="id">PRODUCTION ID<span class="text-danger">*</span></label>
 									<input class="form-control input-sm" type="text" name="id" id="id" readonly
 										   title="Production Id" value="<?= $id ?>" style="border-color: #007bff;">
 								</div>
 								<div class="col-md-2">
-									<label for="eventMonth">EVENT MONTH <span class="text-danger">*</span></label>
-									<select class="form-control input-sm" name="eventMonth" id="eventMonth" required>
-										<option <?= ($data && $data->eventMonth == 'January') || (!$data && date('F') == 'January') ? 'selected' : '' ?>
-												value="January">January
-										</option>
-										<option <?= ($data && $data->eventMonth == 'February') || (!$data && date('F') == 'February') ? 'selected' : '' ?>
-												value="February">February
-										</option>
-										<option <?= ($data && $data->eventMonth == 'March') || (!$data && date('F') == 'March') ? 'selected' : '' ?>
-												value="March">March
-										</option>
-										<option <?= ($data && $data->eventMonth == 'April') || (!$data && date('F') == 'April') ? 'selected' : '' ?>
-												value="April">April
-										</option>
-										<option <?= ($data && $data->eventMonth == 'May') || (!$data && date('F') == 'May') ? 'selected' : '' ?>
-												value="May">May
-										</option>
-										<option <?= ($data && $data->eventMonth == 'June') || (!$data && date('F') == 'June') ? 'selected' : '' ?>
-												value="June">June
-										</option>
-										<option <?= ($data && $data->eventMonth == 'July') || (!$data && date('F') == 'July') ? 'selected' : '' ?>
-												value="July">July
-										</option>
-										<option <?= ($data && $data->eventMonth == 'August') || (!$data && date('F') == 'August') ? 'selected' : '' ?>
-												value="August">August
-										</option>
-										<option <?= ($data && $data->eventMonth == 'September') || (!$data && date('F') == 'September') ? 'selected' : '' ?>
-												value="September">September
-										</option>
-										<option <?= ($data && $data->eventMonth == 'October') || (!$data && date('F') == 'October') ? 'selected' : '' ?>
-												value="October">October
-										</option>
-										<option <?= ($data && $data->eventMonth == 'November') || (!$data && date('F') == 'November') ? 'selected' : '' ?>
-												value="November">November
-										</option>
-										<option <?= ($data && $data->eventMonth == 'December') || (!$data && date('F') == 'December') ? 'selected' : '' ?>
-												value="December">December
-										</option>
-									</select>
+									<label for="startDate">START DATE<b class="text-danger">*</b></label>
+									<div class="input-group date">
+										<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+										<input type="text" class="form-control input-sm" name="startDate" id="startDate"
+											   value="<?= $data->startDate ? date('d M Y', strtotime($data->startDate)) : '' ?>"
+											   required>
+									</div>
+								</div>
+								<div class="col-md-1">
+									<label for="startTime">START TIME<b class="text-danger">*</b></label>
+									<input type="time" class="form-control input-sm" name="startTime"
+										   value="<?= $data->startTime ? $data->startTime : '' ?>" id="startTime"
+										   required>
 								</div>
 								<div class="col-md-2">
-									<label for="eventYear">EVENT YEAR <span class="text-danger">*</span></label>
-									<input class="form-control input-sm" type="number" minlength="4"
-										   min="<?= date('Y') ?>"
-										   name="eventYear" value="<?= $data ? $data->eventYear : date('Y') ?>"
-										   id="eventYear" required>
+									<label for="endDate">END DATE<b class="text-danger">*</b></label>
+									<div class="input-group date">
+										<div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+										<input type="text" class="form-control input-sm" name="endDate" id="endDate"
+											   value="<?= $data->endDate ? date('d M Y', strtotime($data->endDate)) : '' ?>"
+											   required>
+									</div>
+								</div>
+								<div class="col-md-1">
+									<label for="endTime">END TIME<b class="text-danger">*</b></label>
+									<input type="time" class="form-control input-sm"
+										   value="<?= $data->endTime ? $data->endTime : '' ?>"
+										   name="endTime" id="endTime" required>
 								</div>
 							</div>
 						</div>
@@ -363,9 +345,10 @@
 															<a href="javascript:void(0);"
 															   onclick="loadPopup('<?= base_url('customer/editCrewMember/' . $datum->id) ?>')"
 															   class="btn btn-xs btn-info"><i
-																		class="fa fa-edit"></i></a>
+																	class="fa fa-edit"></i></a>
 															<a href="javascript:void(0);"
-															   class="btn btn-xs btn-danger deleteCrew"
+															   class="btn btn-xs btn-danger"
+															   onclick="deleteCrew(event, <?= $datum->id ?>)"
 															   id="<?= $datum->id ?>">
 																<i class="fa fa-trash"></i></a>
 														</td>
@@ -456,9 +439,10 @@
 															<a href="javascript:void(0);"
 															   onclick="loadPopup('<?= base_url('customer/editEntertainer/' . $datum->id) ?>')"
 															   class="btn btn-xs btn-info"><i
-																		class="fa fa-edit"></i></a>
+																	class="fa fa-edit"></i></a>
 															<a href="javascript:void(0);"
-															   class="btn btn-xs btn-danger deleteEntertainer"
+															   class="btn btn-xs btn-danger"
+															   onclick="deleteEntertainer(event, <?= $datum->id ?>)"
 															   id="<?= $datum->id ?>">
 																<i class="fa fa-trash"></i></a>
 														</td>
@@ -518,9 +502,10 @@
 															<a href="javascript:void(0);"
 															   onclick="loadPopup('<?= base_url('customer/editTheatreCrew/' . $datum->id) ?>')"
 															   class="btn btn-xs btn-info"><i
-																		class="fa fa-edit"></i></a>
+																	class="fa fa-edit"></i></a>
 															<a href="javascript:void(0);"
-															   class="btn btn-xs btn-danger deleteTheatreCrew"
+															   class="btn btn-xs btn-danger"
+															   onclick="deleteTheatreCrew(event, <?= $datum->id ?>)"
 															   id="<?= $datum->id ?>">
 																<i class="fa fa-trash"></i></a>
 														</td>
@@ -699,9 +684,10 @@
 															<a href="javascript:void(0);"
 															   onclick="loadPopup('<?= base_url('customer/editMarketingFee/' . $datum->id) ?>')"
 															   class="btn btn-xs btn-info"><i
-																		class="fa fa-edit"></i></a>
+																	class="fa fa-edit"></i></a>
 															<a href="javascript:void(0);"
-															   class="btn btn-xs btn-danger deleteMarketingFees"
+															   class="btn btn-xs btn-danger"
+															   onclick="deleteMarketingFees(event, <?= $datum->id ?>)"
 															   id="<?= $datum->id ?>">
 																<i class="fa fa-trash"></i></a>
 														</td>
@@ -755,9 +741,10 @@
 															<a href="javascript:void(0);"
 															   onclick="loadPopup('<?= base_url('customer/editRentalAndMisc/' . $datum->id) ?>')"
 															   class="btn btn-xs btn-info"><i
-																		class="fa fa-edit"></i></a>
+																	class="fa fa-edit"></i></a>
 															<a href="javascript:void(0);"
-															   class="btn btn-xs btn-danger deleteRentalAndMisc"
+															   class="btn btn-xs btn-danger"
+															   onclick="deleteRentalAndMisc(event, <?= $datum->id ?>)"
 															   id="<?= $datum->id ?>">
 																<i class="fa fa-trash"></i></a>
 														</td>
@@ -977,6 +964,18 @@
 	}
 </style>
 <script>
+	$('#startDate, #endDate').datepicker({
+		autoclose: true,
+		todayHighlight: true,
+		changeMonth: true,
+		changeYear: true,
+		dateFormat: 'dd M yy'
+	});
+
+	$('#startTime, #endTime').on('focus click', function () {
+		this.showPicker();
+	});
+
 	$(function () {
 		$(".selectVenue").select2({
 			placeholder: "Select Venue",
@@ -1115,10 +1114,9 @@
 		$('#projectedROI').val(projectedROI.toFixed(2));
 	}
 
-	$('#crewTable').on('click', '.deleteCrew', function (e) {
+	function deleteCrew(e, id) {
 		e.preventDefault();
 		if (confirm('Are you sure?') == true) {
-			var id = $(this).attr("id");
 			$.ajax({
 				url: '<?= customer_url('deleteCrewMember/') ?>' + id,
 				type: 'POST',
@@ -1136,11 +1134,11 @@
 				}
 			});
 		}
-	})
-	$('#entertainerTable').on('click', '.deleteEntertainer', function (e) {
+	}
+
+	function deleteEntertainer(e, id) {
 		e.preventDefault();
 		if (confirm('Are you sure?') == true) {
-			var id = $(this).attr("id");
 			$.ajax({
 				url: '<?= customer_url('deleteEntertainer/') ?>' + id,
 				type: 'POST',
@@ -1158,11 +1156,11 @@
 				}
 			});
 		}
-	})
-	$('#theatreCrewTable').on('click', '.deleteTheatreCrew', function (e) {
+	}
+
+	function deleteTheatreCrew(e, id) {
 		e.preventDefault();
 		if (confirm('Are you sure?') == true) {
-			var id = $(this).attr("id");
 			$.ajax({
 				url: '<?= customer_url('deleteTheatreCrew/') ?>' + id,
 				type: 'POST',
@@ -1180,11 +1178,11 @@
 				}
 			});
 		}
-	})
-	$('#marketingFeesTable').on('click', '.deleteMarketingFees', function (e) {
+	}
+
+	function deleteMarketingFees(e, id) {
 		e.preventDefault();
 		if (confirm('Are you sure?') == true) {
-			var id = $(this).attr("id");
 			$.ajax({
 				url: '<?= customer_url('deleteMarketingFee/') ?>' + id,
 				type: 'POST',
@@ -1202,11 +1200,11 @@
 				}
 			});
 		}
-	})
-	$('#rentalAndMiscTable').on('click', '.deleteRentalAndMisc', function (e) {
+	}
+
+	function deleteRentalAndMisc(e, id) {
 		e.preventDefault();
 		if (confirm('Are you sure?') == true) {
-			var id = $(this).attr("id");
 			$.ajax({
 				url: '<?= customer_url('deleteRentalAndMisc/') ?>' + id,
 				type: 'POST',
@@ -1224,7 +1222,7 @@
 				}
 			});
 		}
-	})
+	}
 
 	$('#form').on('submit', function (e) {
 		e.preventDefault();
@@ -1234,13 +1232,12 @@
 
 		if (clickedButton == 'submit') {
 			var r = confirm('Are you sure?');
-			if (r == true) {
+			if (r === true) {
 				actionUrl = '<?= customer_url('save') ?>';
 			}
 		} else {
 			actionUrl = '<?= customer_url('saveProgress') ?>';
 		}
-
 		if (actionUrl !== '') {
 			$.ajax({
 				url: actionUrl,
@@ -1250,9 +1247,9 @@
 					toastr.warning('Something is wrong');
 				},
 				success: function (data) {
+					console.log(data);
 					$("#remoteModal1").modal('hide');
-
-					$("#form").load(window.location + " #form > *", function() {
+					$("#form").load(window.location + " #form > *", function () {
 						$(".selectVenue").select2({
 							placeholder: "Select Venue",
 							ajax: {
@@ -1290,7 +1287,6 @@
 							calculateCosts();
 						});
 					});
-
 					toastr.success("Record updated successfully");
 				}
 			});

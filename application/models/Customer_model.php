@@ -11,12 +11,32 @@ class Customer_model extends CI_Model
 		$this->db->update(TABLE_USERS, $arr, array('id' => $id));
 	}
 
+	function update($arr, $id)
+	{
+		$this->db->update(TABLE_PRODUCTIONS, $arr, array('id' => $id));
+	}
+
 	function getCustomerById($id)
 	{
 		$this->db->select('*');
 		$this->db->from(TABLE_USERS);
 		$this->db->where('id', $id);
 		return $this->db->get()->row();
+	}
+
+	function getCustomerSearch($searchTerm = "")
+	{
+		$this->db->select('*, name as text');
+		$this->db->from(TABLE_USERS);
+		$this->db->where("name like '%" . $searchTerm . "%'");
+		$value = $this->db->get()->result();
+		$data = array();
+		foreach ($value as $val) {
+			if ($val->deleted == 0 && $val->type != 'Vendor') {
+				$data[] = $val;
+			}
+		}
+		return $data;
 	}
 
 	function fetch_email($email)
@@ -81,6 +101,7 @@ class Customer_model extends CI_Model
 		return $this->db->get()->num_rows();
 	}
 
+	// production
 	function totalRejectedInvoices()
 	{
 		$this->db->select('vv.*');
@@ -91,22 +112,32 @@ class Customer_model extends CI_Model
 		return $this->db->get()->num_rows();
 	}
 
-	// production
+	function getProductionSearch($searchTerm = "")
+	{
+		$this->db->select('p.*, p.title as text, v.venueName');
+		$this->db->from(TABLE_PRODUCTIONS . ' as p');
+		$this->db->join(TABLE_VENUE . ' as v', 'p.venueId = v.id');
+		$this->db->where("p.title like '%" . $searchTerm . "%' or p.id like '%" . $searchTerm . "%'");
+		$value = $this->db->get()->result();
+		$data = array();
+		foreach ($value as $val) {
+			if ($val->completedStatus == 'Green Lit' || $val->completedStatus == 'Wrapped') {
+				$data[] = $val;
+			}
+		}
+		return $data;
+	}
+
 	function save($arr)
 	{
 		$this->db->insert(TABLE_PRODUCTIONS, $arr);
-	}
-
-	function update($arr, $id)
-	{
-		$this->db->update(TABLE_PRODUCTIONS, $arr, array('id' => $id));
 	}
 
 	function getProductionById($id)
 	{
 		$this->db->select('p.*, v.venueName, v.address, v.city, v.state, v.zip');
 		$this->db->from(TABLE_PRODUCTIONS . ' as p');
-		$this->db->join(TABLE_VENUE . ' as v', 'p.venueId = v.id');
+		$this->db->join(TABLE_VENUE . ' as v', 'p.venueId = v.id', 'left');
 		$this->db->where('p.id', $id);
 		return $this->db->get()->row();
 	}
@@ -376,7 +407,7 @@ class Customer_model extends CI_Model
 	function getVendorInvoiceById($id)
 	{
 		$this->db->select('v.*, u.name, u.phone, u.username, u.businessName, u.ein, u.businessAddress, u.city, u.state,
-		 	p.title, p.eventMonth, p.eventYear, vv.venueName');
+		 	p.title, p.startDate, p.startTime, p.endDate, p.endTime, vv.venueName');
 		$this->db->from(TABLE_VENDORINVOICE . ' as v');
 		$this->db->join(TABLE_USERS . ' as u', 'v.vendorId = u.id');
 		$this->db->join(TABLE_PRODUCTIONS . ' as p', 'v.productionId = p.id');
@@ -461,5 +492,707 @@ class Customer_model extends CI_Model
 	{
 		$this->db->where('venueId', $id);
 		$this->db->delete(TABLE_VENUEATTACHMENT);
+	}
+
+	// run of show
+	function saveRunOfShow($arr)
+	{
+		$this->db->insert(TABLE_RUNOFSHOW, $arr);
+	}
+
+	function getRunOfShowById($id)
+	{
+		$this->db->select('r.*, p.title, p.startDate, p.startTime, p.endDate, p.endTime, v.venueName, v.address, v.city, v.state, v.zip');
+		$this->db->from(TABLE_RUNOFSHOW . ' as r');
+		$this->db->join(TABLE_PRODUCTIONS . ' as p', 'r.productionId = p.id');
+		$this->db->join(TABLE_VENUE . ' as v', 'p.venueId = v.id');
+		$this->db->where('r.id', $id);
+		return $this->db->get()->row();
+	}
+
+	function updateRunOfShow($arr, $id)
+	{
+		$this->db->update(TABLE_RUNOFSHOW, $arr, array('id' => $id));
+	}
+
+	function deleteRunOfShow($id)
+	{
+		$this->db->where('id', $id);
+		$this->db->delete(TABLE_RUNOFSHOW);
+	}
+
+	public function insertRunOfShowScheduleTitle($data)
+	{
+		$this->db->insert(TABLE_RUNOFSHOWTITLES, $data);
+		return $this->db->insert_id(); // Return the inserted title ID
+	}
+
+	public function insertRunOfShowScheduleItem($data)
+	{
+		$this->db->insert(TABLE_RUNOFSHOWITEMS, $data);
+	}
+
+	public function getRunOfShowScheduleDetails($runId)
+	{
+		$this->db->select('t.*, i.*, u.name');
+		$this->db->from(TABLE_RUNOFSHOWTITLES . ' as t');
+		$this->db->join(TABLE_RUNOFSHOWITEMS . ' as i', 't.id = i.title_id', 'left');
+		$this->db->join(TABLE_USERS . ' as u', 'u.id = i.leadTeamMember', 'left');
+		$this->db->where('t.runOfShowId', $runId);
+		return $this->db->get()->result_array();
+	}
+
+	public function deleteRunOfShowDetailsByRunId($runId)
+	{
+		// Delete items first to avoid foreign key constraint issues
+		$this->db->where('runOfShowId', $runId);
+		$this->db->delete(TABLE_RUNOFSHOWITEMS); // Assuming 'items' is the table where individual rows are stored
+
+		// Now delete titles
+		$this->db->where('runOfShowId', $runId);
+		$this->db->delete(TABLE_RUNOFSHOWTITLES); // Assuming 'titles' is the table where title rows are stored
+	}
+
+	// copy run of show
+	public function duplicateRunOfShowSchedule($oldRunOfShowId, $newRunOfShowId)
+	{
+		$this->db->select('*');
+		$this->db->where('runOfShowId', $oldRunOfShowId);
+		$titleQuery = $this->db->get(TABLE_RUNOFSHOWTITLES);
+		$titleResult = $titleQuery->result_array();
+
+		if (!empty($titleResult)) {
+			$titleInsertData = [];
+			foreach ($titleResult as $titleRow) {
+				$titleInsertData[] = [
+					'runOfShowId' => $newRunOfShowId,
+					'title_name' => $titleRow['title_name']
+				];
+			}
+			$this->db->insert_batch(TABLE_RUNOFSHOWTITLES, $titleInsertData);
+
+			$newTitleMap = $this->db->insert_id();
+			foreach ($titleResult as $index => $titleRow) {
+				$titleResult[$index]['new_title_id'] = $newTitleMap + $index;
+			}
+		}
+
+		$this->db->select('*');
+		$this->db->where('runOfShowId', $oldRunOfShowId);
+		$itemQuery = $this->db->get(TABLE_RUNOFSHOWITEMS);
+		$itemResult = $itemQuery->result_array();
+
+		if (!empty($itemResult) && !empty($titleResult)) {
+			$itemInsertData = [];
+			foreach ($itemResult as $itemRow) {
+				$matchingTitle = array_filter($titleResult, function ($titleRow) use ($itemRow) {
+					return $titleRow['id'] === $itemRow['title_id'];
+				});
+				$newTitleId = reset($matchingTitle)['new_title_id'] ?? null;
+
+				if ($newTitleId) {
+					$itemInsertData[] = [
+						'runOfShowId' => $newRunOfShowId,
+						'title_id' => $newTitleId,
+						'item_name' => $itemRow['item_name'],
+						'start_time' => $itemRow['start_time'],
+						'duration' => $itemRow['duration'],
+						'crew_member' => $itemRow['crew_member'],
+						'leadTeamMember' => $itemRow['leadTeamMember'],
+						'talent' => $itemRow['talent'],
+						'location' => $itemRow['location'],
+						'area_space' => $itemRow['area_space'],
+						'details' => $itemRow['details'],
+						'private_notes' => $itemRow['private_notes']
+					];
+				}
+			}
+			if (!empty($itemInsertData)) {
+				$this->db->insert_batch(TABLE_RUNOFSHOWITEMS, $itemInsertData);
+			}
+		}
+	}
+
+	public function duplicateRunOfShowCrewTravel($oldRunOfShowId, $newRunOfShowId)
+	{
+		$this->db->select('*');
+		$this->db->where('runOfShowId', $oldRunOfShowId);
+		$query = $this->db->get(TABLE_RUNOFSHOWCREWTRAVEL);
+		$result = $query->result_array();
+
+		if (!empty($result)) {
+			$insertData = [];
+			foreach ($result as $row) {
+				$insertData[] = [
+					'runOfShowId' => $newRunOfShowId,
+					'crewMemberId' => $row['crewMemberId'],
+					'travelTypeTo' => $row['travelTypeTo'],
+					'airlineTo' => $row['airlineTo'],
+					'specifyTravelTo' => $row['specifyTravelTo'],
+					'airportFromTo' => $row['airportFromTo'],
+					'departureTimeTo' => $row['departureTimeTo'],
+					'confirmationTo' => $row['confirmationTo'],
+					'airportToTo' => $row['airportToTo'],
+					'arrivalTimeTo' => $row['arrivalTimeTo'],
+					'travelTypeFrom' => $row['travelTypeFrom'],
+					'airlineFrom' => $row['airlineFrom'],
+					'specifyTravelFrom' => $row['specifyTravelFrom'],
+					'airportFromFrom' => $row['airportFromFrom'],
+					'departureTimeFrom' => $row['departureTimeFrom'],
+					'confirmationFrom' => $row['confirmationFrom'],
+					'airportToFrom' => $row['airportToFrom'],
+					'arrivalTimeFrom' => $row['arrivalTimeFrom'],
+					'groundTransCo' => $row['groundTransCo'],
+					'vehicleMake' => $row['vehicleMake'],
+					'driverName' => $row['driverName'],
+					'driverPhone' => $row['driverPhone'],
+					'vehicleModel' => $row['vehicleModel'],
+					'vehicleTag' => $row['vehicleTag'],
+					'pickUpTime' => $row['pickUpTime'],
+					'dropOffTime' => $row['dropOffTime'],
+					'dropOffLocation' => $row['dropOffLocation'],
+					'groundNotes' => $row['groundNotes'],
+					'hotelName' => $row['hotelName'],
+					'hotelStay' => $row['hotelStay'],
+					'confirmationAccommodation' => $row['confirmationAccommodation'],
+					'perDiem' => $row['perDiem'],
+					'hotelAddress' => $row['hotelAddress'],
+					'roomType' => $row['roomType'],
+					'checkIn' => $row['checkIn'],
+					'checkOut' => $row['checkOut'],
+					'accommodationNote' => $row['accommodationNote']
+				];
+			}
+			$this->db->insert_batch(TABLE_RUNOFSHOWCREWTRAVEL, $insertData);
+		}
+	}
+
+	public function duplicateRunOfShowTalentCrew($oldRunOfShowId, $newRunOfShowId)
+	{
+		$this->db->select('*');
+		$this->db->where('runOfShowId', $oldRunOfShowId);
+		$query = $this->db->get(TABLE_RUNOFSHOWTALENTCREW);
+		$result = $query->result_array();
+
+		if (!empty($result)) {
+			$insertData = [];
+			foreach ($result as $row) {
+				$insertData[] = [
+					'runOfShowId' => $newRunOfShowId,
+					'crewMemberId' => $row['crewMemberId'],
+					'travelTypeTo' => $row['travelTypeTo'],
+					'airlineTo' => $row['airlineTo'],
+					'specifyTravelTo' => $row['specifyTravelTo'],
+					'airportFromTo' => $row['airportFromTo'],
+					'departureTimeTo' => $row['departureTimeTo'],
+					'confirmationTo' => $row['confirmationTo'],
+					'airportToTo' => $row['airportToTo'],
+					'arrivalTimeTo' => $row['arrivalTimeTo'],
+					'travelTypeFrom' => $row['travelTypeFrom'],
+					'airlineFrom' => $row['airlineFrom'],
+					'specifyTravelFrom' => $row['specifyTravelFrom'],
+					'airportFromFrom' => $row['airportFromFrom'],
+					'departureTimeFrom' => $row['departureTimeFrom'],
+					'confirmationFrom' => $row['confirmationFrom'],
+					'airportToFrom' => $row['airportToFrom'],
+					'arrivalTimeFrom' => $row['arrivalTimeFrom'],
+					'groundTransCo' => $row['groundTransCo'],
+					'vehicleMake' => $row['vehicleMake'],
+					'driverName' => $row['driverName'],
+					'driverPhone' => $row['driverPhone'],
+					'vehicleModel' => $row['vehicleModel'],
+					'vehicleTag' => $row['vehicleTag'],
+					'pickUpTime' => $row['pickUpTime'],
+					'dropOffTime' => $row['dropOffTime'],
+					'dropOffLocation' => $row['dropOffLocation'],
+					'groundNotes' => $row['groundNotes'],
+					'hotelName' => $row['hotelName'],
+					'hotelStay' => $row['hotelStay'],
+					'confirmationAccommodation' => $row['confirmationAccommodation'],
+					'perDiem' => $row['perDiem'],
+					'hotelAddress' => $row['hotelAddress'],
+					'roomType' => $row['roomType'],
+					'checkIn' => $row['checkIn'],
+					'checkOut' => $row['checkOut'],
+					'accommodationNote' => $row['accommodationNote']
+				];
+			}
+			$this->db->insert_batch(TABLE_RUNOFSHOWTALENTCREW, $insertData);
+		}
+	}
+
+	public function duplicateRunOfShowPoc($oldRunOfShowId, $newRunOfShowId)
+	{
+		$this->db->select('*');
+		$this->db->where('runOfShowId', $oldRunOfShowId);
+		$query = $this->db->get(TABLE_RUNOFSHOWPOC);
+		$result = $query->result_array();
+
+		if (!empty($result)) {
+			$insertData = [];
+			foreach ($result as $row) {
+				$insertData[] = [
+					'runOfShowId' => $newRunOfShowId,
+					'name' => $row['name'],
+					'title' => $row['title'],
+					'phone' => $row['phone'],
+					'email' => $row['email'],
+					'assistantName' => $row['assistantName'],
+					'assistantTitle' => $row['assistantTitle'],
+					'assistantPhone' => $row['assistantPhone'],
+					'assistantEmail' => $row['assistantEmail'],
+					'backUpTitle' => $row['backUpTitle'],
+					'backUpPhone' => $row['backUpPhone'],
+					'backUpEmail' => $row['backUpEmail']
+				];
+			}
+			$this->db->insert_batch(TABLE_RUNOFSHOWPOC, $insertData);
+		}
+	}
+
+	// Crew Travel
+	function saveRunOfShowCrewTravel($arr)
+	{
+		$this->db->insert(TABLE_RUNOFSHOWCREWTRAVEL, $arr);
+	}
+
+	function updateRunOfShowCrewTravel($arr, $id)
+	{
+		$this->db->update(TABLE_RUNOFSHOWCREWTRAVEL, $arr, array('id' => $id));
+	}
+
+	function deleteRunOfShowCrewTravel($id)
+	{
+		$this->db->where('id', $id);
+		$this->db->delete(TABLE_RUNOFSHOWCREWTRAVEL);
+	}
+
+	function deleteRunOfShowCrewTravelByRunOfShowId($id)
+	{
+		$this->db->where('runOfShowId', $id);
+		$this->db->delete(TABLE_RUNOFSHOWCREWTRAVEL);
+	}
+
+	function getCrewMemberSearch($searchTerm = "", $id = null)
+	{
+		$this->db->select('*, firstName as text');
+		$this->db->from(TABLE_CREWMEMBERS);
+		$this->db->where("firstName like '%" . $searchTerm . "%'");
+		$this->db->where('productionId', $id);
+		$value = $this->db->get()->result();
+		$data = array();
+		foreach ($value as $val) {
+			$data[] = $val;
+		}
+		return $data;
+	}
+
+	public function getRunOfShowCrewTravelDetails($id)
+	{
+		$this->db->select('t.*, i.firstName, i.lastName');
+		$this->db->from(TABLE_RUNOFSHOWCREWTRAVEL . ' as t');
+		$this->db->join(TABLE_CREWMEMBERS . ' as i', 't.crewMemberId = i.id');
+		$this->db->where('t.runOfShowId', $id);
+		return $this->db->get()->result();
+	}
+
+	public function getRunOfShowCrewTravelById($id)
+	{
+		$this->db->select('t.*, i.firstName, i.lastName, r.productionId');
+		$this->db->from(TABLE_RUNOFSHOWCREWTRAVEL . ' as t');
+		$this->db->join(TABLE_RUNOFSHOW . ' as r', 'r.id = t.runOfShowId');
+		$this->db->join(TABLE_CREWMEMBERS . ' as i', 't.crewMemberId = i.id');
+		$this->db->where('t.id', $id);
+		return $this->db->get()->row();
+	}
+
+	// talent Crew
+	function getTalentCrewMemberSearch($searchTerm = "", $id = null)
+	{
+		$this->db->select('*, firstName as text');
+		$this->db->from(TABLE_ENTERTAINER);
+		$this->db->where("firstName like '%" . $searchTerm . "%'");
+		$this->db->where('productionId', $id);
+		$value = $this->db->get()->result();
+		$data = array();
+		foreach ($value as $val) {
+			$data[] = $val;
+		}
+		return $data;
+	}
+
+	public function getRunOfShowTalentCrewDetails($id)
+	{
+		$this->db->select('t.*, i.firstName, i.lastName');
+		$this->db->from(TABLE_RUNOFSHOWTALENTCREW . ' as t');
+		$this->db->join(TABLE_ENTERTAINER . ' as i', 't.crewMemberId = i.id');
+		$this->db->where('t.runOfShowId', $id);
+		return $this->db->get()->result();
+	}
+
+	function saveRunOfShowTalentCrew($arr)
+	{
+		$this->db->insert(TABLE_RUNOFSHOWTALENTCREW, $arr);
+	}
+
+	public function getRunOfShowTalentCrewById($id)
+	{
+		$this->db->select('t.*, i.firstName, i.lastName, r.productionId');
+		$this->db->from(TABLE_RUNOFSHOWTALENTCREW . ' as t');
+		$this->db->join(TABLE_RUNOFSHOW . ' as r', 'r.id = t.runOfShowId');
+		$this->db->join(TABLE_ENTERTAINER . ' as i', 't.crewMemberId = i.id');
+		$this->db->where('t.id', $id);
+		return $this->db->get()->row();
+	}
+
+	function updateRunOfShowTalentCrew($arr, $id)
+	{
+		$this->db->update(TABLE_RUNOFSHOWTALENTCREW, $arr, array('id' => $id));
+	}
+
+	function deleteRunOfShowTalentCrew($id)
+	{
+		$this->db->where('id', $id);
+		$this->db->delete(TABLE_RUNOFSHOWTALENTCREW);
+	}
+
+	function deleteRunOfShowTalentCrewRunOfShowId($id)
+	{
+		$this->db->where('runOfShowId', $id);
+		$this->db->delete(TABLE_RUNOFSHOWTALENTCREW);
+	}
+
+	// Run of Show POC
+	public function getRunOfShowPocDetails($id)
+	{
+		$this->db->select('*');
+		$this->db->from(TABLE_RUNOFSHOWPOC);
+		$this->db->where('runOfShowId', $id);
+		return $this->db->get()->result();
+	}
+
+	function saveRunOfShowPoc($arr)
+	{
+		$this->db->insert(TABLE_RUNOFSHOWPOC, $arr);
+	}
+
+	public function getRunOfShowPocById($id)
+	{
+		$this->db->select('*');
+		$this->db->from(TABLE_RUNOFSHOWPOC);
+		$this->db->where('id', $id);
+		return $this->db->get()->row();
+	}
+
+	function updateRunOfShowPoc($arr, $id)
+	{
+		$this->db->update(TABLE_RUNOFSHOWPOC, $arr, array('id' => $id));
+	}
+
+	function deleteRunOfShowPoc($id)
+	{
+		$this->db->where('id', $id);
+		$this->db->delete(TABLE_RUNOFSHOWPOC);
+	}
+
+
+	function deleteRunOfShowPocRunOfShowId($id)
+	{
+		$this->db->where('runOfShowId', $id);
+		$this->db->delete(TABLE_RUNOFSHOWPOC);
+	}
+
+	// timed access link
+	function saveTimedAccessLink($arr)
+	{
+		$this->db->insert(TABLE_TIMEDACCESSLINK, $arr);
+		return $this->db->insert_id();
+	}
+
+	public function getTimedAccessLinkDetailsByRunOfShowId($id)
+	{
+		$this->db->select('*');
+		$this->db->from(TABLE_TIMEDACCESSLINK);
+		$this->db->where('runOfShowId', $id);
+		return $this->db->get()->result();
+	}
+
+
+	function insertCrewTravel($arr)
+	{
+		$this->db->insert(TABLE_TIMEDACCESSLINKCREWTRAVEL, $arr);
+	}
+
+	function insertTalentTravel($arr)
+	{
+		$this->db->insert(TABLE_TIMEDACCESSLINKTALENTTRAVEL, $arr);
+	}
+
+	function insertPoc($arr)
+	{
+		$this->db->insert(TABLE_TIMEDACCESSLINKPOC, $arr);
+	}
+
+	public function getTimedAccessLinkCrewTravelDetailsByRunOfShowId($id)
+	{
+		$this->db->select('t.*, c.firstName, c.lastName');
+		$this->db->from(TABLE_TIMEDACCESSLINKCREWTRAVEL . ' as t');
+		$this->db->join(TABLE_CREWMEMBERS . ' as c', 't.crewTravelId = c.id');
+		$this->db->where('t.runOfShowId', $id);
+		return $this->db->get()->result();
+	}
+
+	public function getTimedAccessLinkTalentTravelDetailsByRunOfShowId($id)
+	{
+		$this->db->select('t.*, c.firstName, c.lastName');
+		$this->db->from(TABLE_TIMEDACCESSLINKTALENTTRAVEL . ' as t');
+		$this->db->join(TABLE_ENTERTAINER . ' as c', 't.talentTravelId = c.id');
+		$this->db->where('t.runOfShowId', $id);
+		return $this->db->get()->result();
+	}
+
+	public function getTimedAccessLinkPocDetailsByRunOfShowId($id)
+	{
+		$this->db->select('t.*, c.name, c.title');
+		$this->db->from(TABLE_TIMEDACCESSLINKPOC . ' as t');
+		$this->db->join(TABLE_RUNOFSHOWPOC . ' as c', 't.pocId = c.id');
+		$this->db->where('t.runOfShowId', $id);
+		return $this->db->get()->result();
+	}
+
+	function updateTimedAccessLinkById($arr, $id)
+	{
+		$this->db->update(TABLE_TIMEDACCESSLINK, $arr, array('id' => $id));
+	}
+
+	public function getTimedAccessLinkDetailsById($id)
+	{
+		$this->db->select('*');
+		$this->db->from(TABLE_TIMEDACCESSLINK);
+		$this->db->where('id', $id);
+		return $this->db->get()->row();
+	}
+
+	public function getTimedAccessLinkCrewTravelDetailsById($id)
+	{
+		$this->db->select('c.firstName, c.lastName, rc.*');
+		$this->db->from(TABLE_TIMEDACCESSLINKCREWTRAVEL . ' as t');
+		$this->db->join(TABLE_RUNOFSHOWCREWTRAVEL . ' as rc', 't.crewTravelId = rc.crewMemberId');
+		$this->db->join(TABLE_CREWMEMBERS . ' as c', 't.crewTravelId = c.id');
+		$this->db->where('t.timedAccessLinkId', $id);
+		return $this->db->get()->result();
+	}
+
+	public function getTimedAccessLinkTalentTravelDetailsById($id)
+	{
+		$this->db->select('c.firstName, c.lastName, rc.*');
+		$this->db->from(TABLE_TIMEDACCESSLINKTALENTTRAVEL . ' as t');
+		$this->db->join(TABLE_RUNOFSHOWTALENTCREW . ' as rc', 't.talentTravelId = rc.crewMemberId');
+		$this->db->join(TABLE_ENTERTAINER . ' as c', 't.talentTravelId = c.id');
+		$this->db->where('t.timedAccessLinkId', $id);
+		return $this->db->get()->result();
+	}
+
+	public function getTimedAccessLinkPocDetailsById($id)
+	{
+		$this->db->select('c.*');
+		$this->db->from(TABLE_TIMEDACCESSLINKPOC . ' as t');
+		$this->db->join(TABLE_RUNOFSHOWPOC . ' as c', 't.pocId = c.id');
+		$this->db->where('t.timedAccessLinkId', $id);
+		return $this->db->get()->result();
+	}
+
+	function deleteTimedAccessLinkExtend($id)
+	{
+		$this->db->delete(TABLE_TIMEDACCESSLINKCREWTRAVEL, array('timedAccessLinkId' => $id));
+		$this->db->delete(TABLE_TIMEDACCESSLINKTALENTTRAVEL, array('timedAccessLinkId' => $id));
+		$this->db->delete(TABLE_TIMEDACCESSLINKPOC, array('timedAccessLinkId' => $id));
+	}
+
+	function deleteTimedAccessLink($id)
+	{
+		$this->db->delete(TABLE_TIMEDACCESSLINK, array('id' => $id));
+	}
+
+	// project KPI
+
+	function saveProject($arr)
+	{
+		$this->db->insert(TABLE_PROJECTS, $arr);
+	}
+
+	function getProjectById($id)
+	{
+		$this->db->select('r.*, p.title, p.startDate, p.startTime, p.endDate, p.endTime, p.createAt as productionCreateAt, v.venueName, v.address, v.city, v.state, v.zip');
+		$this->db->from(TABLE_PROJECTS . ' as r');
+		$this->db->join(TABLE_PRODUCTIONS . ' as p', 'r.productionId = p.id');
+		$this->db->join(TABLE_VENUE . ' as v', 'p.venueId = v.id');
+		$this->db->where('r.id', $id);
+		return $this->db->get()->row();
+	}
+
+	function updateProject($arr, $id)
+	{
+		$this->db->update(TABLE_PROJECTS, $arr, array('id' => $id));
+	}
+
+	function deleteProject($id)
+	{
+		$this->db->where('id', $id);
+		$this->db->delete(TABLE_PROJECTS);
+	}
+
+	// project overview
+	function saveProjectOverview($arr)
+	{
+		$this->db->insert(TABLE_PROJECTOVERVIEW, $arr);
+	}
+
+	function getProjectOverviewByProjectId($id)
+	{
+		$this->db->select('*');
+		$this->db->from(TABLE_PROJECTOVERVIEW);
+		$this->db->where('projectId', $id);
+		return $this->db->get()->row();
+	}
+
+	function updateProjectOverview($arr, $id)
+	{
+		$this->db->update(TABLE_PROJECTOVERVIEW, $arr, array('projectId' => $id));
+	}
+
+	function deleteProjectOverview($id)
+	{
+		$this->db->where('projectId', $id);
+		$this->db->delete(TABLE_PROJECTOVERVIEW);
+	}
+
+	// project KPI
+	public function getProjectKPITitleLastOkr($projectId)
+	{
+		$this->db->select('*');
+		$this->db->from(TABLE_PROJECTKPITITLE);
+		$this->db->where('projectId', $projectId);
+		$this->db->order_by('id', 'desc');
+		return $this->db->get()->row();
+	}
+
+	public function getProjectKPITitleById($id)
+	{
+		$this->db->select('p.*, u.name as responsible, u1.name as accountable, u2.name as consulted, u3.name as informed');
+		$this->db->from(TABLE_PROJECTKPITITLE . ' as p');
+		$this->db->join(TABLE_USERS . ' as u', 'p.responsibleId = u.id', 'left');
+		$this->db->join(TABLE_USERS . ' as u1', 'p.accountableId = u1.id', 'left');
+		$this->db->join(TABLE_USERS . ' as u2', 'p.consultedId = u2.id', 'left');
+		$this->db->join(TABLE_USERS . ' as u3', 'p.informedId = u3.id', 'left');
+		$this->db->where('p.id', $id);
+		return $this->db->get()->row();
+	}
+
+	public function getProjectKPITitleByProjectId($id)
+	{
+		$this->db->select('*');
+		$this->db->from(TABLE_PROJECTKPITITLE);
+		$this->db->where('projectId', $id);
+		return $this->db->get()->result();
+	}
+
+	public function getProjectKPIItemsByTitleId($titleId)
+	{
+		$this->db->select('*');
+		$this->db->from(TABLE_PROJECTKPIITEM);
+		$this->db->where('title_id', $titleId);
+		return $this->db->get()->result();
+	}
+
+	public function getProjectKPIItemsById($id)
+	{
+		$this->db->select('i.*, to.okr as tOkr, to.productionPhase, to.timelineTrack, to.startDate as tStartDate, to.dueDate as tDueDate, u.name as responsible, u1.name as accountable, u2.name as consulted, u3.name as informed');
+		$this->db->from(TABLE_PROJECTKPIITEM . ' as i');
+		$this->db->join(TABLE_PROJECTKPITITLE . ' as to', 'i.title_id = to.id');
+		$this->db->join(TABLE_USERS . ' as u', 'i.responsibleId = u.id', 'left');
+		$this->db->join(TABLE_USERS . ' as u1', 'i.accountableId = u1.id', 'left');
+		$this->db->join(TABLE_USERS . ' as u2', 'i.consultedId = u2.id', 'left');
+		$this->db->join(TABLE_USERS . ' as u3', 'i.informedId = u3.id', 'left');
+		$this->db->where('i.id', $id);
+		return $this->db->get()->row();
+	}
+
+	function getProjectKpiDetails($projectId)
+	{
+		$this->db->select('t.id as tId, t.type as tType, t.okr as tOkr, t.productionPhase as tProductionPhase, t.timelineTrack as tTimelineTrack, t.timelineGoal as tTimelineGoal, 
+			t.timelineAction as tTimelineAction, t.timelineView as tTimelineView, t.milestoneMark as tMilestoneMark, t.metrics as tMetrics, t.startDate as tStartDate, t.dueDate as tDueDate, 
+			t.qtr as tQtr, t.status as tStatus, t.markedDate as tMarkedDate, uu.name as tResponsible, uu1.name as tAccountable, uu2.name as tConsulted, uu3.name as tInformed, t.xfnName as tXfnName, 
+			t.xfnEmail as tXfnEmail, t.studioFloName as tStudioFloName, t.studioFloDirectory as tStudioFloDirectory,
+			i.id as iId, i.title_id, i.type as iType, i.okr as iOkr, i.timelineGoal as iTimelineGoal, i.timelineAction as iTimelineAction, 
+			i.timelineView as iTimelineView, i.milestoneMark as iMilestoneMark, i.metrics as iMetrics, i.startDate as iStartDate, i.dueDate as iDueDate, i.qtr as iQtr, i.status as iStatus, 
+			i.markedDate as iMarkedDate, u.name as responsible, u1.name as accountable, u2.name as consulted, u3.name as informed, i.xfnName as iXfnName, i.xfnEmail as iXfnEmail, i.studioFloName as iStudioFloName, 
+			i.studioFloDirectory as iStudioFloDirectory');
+		$this->db->from(TABLE_PROJECTKPITITLE . ' as t');
+		$this->db->join(TABLE_PROJECTKPIITEM . ' as i', 't.id = i.title_id', 'left');
+		$this->db->join(TABLE_USERS . ' as u', 'i.responsibleId = u.id', 'left');
+		$this->db->join(TABLE_USERS . ' as u1', 'i.accountableId = u1.id', 'left');
+		$this->db->join(TABLE_USERS . ' as u2', 'i.consultedId = u2.id', 'left');
+		$this->db->join(TABLE_USERS . ' as u3', 'i.informedId = u3.id', 'left');
+		$this->db->join(TABLE_USERS . ' as uu', 't.responsibleId = uu.id', 'left');
+		$this->db->join(TABLE_USERS . ' as uu1', 't.accountableId = uu1.id', 'left');
+		$this->db->join(TABLE_USERS . ' as uu2', 't.consultedId = uu2.id', 'left');
+		$this->db->join(TABLE_USERS . ' as uu3', 't.informedId = uu3.id', 'left');
+		$this->db->where('t.projectId', $projectId);
+		$this->db->order_by('t.okr', 'ASC');
+		return $this->db->get()->result_array();
+	}
+
+	function saveProjectKpiTitle($arr)
+	{
+		$this->db->insert(TABLE_PROJECTKPITITLE, $arr);
+	}
+
+	function saveProjectKpiItem($arr)
+	{
+		$this->db->insert(TABLE_PROJECTKPIITEM, $arr);
+	}
+
+	function updateProjectKPITitleById($arr, $id)
+	{
+		$this->db->update(TABLE_PROJECTKPITITLE, $arr, array('id' => $id));
+	}
+
+	function updateProjectKPIItemById($arr, $id)
+	{
+		$this->db->update(TABLE_PROJECTKPIITEM, $arr, array('id' => $id));
+	}
+
+	function updateProjectKPIItemByTitleId($arr, $id)
+	{
+		$this->db->update(TABLE_PROJECTKPIITEM, $arr, array('title_id' => $id));
+	}
+
+	function deleteProjectKpiTitle($id)
+	{
+		$this->db->where('id', $id);
+		$this->db->delete(TABLE_PROJECTKPITITLE);
+		$this->db->where('title_id', $id);
+		$this->db->delete(TABLE_PROJECTKPIITEM);
+	}
+
+	function deleteProjectKpiItem($id)
+	{
+		$this->db->where('id', $id);
+		$this->db->delete(TABLE_PROJECTKPIITEM);
+	}
+
+	// project kpi road map
+	function getProjectKpiRoadmapDetails($projectId)
+	{
+		$this->db->select('t.id as tId, t.type as tType, t.okr as tOkr, t.productionPhase as tProductionPhase, t.timelineTrack as tTimelineTrack, t.timelineView as tTimelineView, t.milestoneMark as tMilestoneMark,
+			t.qtr as tQtr, t.status as tStatus,
+			i.id as iId, i.title_id, i.type as iType, i.okr as iOkr, i.timelineGoal as iTimelineGoal,
+			i.timelineView as iTimelineView, i.milestoneMark as iMilestoneMark, i.startDate as iStartDate, i.dueDate as iDueDate, i.qtr as iQtr, i.status as iStatus,');
+		$this->db->from(TABLE_PROJECTKPIITEM . ' as i');
+		$this->db->join(TABLE_PROJECTKPITITLE . ' as t', 't.id = i.title_id', 'left');
+		$this->db->where('t.projectId', $projectId);
+		$this->db->order_by("FIELD(t.productionPhase, 'Pre-Production', 'Production', 'Post-Production', 'Weave')");
+		return $this->db->get()->result_array();
 	}
 }

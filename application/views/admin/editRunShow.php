@@ -21,12 +21,12 @@
 						<div class="form-group col-md-12">
 							<table class="table table-bordered table-sm">
 								<tr>
-									<th>Event Month</th>
-									<td id="eventMonth"><?= $data->eventMonth ?></td>
+									<th>Production Start Date</th>
+									<td style="font-weight: normal"><?= date('d M Y', strtotime($data->startDate)) . ' ' . date('h:i:s A', strtotime($data->startTime)) ?></td>
 								</tr>
 								<tr>
-									<th>Event Year</th>
-									<td id="eventYear"><?= $data->eventYear ?></td>
+									<th>Production End Date</th>
+									<td style="font-weight: normal"><?= date('d M Y', strtotime($data->endDate)) . ' ' . date('h:i:s A', strtotime($data->endTime)) ?></td>
 								</tr>
 								<tr>
 									<th>Venue</th>
@@ -102,7 +102,7 @@
 		font-style: italic;
 	}
 
-	td{
+	td {
 		font-weight: normal;
 	}
 </style>
@@ -143,7 +143,7 @@
 		}).on('select2:select', function (event) {
 			var data = event.params.data;
 			$('.detailsTable').show();
-			$('#eventMonth').text(data.eventMonth);
+			$('#startDate').text(data.startDate);
 			$('#eventYear').text(data.eventYear);
 			$('#venue').text(data.venueName);
 		});

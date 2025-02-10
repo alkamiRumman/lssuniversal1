@@ -7,7 +7,8 @@
 					Close
 				</button>
 				<?php if ($data->customerStatus == 1) { ?>
-					<a href="<?= admin_url('productionMarkRead/') . $data->id ?>" onclick="return confirm('Are you sure?')"
+					<a href="<?= admin_url('productionMarkRead/') . $data->id ?>"
+					   onclick="return confirm('Are you sure?')"
 					   class="btn btn-sm pull-right btn-warning">Mark as read</a>
 				<?php } ?>
 				<h4 class="modal-title"><b><?= $data->title ?> Details</b></h4>
@@ -43,12 +44,12 @@
 										<td style="background-color: #D9D9D9;color: black"><?= $data->title ?></td>
 									</tr>
 									<tr>
-										<th style="background-color: #BCBCBC; color: black">Event Month</th>
-										<td style="background-color: #D9D9D9;color: black"><?= $data->eventMonth ?></td>
+										<th style="background-color: #BCBCBC; color: black">Start Date</th>
+										<td style="background-color: #D9D9D9;color: black"><?= date('d M Y', strtotime($data->startDate)) . ' ' . date('h:i:s A', strtotime($data->startTime)) ?></td>
 									</tr>
 									<tr>
-										<th style="background-color: #BCBCBC; color: black">Event Year</th>
-										<td style="background-color: #D9D9D9;color: black"><?= $data->eventYear ?></td>
+										<th style="background-color: #BCBCBC; color: black">End Date</th>
+										<td style="background-color: #D9D9D9;color: black"><?= date('d M Y', strtotime($data->endDate)) . ' ' . date('h:i:s A', strtotime($data->endTime)) ?></td>
 									</tr>
 								</table>
 							</div>
@@ -193,6 +194,7 @@
 							<div class="panel-heading"><strong>Production Crew Details</strong></div>
 							<div class="panel-body table-responsive">
 								<table class="table">
+									<thead>
 									<tr>
 										<th style="background-color: #BCBCBC; color: black">First Name</th>
 										<th style="background-color: #BCBCBC; color: black">Last Name</th>
@@ -272,6 +274,7 @@
 							<div class="panel-heading"><strong>Entertainers & Crew Members Details</strong></div>
 							<div class="panel-body table-responsive">
 								<table class="table">
+									<thead>
 									<tr>
 										<th style="background-color: #BCBCBC; color: black">First Name</th>
 										<th style="background-color: #BCBCBC; color: black">Last Name</th>
@@ -396,6 +399,7 @@
 							<div class="panel-heading"><strong>Marketing Fees Details</strong></div>
 							<div class="panel-body">
 								<table class="table">
+									<thead>
 									<tr>
 										<th style="background-color: #BCBCBC; color: black">Title</th>
 										<th style="background-color: #BCBCBC; color: black">Total Fee</th>
@@ -437,6 +441,7 @@
 							<div class="panel-body">
 								<table class="table"
 									   style="border-collapse:separate;border-spacing: 7px">
+									<thead>
 									<tr>
 										<th style="background-color: #BCBCBC; color: black">Title</th>
 										<th style="background-color: #BCBCBC; color: black">Total Fee</th>
@@ -560,6 +565,81 @@
 							</div>
 						</div>
 					</div>
+					<?php if ($data->ticketTieringCheckbox == 1) { ?>
+						<div class="col-xs-12 col-xs-4">
+							<div class="panel">
+								<div class="panel-heading"><strong>Ticket Tiering</strong></div>
+								<div class="panel-body table-responsive">
+									<div class="row" style="margin-top: 10px">
+										<div class="col-xs-12 col-xs-6 form-group">
+											<div class="input-group">
+												<span style="background-color: black; color: white"
+													  class="input-group-addon">VENUE CAPACITY</span>
+												<input class="form-control input-sm" type="number"
+													   step="any" min="0" name="graphicDesign"
+													   value="<?= $data ? $data->totalVenueCapacity : '' ?>"
+													   id="ticketTieringVenueCapacity" readonly>
+											</div>
+										</div>
+										<div class="col-xs-12 col-xs-6 form-group">
+											<div class="input-group">
+												<span style="background-color: black; color: white"
+													  class="input-group-addon">REMAINING SEATS</span>
+												<input class="form-control input-sm" type="number"
+													   step="any" min="0" name="remainingSeats"
+													   value="<?= $data ? $data->remainingSeats : '' ?>"
+													   id="remainingSeats" readonly>
+											</div>
+										</div>
+									</div>
+									<table id="ticketTieringTable" style="width: 99%;"
+										   class="table table-bordered table-hover table-ticketTieringTable">
+										<thead>
+										<tr>
+											<th style="background-color: #BCBCBC; color: black">Tier Level</th>
+											<th style="background-color: #BCBCBC; color: black">Selection</th>
+											<th style="background-color: #BCBCBC; color: black"># Of Seats</th>
+											<th style="background-color: #BCBCBC; color: black">Base Ticket Price</th>
+											<th style="background-color: #BCBCBC; color: black">Ticket Mark-Up</th>
+											<th style="background-color: #BCBCBC; color: black">New Ticket Price</th>
+											<th style="background-color: #BCBCBC; color: black">ROI</th>
+										</tr>
+										</thead>
+										<tbody>
+										<?php if ($ticketTieringData) {
+											foreach ($ticketTieringData as $datum): ?>
+												<tr id="<?= $datum->id ?>"
+													class="<?= $datum->comp == 1 ? 'bg-red' : '' ?>">
+													<td><?= $datum->tierLevel ?></td>
+													<td><?= $datum->section ?></td>
+													<td><?= $datum->ofSeats ?></td>
+													<td><?= $datum->baseTicketPrice ?></td>
+													<td><?= $datum->ticketMarkUp ?></td>
+													<td><?= $datum->newTicketPrice ?></td>
+													<td><?= $datum->roi ?></td>
+												</tr>
+											<?php endforeach;
+										} else { ?>
+											<tr>
+												<td class="text-danger text-bold text-center" colspan="7">No record
+													found!!
+												</td>
+											</tr>
+										<?php } ?>
+										</tbody>
+										<tfoot>
+										<tr>
+											<th colspan="6" class="text-right">Total Ticket Tiering ROI</th>
+											<th>
+												$<?= number_format(array_sum(array_column($ticketTieringData, 'roi')), 2) ?>
+											</th>
+										</tr>
+										</tfoot>
+									</table>
+								</div>
+							</div>
+						</div>
+					<?php } ?>
 				</div>
 			</div>
 		</div>
@@ -597,6 +677,12 @@
 			object-fit: contain !important; /* Ensure the entire image is visible */
 			display: block !important; /* Ensure proper layout */
 			margin: 0 auto !important; /* Center image horizontally */
+		}
+
+		.panel .panel-heading {
+			font-size: 20px !important;
+			color: white !important;
+			background-color: black	!important;
 		}
 
 		.logo {

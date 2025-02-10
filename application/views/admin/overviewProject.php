@@ -29,8 +29,10 @@
 							<div class="panel-body" style="padding-bottom: 0">
 								<table class="table">
 									<tr>
-										<th>Production Date & Time</th>
-										<td style="font-weight: normal"><?= date('d M Y H:i:s A', strtotime($data->createAt)) ?></td>
+										<th>Production Start Date</th>
+										<td style="font-weight: normal"><?= date('d M Y', strtotime($data->startDate)) . ' ' . date('h:i:s A', strtotime($data->startTime)) ?></td>
+										<th>Production End Date</th>
+										<td style="font-weight: normal"><?= date('d M Y', strtotime($data->endDate)) . ' ' . date('h:i:s A', strtotime($data->endTime)) ?></td>
 										<th>Production Venue</th>
 										<td style="font-weight: normal"><?= $data->venueName ?></td>
 										<th>Venue Address</th>
@@ -75,8 +77,8 @@
 									<div class="row">
 										<div class="col-md-12">
 											<label for="problemStatement"> The Problem Statement <i
-														class="fa fa-info-circle text-danger"
-														title="What is the gap we are looking to fill in the market?&#10;What challenges exist?"></i></label>
+													class="fa fa-info-circle text-danger"
+													title="What is the gap we are looking to fill in the market?&#10;What challenges exist?"></i></label>
 											<textarea class="form-control" id="problemStatement"
 													  name="problemStatement"><?= $projectOverview->problemStatement ?></textarea>
 										</div>
@@ -84,8 +86,8 @@
 									<div class="row">
 										<div class="col-md-12">
 											<label for="proposedSolution"> Proposed Solution <i
-														class="fa fa-info-circle text-danger"
-														title="How are we solving the problem?"></i></label>
+													class="fa fa-info-circle text-danger"
+													title="How are we solving the problem?"></i></label>
 											<textarea class="form-control" id="proposedSolution"
 													  name="proposedSolution"><?= $projectOverview->proposedSolution ?></textarea>
 										</div>

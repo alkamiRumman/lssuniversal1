@@ -54,8 +54,12 @@
 										<td><?= $data->title ?></td>
 									</tr>
 									<tr>
-										<th>Production Calender</th>
-										<td><?= $data->eventMonth . ', ' . $data->eventYear ?></td>
+										<th>Production Start Date</th>
+										<td><?= date('d M Y', strtotime($data->startDate)) . ' ' . date('h:i:s A', strtotime($data->startTime)) ?></td>
+									</tr>
+									<tr>
+										<th>Production End Date</th>
+										<td><?= date('d M Y', strtotime($data->endDate)) . ' ' . date('h:i:s A', strtotime($data->endTime)) ?></td>
 									</tr>
 									<tr>
 										<th>Venue</th>
@@ -233,6 +237,16 @@
 			margin: 2cm;
 		}
 
+		.table {
+			padding: 0;
+			margin: 0;
+			page-break-inside: auto; /* Ensure tables break nicely if they exceed one page */
+		}
+
+		.table th, .table td {
+			font-size: 12px; /* Smaller font for compact display */
+		}
+		
 		#printSection, #printSection * {
 			visibility: visible;
 		}
